@@ -16,6 +16,56 @@
   input, button { font-family: inherit; }
   ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-thumb { background: #D8DBEC; border-radius: 4px; }
+  button { transition: transform 0.12s ease, box-shadow 0.15s ease, filter 0.15s ease, background-color 0.15s ease; }
+  button:not(:disabled):hover { filter: brightness(1.06); }
+  button:not(:disabled):active { transform: scale(0.96); }
+  input, textarea { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+  input:focus, textarea:focus { outline: none; border-color: #6B3FA0 !important; box-shadow: 0 0 0 3px rgba(107,63,160,0.12); }
+  @keyframes swsFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .sws-fade-in { animation: swsFadeIn 0.35s ease both; }
+  /* ===== Apple uslubidagi animatsiyalar ===== */
+  :root { --ease-apple: cubic-bezier(0.22, 1, 0.36, 1); }
+  [data-reveal] { opacity: 0; transform: translate3d(0, 48px, 0) scale(0.97); filter: blur(6px);
+    transition: opacity 1s var(--ease-apple), transform 1.1s var(--ease-apple), filter 1s var(--ease-apple);
+    transition-delay: var(--d, 0ms); will-change: opacity, transform; }
+  [data-reveal="left"] { transform: translate3d(-56px, 0, 0); }
+  [data-reveal="right"] { transform: translate3d(56px, 0, 0); }
+  [data-reveal="zoom"] { transform: scale(0.86); }
+  [data-reveal].sws-in { opacity: 1; transform: none; filter: none; }
+  @keyframes swsHeroUp { from { opacity: 0; transform: translate3d(0, 34px, 0); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
+  .sws-hero-up { animation: swsHeroUp 1.2s var(--ease-apple) both; animation-delay: var(--d, 0ms); }
+  @keyframes swsTiltIn { from { opacity: 0; transform: perspective(1200px) rotateX(22deg) rotateY(-10deg) translate3d(0, 60px, 0) scale(0.9); } to { opacity: 1; transform: perspective(1200px) rotateX(0) rotateY(0) translate3d(0,0,0) scale(1); } }
+  .sws-tilt-in { animation: swsTiltIn 1.4s var(--ease-apple) 0.35s both; transform-style: preserve-3d; }
+  @keyframes swsFloat { 0%,100% { transform: translate3d(0,0,0) rotate(0deg); } 50% { transform: translate3d(0,-12px,0) rotate(4deg); } }
+  .sws-float { animation: swsFloat 4.5s ease-in-out infinite; }
+  @keyframes swsShine { to { background-position: 200% center; } }
+  .sws-gradient-text { background: linear-gradient(90deg, #6B3FA0, #C2185B, #F5A623, #6B3FA0); background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent; animation: swsShine 6s linear infinite; }
+  @keyframes swsBlob { 0%,100% { transform: translate3d(0,0,0) scale(1); } 33% { transform: translate3d(40px,-30px,0) scale(1.12); } 66% { transform: translate3d(-30px,24px,0) scale(0.92); } }
+  .sws-blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.45; pointer-events: none; animation: swsBlob 16s ease-in-out infinite; z-index: 0; }
+  @keyframes swsBar { from { width: 0; } }
+  .sws-bar { animation: swsBar 1.6s var(--ease-apple) 0.9s both; }
+  .sws-lift { transition: transform 0.5s var(--ease-apple), box-shadow 0.5s var(--ease-apple), opacity 1s var(--ease-apple), filter 1s var(--ease-apple); }
+  .sws-lift.sws-in:hover, .sws-lift:not([data-reveal]):hover { transform: translate3d(0,-8px,0) scale(1.015); box-shadow: 0 26px 50px -24px rgba(22,32,77,0.35); }
+  .sws-lift[data-reveal]:not(.sws-in) { transition-delay: var(--d, 0ms); }
+  @keyframes swsPulse { 0% { box-shadow: 0 0 0 0 rgba(31,169,113,0.55); } 100% { box-shadow: 0 0 0 10px rgba(31,169,113,0); } }
+  .sws-pulse { animation: swsPulse 1.8s ease-out infinite; }
+  /* ===== Ichki sahifalar: Apple uslubidagi chegarasiz kartalar ===== */
+  .sws-app [style*="border: 1px solid rgb(228, 231, 245)"] { border-color: transparent !important;
+    box-shadow: 0 1px 2px rgba(22,32,77,0.04), 0 10px 30px -14px rgba(22,32,77,0.16);
+    transition: transform 0.45s var(--ease-apple), box-shadow 0.45s var(--ease-apple), background-color 0.25s ease; }
+  .sws-app [style*="border: 1px solid rgb(228, 231, 245)"] [style*="border: 1px solid rgb(228, 231, 245)"] { box-shadow: none; }
+  .sws-app [style*="border: 1px solid rgb(228, 231, 245)"] [style*="border: 1px solid rgb(228, 231, 245)"][style*="background: rgb(255, 255, 255)"] { background-color: #F5F6FA !important; }
+  .sws-app [style*="cursor: pointer"][style*="border: 1px solid rgb(228, 231, 245)"]:hover { transform: translate3d(0,-3px,0); box-shadow: 0 2px 4px rgba(22,32,77,0.05), 0 22px 44px -20px rgba(22,32,77,0.28); }
+  .sws-app [style*="border: 1px solid rgb(228, 231, 245)"] [style*="border: 1px solid rgb(228, 231, 245)"][style*="cursor: pointer"]:hover { transform: none; box-shadow: none; background-color: #EEF0F7 !important; }
+  .sws-app [style*="border-bottom: 1px solid rgb(228, 231, 245)"] { border-bottom-color: rgba(22,32,77,0.06) !important; }
+  .sws-app [style*="border-top: 1px solid rgb(228, 231, 245)"] { border-top-color: rgba(22,32,77,0.06) !important; }
+  .sws-app [style*="border-right: 1px solid rgb(228, 231, 245)"] { border-right-color: rgba(22,32,77,0.06) !important; }
+  .sws-app input:not([type="range"]):not([type="checkbox"]):not([type="radio"]), .sws-app textarea, .sws-app select { border-color: transparent !important; background-color: #F2F3F8 !important; box-shadow: none !important; }
+  .sws-app input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):focus, .sws-app textarea:focus, .sws-app select:focus { background-color: #fff !important; box-shadow: 0 0 0 3px rgba(107,63,160,0.18) !important; }
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal], .sws-hero-up, .sws-tilt-in, .sws-float, .sws-gradient-text, .sws-blob, .sws-bar, .sws-pulse { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -128,6 +178,10 @@ const TIERS = {
   premium: { label: "Premium", mockLimit: 200, bankPerDomain: 500, vocabFolders: ["core", "extra"], vocabCoreLimit: Infinity, tutorLimit: Infinity },
 };
 const PRICE = { standard: "89 000", premium: "179 000" };
+// SINOV DAVRI: true bo'lsa, hamma foydalanuvchiga barcha imkoniyatlar bepul ochiladi.
+// To'lovli tariflarni yoqish uchun false qiling.
+const LAUNCH_FREE = true;
+const tierLabel = (t) => (LAUNCH_FREE ? "Bepul sinov" : TIERS[t].label);
 
 function mulberry32(a) {
   return function () {
@@ -273,6 +327,14 @@ const RW_POOL = {
     { passage: "Long dismissed as ______, the crater's unusual shape is now understood to result from a rare double-impact event billions of years ago.", prompt: "Which choice completes the text with the most logical and precise word or phrase?", choices: ["anomalous", "predictable", "volcanic", "recent"], answer: 0, expl: "A shape 'now understood' to have a cause was previously unexplained, or 'anomalous'." },
     { passage: "The survey's authors caution that self-reported data on volunteering hours are often ______, since respondents tend to round up their contributions.", prompt: "Which choice completes the text with the most logical and precise word or phrase?", choices: ["inflated", "random", "confidential", "irrelevant"], answer: 0, expl: "Rounding up one's own hours produces inflated, not random, figures." },
     { passage: "The city's water utility found that homes with new digital meters used noticeably less water, suggesting that simply making usage ______ to residents can change their habits.", prompt: "Which choice completes the text with the most logical and precise word or phrase?", choices: ["visible", "expensive", "mandatory", "irrelevant"], answer: 0, expl: "Real-time displays make usage visible, which is what changes behavior." },
+    { passage: "Chemist Laylo Ergasheva expected the reaction's byproducts to be entirely ______, but trace contaminants persisted even after three rounds of purification.", prompt: "Which choice completes the text with the most logical and precise word or phrase?", choices: ["eliminated", "abundant", "colorful", "expected"], answer: 0, expl: "'Persisted' implies the contaminants were not eliminated." },
+    { passage: "The renovated concert hall was praised for its ______ acoustics: a whisper from the stage carried clearly to the back row.", prompt: "Which choice completes the text with the most logical and precise word or phrase?", choices: ["muffled", "exceptional", "standard", "inaudible"], answer: 1, expl: "A whisper carrying clearly to the back row shows exceptional acoustics." },
+    { passage: "Drought-tolerant sorghum has become ______ among farmers in arid regions, replacing crops that require far more irrigation.", prompt: "Which choice completes the text with the most logical and precise word or phrase?", choices: ["scarce", "popular", "forbidden", "irrelevant"], answer: 1, expl: "Replacing thirstier crops shows the crop has become popular." },
+    { passage: "Early critics dismissed the device as a ______, but within a decade it had reshaped how millions of people communicated.", prompt: "Which choice completes the text with the most logical and precise word or phrase?", choices: ["breakthrough", "novelty", "standard", "necessity"], answer: 1, expl: "Dismissed at first, then later reshaping communication, fits 'novelty' best." },
+    { passage: "The clinical trial's results were ______ enough that regulators approved the drug after only one phase of testing, a rare occurrence.", prompt: "Which choice completes the text with the most logical and precise word or phrase?", choices: ["ambiguous", "compelling", "preliminary", "modest"], answer: 1, expl: "Fast approval implies compelling results." },
+    { passage: "Despite years of training, the sprinter's technique remained ______, costing her precious fractions of a second at every start.", prompt: "Which choice completes the text with the most logical and precise word or phrase?", choices: ["flawless", "inefficient", "celebrated", "irrelevant"], answer: 1, expl: "Costing time at every start implies inefficiency." },
+    { passage: "The judge's ruling was widely seen as ______, departing sharply from decades of established precedent.", prompt: "Which choice completes the text with the most logical and precise word or phrase?", choices: ["conventional", "unprecedented", "routine", "predictable"], answer: 1, expl: "Departing sharply from precedent is the definition of unprecedented." },
+    { passage: "Volcanic glass forms so ______ that its atomic structure never has time to arrange into the orderly pattern of a crystal.", prompt: "Which choice completes the text with the most logical and precise word or phrase?", choices: ["slowly", "rapidly", "occasionally", "unpredictably"], answer: 1, expl: "Rapid cooling prevents the atoms from arranging into a crystal." },
   ],
   "Text Structure and Purpose": [
     { passage: "The following text is from a 2022 article on archival science. Digitization projects often promise permanence, but magnetic and optical media degrade on timescales far shorter than acid-free paper. Archivists therefore treat digitization not as preservation but as migration: a commitment to copy files forward, indefinitely.", prompt: "Which choice best describes the main purpose of the text?", choices: ["To argue that paper archives should replace digital ones", "To correct a common assumption about what digitization accomplishes", "To describe the technical process of copying files", "To criticize archivists for adopting new technologies"], answer: 1, expl: "The text sets up a promise and reframes it, correcting an assumption." },
@@ -285,6 +347,10 @@ const RW_POOL = {
     { passage: "The passage moves from a broad claim about coral bleaching worldwide to a detailed case study of a single reef, and closes by returning to the global claim with new supporting detail.", prompt: "Which choice best describes the overall structure of the text?", choices: ["General claim, specific case, return to the general claim.", "Chronological narrative with no analysis.", "A rebuttal followed by a concession.", "A comparison of two unrelated ecosystems."], answer: 0, expl: "It moves from general to specific and back to general." },
     { passage: "The following text is from a 2018 profile of a ceramicist. The author first describes the artist's meticulous glazing process in technical detail, then reveals that most of the finished pieces are deliberately shattered before sale.", prompt: "Which choice best describes the effect of the detail about shattering the pieces?", choices: ["It undercuts the earlier emphasis on careful technique, creating an ironic contrast.", "It confirms that the artist's technique is flawed.", "It explains how the glazing process works.", "It provides evidence that the artist is unsuccessful."], answer: 0, expl: "The detail creates an ironic contrast with the careful technique described earlier." },
     { passage: "The essay begins with a common misconception about how deserts form, dismantles that misconception using rainfall data, and ends by proposing a revised definition of 'desert' based on evaporation rates rather than precipitation alone.", prompt: "Which choice best describes the main purpose of the text?", choices: ["To defend a widely accepted definition", "To replace a flawed definition with a more precise one", "To argue that deserts cannot be defined", "To narrate the history of desert exploration"], answer: 1, expl: "A flawed definition is dismantled and replaced with a more precise one." },
+    { passage: "The following text is from a 2017 essay on food science. Fermentation was once viewed purely as a preservation technique. The author traces how chefs increasingly use it to build entirely new flavors, treating spoilage-prone ingredients as a starting point rather than a problem to avoid.", prompt: "Which choice best describes the main purpose of the text?", choices: ["To warn against the dangers of fermentation", "To trace a shift from viewing fermentation as preservation to viewing it as flavor creation", "To provide a recipe for fermented foods", "To argue that fermentation should be banned in professional kitchens"], answer: 1, expl: "The text traces a shift in how fermentation is used and understood." },
+    { passage: "The passage opens with skepticism about a new teaching method, presents three classroom studies with mixed results, and closes by recommending further research rather than a firm conclusion.", prompt: "Which choice best describes the overall structure of the text?", choices: ["Skepticism is raised, evidence is weighed, and a cautious recommendation follows.", "A method is praised without qualification.", "Two teachers debate a method in dialogue form.", "A single study is described in exhaustive statistical detail."], answer: 0, expl: "Skepticism → mixed evidence → cautious recommendation." },
+    { passage: "The following text is from a 2020 profile of a translator. The author describes the translator's meticulous word-by-word method, then notes that her most celebrated translation was completed in a single feverish week, breaking her usual pattern entirely.", prompt: "Which choice best describes the function of the detail about the single feverish week?", choices: ["It contradicts the portrait of meticulousness established earlier, adding nuance.", "It confirms that her usual method was flawed.", "It explains her translation technique in general.", "It provides evidence that she disliked the project."], answer: 0, expl: "The detail adds nuance by contrasting with the earlier portrait." },
+    { passage: "The essay begins by describing a coral reef's vivid colors, then explains that those colors come from symbiotic algae, and ends by warning that the loss of the algae during bleaching events strips the reef of both color and a vital food source.", prompt: "Which choice best describes the main purpose of the text?", choices: ["To celebrate the beauty of coral reefs without further comment", "To explain a biological relationship and its consequences when disrupted", "To argue that coral reefs are no longer worth protecting", "To compare coral reefs to other marine ecosystems"], answer: 1, expl: "The text explains the algae relationship and what happens when it breaks down." },
   ],
   "Cross-Text Connections": [
     { passage: "Text 1: Urban planners argue that removing minimum parking requirements lowers housing costs, since builders no longer pay for unneeded garages.\n\nText 2: Economist Dilnoza Rashidova cautions that in car-dependent cities, removing the requirements shifts parking demand onto streets without reducing construction costs meaningfully.", prompt: "Based on the texts, how would Rashidova (Text 2) most likely respond to the claim in Text 1?", choices: ["By agreeing the policy always lowers costs", "By noting that the benefit depends on local car dependence", "By arguing garages are inexpensive to build", "By suggesting planners raise parking minimums"], answer: 1, expl: "Her objection is conditional on the city being car-dependent." },
@@ -295,6 +361,9 @@ const RW_POOL = {
     { passage: "Text 1: An op-ed claims that remote work has permanently reduced downtown office demand in every major city.\n\nText 2: Real-estate analyst Malika Sobirova notes that office vacancy trends vary sharply by city, with some downtown markets already back above pre-pandemic occupancy.", prompt: "Based on the texts, how would Sobirova (Text 2) most likely respond to the claim in Text 1?", choices: ["By agreeing the trend is universal", "By pointing out that the pattern is not consistent across cities", "By arguing office space is no longer needed anywhere", "By suggesting all cities will recover at the same rate"], answer: 1, expl: "Her data shows the trend is not uniform, unlike the op-ed's universal claim." },
     { passage: "Text 1: A textbook states that the region's ancient irrigation canals were engineered entirely by a single centralized authority.\n\nText 2: Archaeological surveys led by Jasur Ergashev reveal canal sections built with distinctly different techniques, suggesting the work of multiple independent communities over time.", prompt: "Which choice best describes the relationship between the two texts?", choices: ["Text 2 provides evidence that complicates the centralized-authority claim in Text 1.", "Text 2 confirms that a single authority built the canals.", "Text 1 and Text 2 describe unrelated irrigation systems.", "Text 2 is a direct quotation from Text 1."], answer: 0, expl: "The differing techniques complicate the single-authority claim." },
     { passage: "Text 1: A finance newsletter claims that a company's stock price always reflects its true long-term value within a few trading days.\n\nText 2: Economist Nodira Karimova points to several cases where mispriced stocks persisted for years before correcting, suggesting markets can be slow to reflect new information.", prompt: "Based on the texts, how would Karimova (Text 2) most likely respond to the claim in Text 1?", choices: ["By endorsing the few-days timeframe", "By citing evidence that pricing can lag for much longer", "By arguing stock prices are entirely random", "By agreeing that markets are always efficient"], answer: 1, expl: "Her examples of years-long mispricing directly counter the newsletter's timeframe." },
+    { passage: "Text 1: A parenting blog claims that screen time before bed universally disrupts children's sleep, regardless of content.\n\nText 2: Sleep researcher Aziza Murodova found that passive video content delayed sleep onset far less than interactive games, suggesting content type matters as much as screen time itself.", prompt: "Based on the texts, how would Murodova (Text 2) most likely respond to the claim in Text 1?", choices: ["By agreeing all screen time is equally disruptive", "By pointing out that the type of content likely matters, not just the presence of a screen", "By arguing screens have no effect on sleep", "By recommending banning screens entirely"], answer: 1, expl: "Her finding shows content type, not just screen presence, matters." },
+    { passage: "Text 1: A management consultant argues that open-plan offices boost collaboration and should replace private offices industry-wide.\n\nText 2: Organizational psychologist Davron Islomov's research found that face-to-face interaction actually decreased in open-plan offices, as employees retreated to messaging apps to preserve privacy.", prompt: "Which choice best describes the relationship between the two texts?", choices: ["Text 2 provides evidence that complicates the claim in Text 1.", "Text 2 offers additional support for the claim in Text 1.", "Text 1 and Text 2 describe unrelated office designs.", "Text 2 is a direct summary of Text 1."], answer: 0, expl: "Text 2's finding of decreased interaction complicates Text 1's claim." },
+    { passage: "Text 1: A popular science article claims that a newly discovered exoplanet is very likely to host liquid water based on its distance from its star.\n\nText 2: Astronomer Zarina Tosheva cautions that distance alone cannot confirm liquid water without also knowing the planet's atmospheric composition, which remains unmeasured.", prompt: "Based on the texts, how would Tosheva (Text 2) most likely respond to the claim in Text 1?", choices: ["By agreeing that distance alone settles the question", "By noting that an additional factor must be known before concluding water is likely", "By arguing the exoplanet definitely lacks water", "By dismissing the value of studying exoplanets"], answer: 1, expl: "She points to atmospheric composition as a needed, unmeasured factor." },
   ],
   "Central Ideas and Details": [
     { passage: "Researchers tracking migratory dragonflies found individuals crossing more than 600 kilometres of open ocean. Rather than flying continuously, the insects appear to ride high-altitude wind systems, expending energy only to enter and exit favourable air currents.", prompt: "Which choice best states the main idea of the text?", choices: ["Dragonflies migrate farther than any other insect.", "Dragonflies conserve energy by using wind systems during ocean crossings.", "Ocean crossings are the most dangerous part of migration.", "Researchers cannot explain dragonfly navigation."], answer: 1, expl: "The mechanism sentence carries the main idea." },
@@ -305,6 +374,12 @@ const RW_POOL = {
     { passage: "A study of night-shift hospital workers found that meal timing, not sleep duration alone, predicted long-term weight gain. Workers who ate their largest meal during nighttime hours gained more weight over five years than those who shifted their largest meal to daytime, even when total calories and sleep hours were similar.", prompt: "Which choice best states the main idea of the text?", choices: ["Night-shift work always causes weight gain.", "When a person eats may matter as much as sleep or total calories for long-term weight.", "Sleep duration has no effect on health.", "Daytime meals contain fewer calories than nighttime meals."], answer: 1, expl: "Meal timing is presented as an independent factor alongside sleep and calories." },
     { passage: "Historians long credited a single royal decree with ending a centuries-old craft guild system. Recently uncovered trade ledgers show guild membership had already declined by more than half in the decades before the decree, as independent workshops quietly out-competed guild members on price.", prompt: "Which choice best states the main idea of the text?", choices: ["The royal decree was the sole cause of the guild system's end.", "Economic competition, already underway, undermines a single-cause explanation for the guild system's decline.", "Guild membership increased steadily until the decree.", "Trade ledgers from this period have all been lost."], answer: 1, expl: "The ledgers complicate the single-cause (decree) explanation." },
     { passage: "Ecologists monitoring a wetland restoration project expected native plant species to rebound first, since the site had been seeded specifically with native seed mixes. Instead, fast-growing invasive species dominated the site in its first two years, only giving way to native plants once soil nutrient levels stabilized.", prompt: "Which choice best states the main idea of the text?", choices: ["Native seed mixes are ineffective in wetland restoration.", "Soil conditions, not seeding alone, determined which plants established first.", "Invasive species always outcompete native ones permanently.", "Wetland restoration projects rarely succeed."], answer: 1, expl: "Soil stabilization, not the seed mix alone, explained the eventual outcome." },
+    { passage: "City engineers assumed that painting bus lanes red would be enough to deter cars from blocking them. After the paint faded within a year in high-traffic corridors, violation rates crept back to pre-paint levels, suggesting the visual cue alone was not a durable solution.", prompt: "Which choice best states the main idea of the text?", choices: ["Red paint permanently solved the bus lane problem.", "A visual-only intervention proved insufficient once it physically faded.", "Drivers never blocked bus lanes before the paint was applied.", "Bus lanes are unnecessary in most cities."], answer: 1, expl: "The paint's fading and the return of violations show the visual fix wasn't durable." },
+    { passage: "Anthropologists studying a fishing community found that elders' oral histories described storm patterns matching tree-ring records almost exactly, even for storms centuries before written records began, suggesting the oral tradition preserved genuine environmental memory rather than embellished legend.", prompt: "Which choice best states the main idea of the text?", choices: ["Oral histories are always more accurate than written records.", "The oral tradition's storm accounts align with independent physical evidence, supporting their reliability.", "Tree-ring records are unreliable for dating storms.", "The fishing community no longer tells these stories."], answer: 1, expl: "The match with tree-ring evidence supports the oral tradition's reliability." },
+    { passage: "A hospital that switched from paper charts to a digital system expected faster patient processing. Instead, nurses reported spending more time on data entry in the first year, though processing times improved sharply once staff completed additional training in year two.", prompt: "Which choice best states the main idea of the text?", choices: ["Digital systems always slow down hospitals permanently.", "The switch caused a temporary slowdown before training unlocked the expected gains.", "Paper charts were faster in every respect.", "Nurses refused to use the new system."], answer: 1, expl: "The slowdown was temporary, resolved once training was completed." },
+    { passage: "Economists studying a minimum-wage increase in one state found employment in fast food barely changed, while employment in small independent restaurants, which operate on thinner margins, declined noticeably in the same period.", prompt: "Which choice best states the main idea of the text?", choices: ["The minimum-wage increase affected all restaurant types identically.", "The wage increase's employment effects differed by business type and profit margin.", "Fast food chains laid off the most workers.", "Independent restaurants were unaffected by the policy."], answer: 1, expl: "The differing impact by business type is the text's central point." },
+    { passage: "Astronomers long assumed that a planet's rings must be nearly as old as the planet itself. Detailed analysis of one ring system's composition instead suggests it formed only tens of millions of years ago, far more recently than the planet.", prompt: "Which choice best states the main idea of the text?", choices: ["All planetary rings are exactly as old as their planets.", "New evidence suggests this ring system is surprisingly young relative to its planet.", "The ring system has never been studied before.", "Planets cannot form rings after their initial formation."], answer: 1, expl: "The composition analysis suggests a surprisingly recent formation." },
+    { passage: "A publisher expected that switching to recycled paper would raise production costs significantly. After renegotiating supplier contracts and adjusting print runs, the company found costs rose only marginally, and customer response to the change was strongly positive.", prompt: "Which choice best states the main idea of the text?", choices: ["Recycled paper made the company unprofitable.", "The anticipated cost increase was largely avoided, and the change was well received.", "Customers disliked the switch to recycled paper.", "The company reversed its decision after one year."], answer: 1, expl: "Costs rose only marginally, and customers responded positively." },
   ],
   "Command of Evidence (Textual)": [
     { passage: "A student claims that the sculptor Adolfina Zaripova developed her signature technique only after moving to Bukhara in 1978.", prompt: "Which quotation from a scholarly article would best support the student's claim?", choices: ["\"Zaripova exhibited widely throughout the 1960s.\"", "\"No work before 1979 shows the layered-glaze method she later became known for.\"", "\"Bukhara had a thriving community of ceramicists.\"", "\"Critics disagreed about her late work.\""], answer: 1, expl: "Only this ties the technique's absence to the period before the move." },
@@ -318,6 +393,9 @@ const RW_POOL = {
     { passage: "A student claims that a particular species of coral is more resilient to warming waters than previously believed.", prompt: "Which quotation from the marine biology report would best support the student's claim?", choices: ["\"Coral bleaching events have increased in frequency worldwide.\"", "\"Colonies of this species survived water temperatures 2°C above the previously recorded bleaching threshold.\"", "\"The reef is a popular destination for divers.\"", "\"Warming trends are expected to continue for decades.\""], answer: 1, expl: "Only this directly shows survival beyond the previous threshold." },
     { passage: "A student claims that a factory's productivity gains came from a change in shift scheduling rather than new machinery.", prompt: "Which quotation from the plant manager's report would best support the student's claim?", choices: ["\"New machinery was installed the previous year with no measurable output change.\"", "\"Output per worker rose 22 percent the month the new shift schedule began.\"", "\"The factory employs over 300 workers.\"", "\"Raw material costs remained stable throughout the year.\""], answer: 1, expl: "This links the productivity rise directly to the scheduling change, while the first choice rules out machinery." },
     { passage: "A student claims that a medieval trade route's decline was driven by a shift in currency value rather than the opening of a new sea route.", prompt: "Which quotation from the economic historian's account would best support the student's claim?", choices: ["\"The sea route was not commonly used until decades after the trade route's decline began.\"", "\"Merchant records show the route's currency lost over half its value in the preceding years.\"", "\"The trade route had connected several major cities.\"", "\"Caravans along the route were frequently escorted by guards.\""], answer: 1, expl: "Only this directly cites a currency-value cause." },
+    { passage: "A student claims that a city's new curbside composting program significantly increased participation after adding weekly reminder texts.", prompt: "Which quotation from the city's program report would best support the student's claim?", choices: ["\"The program launched in most neighborhoods within six months.\"", "\"Participation rose from 22 percent to 61 percent in the eight weeks after reminder texts began.\"", "\"Composting bins are collected on Tuesdays in most districts.\"", "\"The city surveyed residents about program awareness.\""], answer: 1, expl: "Only this directly ties the participation jump to the reminder texts." },
+    { passage: "A student claims that a particular airline's on-time performance improved mainly because of a scheduling change rather than better weather.", prompt: "Which quotation from the airline's operations report would best support the student's claim?", choices: ["\"Weather conditions during the period were consistent with the prior year's averages.\"", "\"On-time arrivals rose most sharply at hubs where turnaround buffers were extended.\"", "\"The airline operates over 200 daily flights.\"", "\"Customer satisfaction scores also improved.\""], answer: 1, expl: "This ties the improvement to the scheduling change, while the first choice rules out weather." },
+    { passage: "A student claims that a particular language's verb system preserves features lost in its closest relative languages.", prompt: "Which quotation from the linguistics paper would best support the student's claim?", choices: ["\"The language is spoken by roughly two million people.\"", "\"Three verb-tense markers absent from every related language persist in this one, unchanged for centuries.\"", "\"Researchers began documenting the language in the 1960s.\"", "\"The language has borrowed vocabulary from neighboring tongues.\""], answer: 1, expl: "Only this directly compares the verb system to related languages." },
   ],
   "Command of Evidence (Quantitative)": [
     { passage: "A survey measured average daily reading time among students in three districts:\n\n  District A — 41 minutes\n  District B — 27 minutes\n  District C — 63 minutes\n\nA researcher concluded that reading time varies substantially across districts.", prompt: "Which choice most effectively uses data from the table to support the conclusion?", choices: ["District C's average is more than double District B's.", "All three districts averaged under an hour.", "District A's average is close to District B's.", "The survey covered three districts."], answer: 0, expl: "63 is more than twice 27 — direct evidence of substantial variation." },
@@ -328,6 +406,9 @@ const RW_POOL = {
     { passage: "A researcher compared test scores of students who used a tutoring app for different durations:\n\n  0–1 hours/week — 68 average\n  2–3 hours/week — 74 average\n  4–5 hours/week — 79 average\n  6+ hours/week — 78 average\n\nThe researcher concluded that additional tutoring time produces diminishing returns beyond a certain point.", prompt: "Which choice most effectively uses data from the table to support the conclusion?", choices: ["Scores rose steadily from 0–1 to 4–5 hours but slightly declined from 4–5 to 6+ hours.", "Students who used the app for 0–1 hours scored above 65.", "Four groups were compared in the study.", "The app was used by students of various ages."], answer: 0, expl: "The leveling-off (and slight drop) after 4–5 hours is direct evidence of diminishing returns." },
     { passage: "A wildlife agency counted deer populations in a forest over four years following the reintroduction of wolves:\n\n  Year 1 — 1,200\n  Year 2 — 1,050\n  Year 3 — 950\n  Year 4 — 970\n\nA biologist concluded that the deer population decline leveled off after the third year.", prompt: "Which choice most effectively uses data from the table to support the conclusion?", choices: ["The population changed by only 20 between Year 3 and Year 4, far less than the drops in earlier years.", "The population was highest in Year 1.", "Wolves were reintroduced before the count began.", "The forest was surveyed over four years."], answer: 0, expl: "The small Year 3-to-4 change, compared to earlier drops, shows the leveling off." },
     { passage: "A quality-control team recorded manufacturing defect rates before and after a new inspection protocol at three plants:\n\n  Plant X — 4.2% to 1.8%\n  Plant Y — 3.5% to 3.1%\n  Plant Z — 5.0% to 1.1%\n\nThe team concluded that the new protocol's effectiveness varied widely across plants.", prompt: "Which choice most effectively uses data from the table to support the conclusion?", choices: ["Plant Z's defect rate dropped by 3.9 points while Plant Y's dropped by only 0.4 points.", "All three plants had defect rates above 1% before the change.", "Plant X's rate was higher than Plant Y's before the protocol began.", "Three plants adopted the new inspection protocol."], answer: 0, expl: "Comparing the size of each plant's improvement directly shows the variation." },
+    { passage: "A clinic tracked patient wait times before and after adding a triage nurse at three locations:\n\n  Location A — 34 min to 19 min\n  Location B — 28 min to 25 min\n  Location C — 41 min to 15 min\n\nAn administrator concluded that the triage nurse's impact varied substantially by location.", prompt: "Which choice most effectively uses data from the table to support the conclusion?", choices: ["Location C's wait time dropped by 26 minutes while Location B's dropped by only 3 minutes.", "All three locations saw wait times decrease.", "Location A's wait time was higher than Location B's before the change.", "Three locations were included in the study."], answer: 0, expl: "Comparing the drop sizes directly shows the varying impact." },
+    { passage: "A gym tracked member retention across four membership tiers over one year:\n\n  Basic — 58%\n  Standard — 71%\n  Premium — 84%\n  Elite — 82%\n\nA manager concluded that retention improves with tier level but levels off at the highest tiers.", prompt: "Which choice most effectively uses data from the table to support the conclusion?", choices: ["Retention rose steadily from Basic through Premium but dipped slightly at Elite.", "The gym offers four membership tiers.", "Basic members had the lowest retention of the four tiers.", "Standard tier retention was above 50 percent."], answer: 0, expl: "The rise then slight dip at Elite shows the leveling-off pattern." },
+    { passage: "A farm compared crop losses to pests under three treatments over one season:\n\n  No treatment — 340 kg lost\n  Treatment A — 210 kg lost\n  Treatment B — 95 kg lost\n\nThe farm's agronomist concluded that Treatment B was the more effective option for reducing losses.", prompt: "Which choice most effectively uses data from the table to support the conclusion?", choices: ["Treatment B reduced losses by 245 kg compared to no treatment, versus 130 kg for Treatment A.", "All three groups experienced some crop loss.", "No treatment resulted in the highest losses.", "The season lasted several months."], answer: 0, expl: "Comparing the size of each reduction directly shows Treatment B's advantage." },
   ],
   Inferences: [
     { passage: "Volcanic ash layers can be dated precisely, so geologists use them as time markers in sediment cores. When a core contains no ash layer for a long stretch, dating that interval relies on slower, less exact methods; consequently, ______", prompt: "Which choice most logically completes the text?", choices: ["ash layers are found in every core.", "age estimates for ash-free intervals carry wider uncertainty.", "geologists avoid sediment cores entirely.", "sediment accumulates faster near volcanoes."], answer: 1, expl: "Less exact methods imply greater uncertainty." },
@@ -338,6 +419,10 @@ const RW_POOL = {
     { passage: "Archaeologists excavating a coastal settlement found cooking hearths built well above the highest known tide line for that era, based on shell deposits and sediment layers. This suggests that ______", prompt: "Which choice most logically completes the text?", choices: ["the settlement's residents lacked knowledge of tides.", "the residents may have deliberately built away from flood-prone areas.", "the settlement was located far inland.", "the sea level in that era was lower than researchers assume."], answer: 1, expl: "Building above the known tide line suggests intentional flood avoidance." },
     { passage: "In a study of two otherwise similar schools, the one that started its day an hour later reported fewer tardiness incidents and higher first-period test scores, even though both schools had the same curriculum and teaching staff. This pattern suggests that ______", prompt: "Which choice most logically completes the text?", choices: ["curriculum quality has no effect on test scores.", "start time itself may influence student punctuality and morning performance.", "the later-starting school had better teachers.", "test scores are unrelated to sleep schedules."], answer: 1, expl: "With curriculum and staff held equal, start time is the likeliest explanation." },
     { passage: "A restaurant chain that removed calorie counts from its menu, then reinstated them a year later, saw average order size shrink slightly in the months after reinstatement but return to its prior level within six months. This pattern suggests that ______", prompt: "Which choice most logically completes the text?", choices: ["calorie counts permanently change customer ordering habits.", "the initial effect of calorie information on orders may fade as customers grow accustomed to seeing it.", "customers ignored the calorie counts entirely.", "the restaurant's menu prices changed during this period."], answer: 1, expl: "The effect fading after six months suggests it was temporary, not permanent." },
+    { passage: "A city's library system removed late fees entirely in 2019. Return rates for borrowed books, contrary to staff expectations, did not decline in the years that followed. This suggests that ______", prompt: "Which choice most logically completes the text?", choices: ["late fees were the primary reason people returned books on time.", "factors other than late fees may be what motivate most patrons to return books.", "the library system saw a drop in total borrowing.", "removing late fees had no effect on the library's budget."], answer: 1, expl: "If return rates held steady without fees, other motivations likely matter more." },
+    { passage: "A software company found that user churn dropped sharply after simplifying its onboarding flow from twelve steps to four, even though the simplified version explained fewer features upfront. This suggests that ______", prompt: "Which choice most logically completes the text?", choices: ["explaining more features always increases user retention.", "a shorter, simpler onboarding experience may matter more to new users than comprehensive feature explanations.", "the company's product quality declined.", "users prefer applications with no onboarding at all."], answer: 1, expl: "Churn dropped despite less explanation, pointing to simplicity mattering more." },
+    { passage: "Paleontologists comparing fossilized footprints found that individuals within the same herd varied enormously in stride length, more than body-size differences alone would predict. This suggests that ______", prompt: "Which choice most logically completes the text?", choices: ["all members of the herd were the same age.", "factors beyond body size, such as pace or terrain, likely influenced the animals' stride length.", "the footprints belonged to different species entirely.", "the herd traveled at a single, fixed speed."], answer: 1, expl: "Variation beyond what body size predicts points to other influencing factors." },
+    { passage: "A bakery that switched to a slower fermentation process saw a decline in daily output but received a sharp increase in returning customers over the following months. This suggests that ______", prompt: "Which choice most logically completes the text?", choices: ["customers did not notice any difference in the bread.", "the quality gained from slower fermentation may have mattered more to customers than the drop in quantity.", "the bakery's prices increased significantly.", "slower fermentation is always unprofitable."], answer: 1, expl: "More returning customers despite lower output points to a quality gain mattering more." },
   ],
   Boundaries: [
     { passage: "The 1908 Tunguska event flattened over 2,000 square kilometres of Siberian forest ______ no crater was ever found.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["forest, yet", "forest yet", "forest; yet,", "forest, yet,"], answer: 0, expl: "Comma + coordinating conjunction joins two independent clauses." },
@@ -351,6 +436,14 @@ const RW_POOL = {
     { passage: "The archive contains three types of historical records ______ tax ledgers, court transcripts, and personal letters.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["records,", "records:", "records;", "records"], answer: 1, expl: "A colon introduces a list after an independent clause." },
     { passage: "The lab results were inconclusive ______ the team decided to repeat the trial under stricter conditions.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["inconclusive;", "inconclusive,", "inconclusive so", "inconclusive, so,"], answer: 0, expl: "Two independent clauses may be joined by a semicolon alone." },
     { passage: "The negotiations dragged on for months ______ neither side was willing to compromise on the final clause.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["months, and", "months and", "months; and,", "months, and,"], answer: 0, expl: "Comma + coordinating conjunction joins two independent clauses." },
+    { passage: "The observatory's newest telescope captured images of the distant galaxy ______ astronomers had waited nearly a decade for an instrument sensitive enough to do so.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["galaxy, and", "galaxy and", "galaxy; and,", "galaxy, and,"], answer: 0, expl: "Comma + coordinating conjunction joins two independent clauses." },
+    { passage: "Although the manuscript was badly damaged by water ______ restorers were able to recover nearly all of the original text.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["damage;", "damage,", "damage", "damage:"], answer: 1, expl: "A comma follows an introductory dependent clause." },
+    { passage: "The kitchen stocked three essential spices for the recipe ______ cardamom, saffron, and sumac.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["spices,", "spices:", "spices;", "spices"], answer: 1, expl: "A colon introduces a list after an independent clause." },
+    { passage: "The negotiations continued past midnight ______ both delegations refused to leave without a signed agreement.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["midnight, because", "midnight because", "midnight; because,", "midnight, because,"], answer: 1, expl: "No comma is needed before a subordinating conjunction like 'because' introducing an essential clause." },
+    { passage: "Since the vineyard's soil lacked sufficient drainage ______ the winemakers installed an underground irrigation system.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["drainage;", "drainage,", "drainage", "drainage:"], answer: 1, expl: "A comma follows an introductory dependent clause." },
+    { passage: "The archive's newest acquisition included three rare items ______ a hand-drawn map, a merchant's diary, and a set of nautical charts.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["items,", "items:", "items;", "items"], answer: 1, expl: "A colon introduces a list after an independent clause." },
+    { passage: "The marathon route climbed steadily for the first ten miles ______ runners still praised the course for its scenic overlooks.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["miles, yet", "miles yet", "miles; yet,", "miles, yet,"], answer: 0, expl: "Comma + coordinating conjunction joins two independent clauses." },
+    { passage: "The startup's early prototypes failed repeatedly ______ the engineers refused to abandon the underlying design.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["repeatedly, but", "repeatedly but", "repeatedly; but,", "repeatedly, but,"], answer: 0, expl: "Comma + coordinating conjunction joins two independent clauses." },
   ],
   "Form, Structure, and Sense": [
     { passage: "Each of the museum's three restoration labs ______ its own climate-control system.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["have", "has", "having", "to have"], answer: 1, expl: "'Each' is singular → 'has'." },
@@ -363,6 +456,10 @@ const RW_POOL = {
     { passage: "The number of unresolved cases on the judge's docket ______ tripled since the courthouse reduced its staff.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["have", "has", "having", "were"], answer: 1, expl: "'The number' (singular subject) takes 'has'." },
     { passage: "A team of researchers, none of whom had previously studied the species, ______ surprised by how quickly the population recovered.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["were", "was", "being", "are"], answer: 1, expl: "'Team' acting as a single unit takes the singular 'was'." },
     { passage: "Either the mayor or her deputies ______ expected to address the press after the vote.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["is", "are", "being", "was"], answer: 1, expl: "The verb agrees with the nearer subject, 'deputies' (plural)." },
+    { passage: "Each of the laboratory's centrifuges ______ calibrated weekly to ensure accurate results.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["are", "is", "being", "were"], answer: 1, expl: "'Each' is singular → 'is'." },
+    { passage: "Neither the pilot nor the flight attendants ______ aware of the mechanical issue before takeoff.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["was", "were", "is", "being"], answer: 1, expl: "The verb agrees with the nearer subject, 'attendants' (plural)." },
+    { passage: "The archive of handwritten letters, along with several photographs, ______ stored in a temperature-controlled room.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["are", "is", "were", "being"], answer: 1, expl: "The subject is 'archive' (singular); the added phrase doesn't change the verb." },
+    { passage: "Every one of the interns ______ assigned a mentor during the first week of the program.", prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?", choices: ["were", "was", "being", "have been"], answer: 1, expl: "'Every one' is singular → 'was'." },
   ],
   Transitions: [
     { passage: "Solar panel efficiency drops as panels heat up. ______ some installations in hot climates now include passive cooling channels beneath the modules.", prompt: "Which choice completes the text with the most logical transition?", choices: ["Nevertheless,", "For this reason,", "Similarly,", "In contrast,"], answer: 1, expl: "The second sentence is a response to the first — causal." },
@@ -375,6 +472,12 @@ const RW_POOL = {
     { passage: "The drought reduced the region's grain harvest significantly. ______ livestock feed prices in the area increased sharply.", prompt: "Which choice completes the text with the most logical transition?", choices: ["Accordingly,", "Nevertheless,", "For example,", "Similarly,"], answer: 0, expl: "The price increase follows logically from the reduced harvest." },
     { passage: "Early trials of the drug showed promising results in reducing inflammation. ______ later, larger trials failed to replicate those results.", prompt: "Which choice completes the text with the most logical transition?", choices: ["Consequently,", "However,", "Additionally,", "Specifically,"], answer: 1, expl: "The later failure contrasts with the early promise." },
     { passage: "The team's defense allowed the fewest points in the league this season. ______ its offense ranked near the bottom in scoring.", prompt: "Which choice completes the text with the most logical transition?", choices: ["Similarly,", "Yet", "Therefore,", "For example,"], answer: 1, expl: "A strong defense paired with a weak offense is a contrast." },
+    { passage: "The museum's new wing was built entirely underground to preserve the historic facade above. ______ visitors often don't realize how large the museum actually is until they descend the main staircase.", prompt: "Which choice completes the text with the most logical transition?", choices: ["As a result,", "However,", "For example,", "Similarly,"], answer: 0, expl: "The underground design causes the surprise described next." },
+    { passage: "The startup's founders had no experience in the industry when they began. ______ within five years their company had become the market leader.", prompt: "Which choice completes the text with the most logical transition?", choices: ["Yet", "Thus", "For example,", "Similarly,"], answer: 0, expl: "Becoming market leader despite no experience is a contrast." },
+    { passage: "The satellite's fuel reserves were expected to last only two years. ______ engineers have kept it operational for over a decade through careful power management.", prompt: "Which choice completes the text with the most logical transition?", choices: ["Nevertheless,", "Consequently,", "For instance,", "Likewise,"], answer: 0, expl: "Lasting a decade contrasts with the two-year expectation." },
+    { passage: "Researchers found that the new fertilizer increased crop yield by 15 percent. ______ it also raised the cost of production by nearly the same margin.", prompt: "Which choice completes the text with the most logical transition?", choices: ["However,", "Therefore,", "Similarly,", "Specifically,"], answer: 0, expl: "The added cost is a drawback that contrasts with the yield benefit." },
+    { passage: "The city's oldest bridge was closed for structural repairs in March. ______ traffic on nearby streets increased by nearly 40 percent.", prompt: "Which choice completes the text with the most logical transition?", choices: ["As a result,", "Nonetheless,", "In contrast,", "For example,"], answer: 0, expl: "The traffic increase is a direct result of the closure." },
+    { passage: "The novel received little attention upon its initial release in 1962. ______ a film adaptation decades later introduced it to a much wider audience.", prompt: "Which choice completes the text with the most logical transition?", choices: ["Eventually,", "Similarly,", "Nevertheless,", "For example,"], answer: 0, expl: "'Eventually' signals the later shift from neglect to wide recognition." },
   ],
   "Rhetorical Synthesis": [
     { passage: "While researching, a student has taken these notes:\n\n  • Karakalpak yurt-making uses steam-bent willow frames.\n  • The craft was inscribed on UNESCO's intangible heritage list in 2023.\n  • Fewer than 40 master craftspeople remain.\n  • Apprenticeships now run in Nukus.", prompt: "The student wants to emphasize efforts to sustain the craft. Which choice most effectively uses the notes to accomplish this goal?", choices: ["Karakalpak yurt frames are steam-bent from willow.", "Although fewer than 40 masters remain, apprenticeships in Nukus aim to pass the craft on.", "UNESCO inscribed the craft in 2023.", "Yurt-making is a traditional Karakalpak craft."], answer: 1, expl: "Only this foregrounds an effort to sustain the craft." },
@@ -385,6 +488,10 @@ const RW_POOL = {
     { passage: "While researching, a student has taken these notes:\n\n  • The reservoir was built in 1968 to supply water to three counties.\n  • A prolonged drought in the 2010s reduced its capacity by half.\n  • Engineers installed a new filtration system to reduce water loss.\n  • Water loss dropped by 22 percent after installation.", prompt: "The student wants to emphasize the effectiveness of the engineering response to the drought. Which choice most effectively uses the notes to accomplish this goal?", choices: ["The reservoir was built in 1968.", "A drought in the 2010s cut the reservoir's capacity in half.", "After the new filtration system was installed, water loss fell by 22 percent.", "The reservoir supplies water to three counties."], answer: 2, expl: "Only this choice shows a measured effect of the engineering response." },
     { passage: "While researching, a student has taken these notes:\n\n  • The clinic began as a single room staffed by volunteers.\n  • It served fewer than 50 patients in its first year.\n  • A grant in 2005 funded a permanent building and paid staff.\n  • The clinic now serves over 12,000 patients annually.", prompt: "The student wants to illustrate how much the clinic has grown since its founding. Which choice most effectively uses the notes to accomplish this goal?", choices: ["The clinic began in a single room staffed by volunteers.", "From serving fewer than 50 patients in its first year, the clinic now serves over 12,000 annually.", "A grant in 2005 funded a permanent building.", "The clinic relied on volunteers early on."], answer: 1, expl: "Only this choice directly contrasts the founding scale with today's scale." },
     { passage: "While researching, a student has taken these notes:\n\n  • The dam was proposed in 1958 but delayed by funding disputes for a decade.\n  • Construction finally began in 1969.\n  • The project displaced roughly 3,000 residents from the valley.\n  • Resettlement compensation was later found to be inadequate by an independent review.", prompt: "The student wants to highlight a lasting controversy surrounding the dam's construction. Which choice most effectively uses the notes to accomplish this goal?", choices: ["The dam was proposed in 1958.", "Funding disputes delayed construction for a decade.", "An independent review later found that compensation for the roughly 3,000 residents displaced by the project was inadequate.", "Construction began in 1969."], answer: 2, expl: "Only this choice describes a lasting controversy." },
+    { passage: "While researching, a student has taken these notes:\n\n  • The observatory was built in 1889 on a remote mountaintop.\n  • Its original telescope lens took three years to grind by hand.\n  • Light pollution from a nearby city now limits its research use.\n  • The observatory has shifted its mission toward public education tours.", prompt: "The student wants to explain how the observatory adapted to a changing circumstance. Which choice most effectively uses the notes to accomplish this goal?", choices: ["The observatory was built in 1889 on a remote mountaintop.", "As light pollution from a nearby city limited its research value, the observatory shifted its mission toward public education tours.", "The original telescope lens took three years to grind by hand.", "The observatory sits on a mountaintop."], answer: 1, expl: "Only this choice explains the adaptation to changing circumstances." },
+    { passage: "While researching, a student has taken these notes:\n\n  • A small publishing house rejected the novel eleven times.\n  • The author self-published the book in 2015.\n  • Word-of-mouth sales grew steadily over eighteen months.\n  • A major publisher acquired the rights in 2017.", prompt: "The student wants to emphasize the novel's unlikely path to success. Which choice most effectively uses the notes to accomplish this goal?", choices: ["The author self-published the novel in 2015.", "After eleven rejections, the self-published novel's word-of-mouth success led a major publisher to acquire it two years later.", "A major publisher acquired the rights in 2017.", "The novel was rejected by a small publishing house."], answer: 1, expl: "Only this choice traces the full unlikely path to success." },
+    { passage: "While researching, a student has taken these notes:\n\n  • The bridge design used a new type of flexible steel alloy.\n  • Early tests showed the alloy resisted metal fatigue better than standard steel.\n  • The bridge has required no major structural repairs in 40 years.\n  • Similar alloys are now used in several other bridges.", prompt: "The student wants to highlight the alloy's long-term success. Which choice most effectively uses the notes to accomplish this goal?", choices: ["The bridge used a new type of flexible steel alloy.", "Forty years after its early tests showed strong fatigue resistance, the bridge has needed no major structural repairs.", "Similar alloys are now used in other bridges.", "The alloy resisted metal fatigue in early tests."], answer: 1, expl: "Only this choice connects the early promise to the long-term outcome." },
+    { passage: "While researching, a student has taken these notes:\n\n  • A rural clinic had only one doctor serving 5,000 patients.\n  • The clinic introduced a telemedicine program in 2018.\n  • Patient wait times for consultations dropped by half.\n  • The program now serves patients in three neighboring villages.", prompt: "The student wants to emphasize the impact of the telemedicine program. Which choice most effectively uses the notes to accomplish this goal?", choices: ["The clinic had only one doctor serving 5,000 patients.", "Since introducing telemedicine in 2018, the clinic has cut wait times in half and now serves patients in three neighboring villages.", "The clinic introduced telemedicine in 2018.", "The program now serves patients in three neighboring villages."], answer: 1, expl: "Only this choice combines both measures of the program's impact." },
   ],
 };
 const MATH_SKILL_MAP = {
@@ -392,15 +499,17 @@ const MATH_SKILL_MAP = {
   "Problem-Solving and Data Analysis": "Ratios, rates, data", "Geometry and Trigonometry": "Lines, angles, circles",
 };
 
+// Digital SAT: har bir R&W moduli — 27 savol / 32 daqiqa; har bir Math moduli — 22 savol / 35 daqiqa.
+// Savollar tartibi haqiqiy SAT'dagidek: Craft & Structure → Information & Ideas → Standard English Conventions → Expression of Ideas.
 const RW_BLUEPRINT = [
-  ...Array(5).fill(["Craft and Structure", "Words in Context"]), ...Array(2).fill(["Craft and Structure", "Text Structure and Purpose"]), ...Array(1).fill(["Craft and Structure", "Cross-Text Connections"]),
-  ...Array(2).fill(["Information and Ideas", "Central Ideas and Details"]), ...Array(3).fill(["Information and Ideas", "Command of Evidence (Textual)"]), ...Array(1).fill(["Information and Ideas", "Command of Evidence (Quantitative)"]), ...Array(1).fill(["Information and Ideas", "Inferences"]),
+  ...Array(4).fill(["Craft and Structure", "Words in Context"]), ...Array(2).fill(["Craft and Structure", "Text Structure and Purpose"]), ...Array(1).fill(["Craft and Structure", "Cross-Text Connections"]),
+  ...Array(2).fill(["Information and Ideas", "Central Ideas and Details"]), ...Array(2).fill(["Information and Ideas", "Command of Evidence (Textual)"]), ...Array(1).fill(["Information and Ideas", "Command of Evidence (Quantitative)"]), ...Array(2).fill(["Information and Ideas", "Inferences"]),
   ...Array(4).fill(["Standard English Conventions", "Boundaries"]), ...Array(3).fill(["Standard English Conventions", "Form, Structure, and Sense"]),
-  ...Array(3).fill(["Expression of Ideas", "Transitions"]), ...Array(2).fill(["Expression of Ideas", "Rhetorical Synthesis"]),
+  ...Array(3).fill(["Expression of Ideas", "Transitions"]), ...Array(3).fill(["Expression of Ideas", "Rhetorical Synthesis"]),
 ];
 const MATH_BLUEPRINT = [
-  ...Array(6).fill(["Algebra", "Linear equations & systems"]), ...Array(6).fill(["Advanced Math", "Nonlinear functions"]),
-  ...Array(5).fill(["Problem-Solving and Data Analysis", "Ratios, rates, data"]), ...Array(5).fill(["Geometry and Trigonometry", "Lines, angles, circles"]),
+  ...Array(7).fill(["Algebra", "Linear equations & systems"]), ...Array(7).fill(["Advanced Math", "Nonlinear functions"]),
+  ...Array(4).fill(["Problem-Solving and Data Analysis", "Ratios, rates, data"]), ...Array(4).fill(["Geometry and Trigonometry", "Lines, angles, circles"]),
 ];
 const MODULES = [
   { id: "rw1", section: "Reading and Writing", label: "Section 1, Module 1", minutes: 32, kind: "rw" },
@@ -421,7 +530,7 @@ function buildModule(mod, testId, diffPath) {
 function buildModuleCached(mod, testId, diffPath) {
   if (mod.kind === "break") return [];
   const basis = mod.adaptive ? (diffPath || "easy") : "standard";
-  const cacheKey = `sws_qcache_${testId}_${mod.id}_${basis}`;
+  const cacheKey = `sws_qcache_v2_${testId}_${mod.id}_${basis}`;
   const cached = loadLocal(cacheKey, null);
   if (cached) return cached;
   const fresh = buildModule(mod, testId, diffPath);
@@ -504,9 +613,75 @@ const VOCAB_EXTRA = [
 
 function loadLocal(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; } }
 function saveLocal(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {} }
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth <= 680);
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 680);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  return isMobile;
+}
+
+function useAppleMotion(rootRef) {
+  useEffect(() => {
+    const root = rootRef.current; if (!root) return;
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const items = root.querySelectorAll("[data-reveal]");
+    if (reduce || !("IntersectionObserver" in window)) { items.forEach((el) => el.classList.add("sws-in")); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("sws-in"); io.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
+    items.forEach((el) => io.observe(el));
+    // Scroll bilan bog'langan effektlar: parallaks va "zoom-in" (Apple mahsulot sahifalaridagidek)
+    const scroller = root.parentElement && root.parentElement.scrollHeight > root.parentElement.clientHeight + 1 ? root.parentElement : window;
+    const par = root.querySelectorAll("[data-parallax]");
+    const zoom = root.querySelectorAll("[data-zoom]");
+    const header = root.querySelector("[data-glass]");
+    let raf = 0;
+    const tick = () => {
+      raf = 0; const vh = window.innerHeight;
+      par.forEach((el) => { const r = el.getBoundingClientRect(); const f = parseFloat(el.dataset.parallax) || 0.15; el.style.transform = `translate3d(0, ${((r.top + r.height / 2 - vh / 2) * -f).toFixed(1)}px, 0)`; });
+      zoom.forEach((el) => {
+        const r = el.getBoundingClientRect(); const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.75)));
+        el.style.transform = `perspective(1400px) rotateX(${((1 - p) * 16).toFixed(2)}deg) scale(${(0.86 + 0.14 * p).toFixed(3)})`;
+        el.style.opacity = (0.35 + 0.65 * p).toFixed(3);
+      });
+      if (header) { const y = scroller === window ? window.scrollY : scroller.scrollTop; header.style.boxShadow = y > 8 ? "0 8px 30px -18px rgba(22,32,77,0.35)" : "none"; }
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    tick();
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => { io.disconnect(); scroller.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); if (raf) cancelAnimationFrame(raf); };
+  }, []);
+}
+
+function CountUp({ to, duration = 1600 }) {
+  const ref = useRef(null);
+  const target = parseInt(String(to).replace(/\D/g, ""), 10) || 0;
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    if (!("IntersectionObserver" in window)) { setVal(target); return; }
+    let raf = 0;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return; io.disconnect();
+      const t0 = performance.now();
+      const step = (t) => { const k = Math.min(1, (t - t0) / duration); setVal(Math.round(target * (1 - Math.pow(1 - k, 4)))); if (k < 1) raf = requestAnimationFrame(step); };
+      raf = requestAnimationFrame(step);
+    }, { threshold: 0.4 });
+    io.observe(el);
+    return () => { io.disconnect(); if (raf) cancelAnimationFrame(raf); };
+  }, [target]);
+  return <span ref={ref}>{val}</span>;
+}
 
 function Landing({ onStart }) {
+  const motionRef = useRef(null);
+  useAppleMotion(motionRef);
   const [openFaq, setOpenFaq] = useState(0);
+  const isMobile = useIsMobile();
   const features = [
     { icon: Target, t: "Shaxsiy reja", d: "Zaif domenlaringizga qarab kunlik reja avtomatik tuziladi." },
     { icon: FileText, t: "200 ta mock test", d: "Haqiqiy Digital SAT tuzilishi: 2 modul R&W, tanaffus, 2 modul Math." },
@@ -525,39 +700,41 @@ function Landing({ onStart }) {
     { q: "To'lovni qanday amalga oshiraman?", a: "Standard yoki Premium tarifni tanlab, karta orqali oylik obuna sifatida to'laysiz." },
   ];
   return (
-    <div style={{ fontFamily: FONT, background: B.bg, color: B.text }}>
-      <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 32px", background: "#fff", borderBottom: `1px solid ${B.border}`, position: "sticky", top: 0, zIndex: 20 }}>
+    <div ref={motionRef} style={{ fontFamily: FONT, background: B.bg, color: B.text, overflowX: "hidden" }}>
+      <header data-glass style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 32px", background: "rgba(255,255,255,0.72)", backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)", borderBottom: `1px solid ${B.border}`, position: "sticky", top: 0, zIndex: 20, transition: "box-shadow 0.4s ease" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}><Mascot size={34} /><span style={{ fontSize: 17, fontWeight: 800 }}>{BRAND_NAME}</span></div>
         <button onClick={onStart} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 10, padding: "10px 20px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Bepul boshlash</button>
       </header>
-      <section style={{ maxWidth: 1060, margin: "0 auto", padding: "58px 32px 36px", display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 40, alignItems: "center" }}>
-        <div>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#F2EAFB", color: B.plum, padding: "6px 14px", borderRadius: 20, fontSize: 12.5, fontWeight: 700, marginBottom: 18 }}><Sparkles size={13} /> 2 ta to'liq mock test — bepul</div>
-          <h1 style={{ fontSize: 42, lineHeight: 1.14, fontWeight: 800, margin: "0 0 16px", letterSpacing: -0.5 }}>SAT'ga haqiqiy imtihon sharoitida tayyorlaning</h1>
-          <p style={{ fontSize: 16, color: B.muted, lineHeight: 1.6, margin: "0 0 26px", maxWidth: 470 }}>200 ta mock test, adaptiv ikkinchi modul va javoblaringizdan hisoblanadigan haqiqiy ball hisoboti.</p>
-          <button onClick={onStart} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "14px 26px", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, fontFamily: FONT }}>Bepul boshlash <ChevronRight size={17} /></button>
+      <section style={{ position: "relative", maxWidth: 1060, margin: "0 auto", padding: "58px 32px 36px", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr 0.9fr", gap: 40, alignItems: "center" }}>
+        <div className="sws-blob" style={{ width: 340, height: 340, background: "#B28BE0", top: -60, left: -120 }} />
+        <div className="sws-blob" style={{ width: 300, height: 300, background: "#F5A623", bottom: -80, right: -60, animationDelay: "-6s", opacity: 0.3 }} />
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div className="sws-hero-up" style={{ "--d": "0ms", display: "inline-flex", alignItems: "center", gap: 6, background: "#F2EAFB", color: B.plum, padding: "6px 14px", borderRadius: 20, fontSize: 12.5, fontWeight: 700, marginBottom: 18 }}><Sparkles size={13} /> {LAUNCH_FREE ? "Sinov davri — barcha imkoniyatlar bepul" : "2 ta to'liq mock test — bepul"}</div>
+          <h1 className="sws-hero-up" style={{ "--d": "120ms", fontSize: isMobile ? 30 : 48, lineHeight: 1.1, fontWeight: 800, margin: "0 0 16px", letterSpacing: -1 }}>SAT'ga <span className="sws-gradient-text">haqiqiy imtihon sharoitida</span> tayyorlaning</h1>
+          <p className="sws-hero-up" style={{ "--d": "260ms",  fontSize: 16, color: B.muted, lineHeight: 1.6, margin: "0 0 26px", maxWidth: 470 }}>200 ta mock test, adaptiv ikkinchi modul va javoblaringizdan hisoblanadigan haqiqiy ball hisoboti.</p>
+          <button className="sws-hero-up" onClick={onStart} style={{ "--d": "400ms", background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "14px 26px", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, fontFamily: FONT }}>Bepul boshlash <ChevronRight size={17} /></button>
         </div>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 24, boxShadow: "0 20px 44px -22px rgba(22,32,77,0.3)", position: "relative" }}>
-          <div style={{ position: "absolute", top: -24, right: -12 }}><Mascot size={74} /></div>
+        <div data-parallax="0.08" style={{ position: "relative", zIndex: 1 }}><div className="sws-tilt-in" style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 24, boxShadow: "0 30px 60px -28px rgba(22,32,77,0.4)", position: "relative" }}>
+          <div className="sws-float" style={{ position: "absolute", top: -24, right: -12 }}><Mascot size={74} /></div>
           <div style={{ fontSize: 12.5, color: B.muted, marginBottom: 6 }}>Namuna ball hisoboti</div>
-          <div style={{ fontSize: 40, fontWeight: 800, marginBottom: 14 }}>1420</div>
+          <div style={{ fontSize: 40, fontWeight: 800, marginBottom: 14 }}><CountUp to={1420} duration={2000} /></div>
           {[["Reading & Writing", 710, 71], ["Math", 710, 71]].map(([s, sc, v]) => (
             <div key={s} style={{ marginBottom: 12 }}>
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, marginBottom: 5 }}><span>{s}</span><span style={{ fontWeight: 700 }}>{sc}</span></div>
-              <div style={{ height: 7, background: B.bg, borderRadius: 4 }}><div style={{ height: 7, width: `${v}%`, background: B.plum, borderRadius: 4 }} /></div>
+              <div style={{ height: 7, background: B.bg, borderRadius: 4 }}><div className="sws-bar" style={{ height: 7, width: `${v}%`, background: `linear-gradient(90deg, ${B.plum}, #C2185B)`, borderRadius: 4 }} /></div>
             </div>
           ))}
-        </div>
+        </div></div>
       </section>
       <section style={{ background: B.navy, color: "#fff", padding: 30 }}>
-        <div style={{ maxWidth: 1060, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 20, textAlign: "center" }}>
-          {[["200", "mock test"], ["500", "savol / domen (Premium)"], [`${VOCAB_CORE.length + VOCAB_EXTRA.length}`, "lug'at so'zi"], ["9", "o'quv vositasi"]].map(([n, l]) => (
-            <div key={l}><div style={{ fontSize: 26, fontWeight: 800 }}>{n}</div><div style={{ fontSize: 12.5, opacity: 0.75 }}>{l}</div></div>
+        <div style={{ maxWidth: 1060, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(4,1fr)", gap: 20, textAlign: "center" }}>
+          {[["200", "mock test"], ["500", "savol / domen (Premium)"], [`${VOCAB_CORE.length + VOCAB_EXTRA.length}`, "lug'at so'zi"], ["9", "o'quv vositasi"]].map(([n, l], i) => (
+            <div key={l} data-reveal style={{ "--d": `${i * 90}ms` }}><div style={{ fontSize: 30, fontWeight: 800, letterSpacing: -0.5 }}><CountUp to={n} />{/\+/.test(n) ? "+" : ""}</div><div style={{ fontSize: 12.5, opacity: 0.75 }}>{l}</div></div>
           ))}
         </div>
       </section>
       <section style={{ maxWidth: 900, margin: "0 auto", padding: "50px 32px 10px" }}>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 30, display: "grid", gridTemplateColumns: "1fr auto", gap: 24, alignItems: "center", boxShadow: "0 16px 36px -20px rgba(22,32,77,0.25)" }}>
+        <div data-zoom style={{ transformOrigin: "center bottom", willChange: "transform, opacity", background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 30, display: "grid", gridTemplateColumns: "1fr auto", gap: 24, alignItems: "center", boxShadow: "0 16px 36px -20px rgba(22,32,77,0.25)" }}>
           <div>
             <div style={{ display: "flex", gap: 3, marginBottom: 10 }}>{Array.from({ length: 5 }).map((_, i) => <Star key={i} size={15} fill={B.gold} color={B.gold} />)}</div>
             <p style={{ fontSize: 16.5, lineHeight: 1.6, margin: "0 0 14px", fontStyle: "italic" }}>"Adaptiv modul va domenlar bo'yicha aniq tahlil tufayli qayerga e'tibor berishni aniq bilardim."</p>
@@ -572,10 +749,10 @@ function Landing({ onStart }) {
         </div>
       </section>
       <section style={{ maxWidth: 1060, margin: "0 auto", padding: "58px 32px" }}>
-        <h2 style={{ fontSize: 28, fontWeight: 800, textAlign: "center", margin: "0 0 36px" }}>Platformada nima bor</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 18 }}>
-          {features.map((f) => (
-            <div key={f.t} style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 22 }}>
+        <h2 data-reveal style={{ fontSize: 28, fontWeight: 800, textAlign: "center", margin: "0 0 36px" }}>Platformada nima bor</h2>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 18 }}>
+          {features.map((f, i) => (
+            <div key={f.t} data-reveal className="sws-lift" style={{ "--d": `${(i % 3) * 110 + Math.floor(i / 3) * 60}ms`, background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 22 }}>
               <div style={{ width: 40, height: 40, borderRadius: 10, background: "#F2EAFB", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}><f.icon size={19} color={B.plum} /></div>
               <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>{f.t}</div>
               <div style={{ fontSize: 13.5, color: B.muted, lineHeight: 1.55 }}>{f.d}</div>
@@ -584,14 +761,20 @@ function Landing({ onStart }) {
         </div>
       </section>
       <section style={{ background: "#fff", borderTop: `1px solid ${B.border}`, borderBottom: `1px solid ${B.border}`, padding: "52px 32px" }}>
-        <h2 style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 8px" }}>SAT ball kalkulyatori</h2>
-        <p style={{ textAlign: "center", color: B.muted, fontSize: 13.5, margin: "0 0 26px" }}>Ro'yxatdan o'tmasdan sinab ko'ring</p>
-        <ScoreCalculator />
+        <h2 data-reveal style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 8px" }}>SAT ball kalkulyatori</h2>
+        <p data-reveal style={{ "--d": "100ms", textAlign: "center", color: B.muted, fontSize: 13.5, margin: "0 0 26px" }}>Ro'yxatdan o'tmasdan sinab ko'ring</p>
+        <div data-reveal="zoom"><ScoreCalculator /></div>
       </section>
       <section style={{ maxWidth: 1060, margin: "0 auto", padding: "20px 32px 58px" }}>
-        <h2 style={{ fontSize: 26, fontWeight: 800, textAlign: "center", margin: "0 0 30px" }}>Tarif rejalari</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
-          <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 16, padding: 24 }}>
+        <h2 data-reveal style={{ fontSize: 26, fontWeight: 800, textAlign: "center", margin: "0 0 30px" }}>Tarif rejalari</h2>
+        {LAUNCH_FREE && (
+          <div data-reveal="zoom" style={{ background: "#E6F6EE", border: `1px solid ${B.green}55`, borderRadius: 14, padding: "14px 18px", margin: "-12px auto 24px", maxWidth: 640, textAlign: "center", fontSize: 14, fontWeight: 700, color: B.text }}>
+            🎉 Sinov davri: hozircha barcha imkoniyatlar — 200 ta mock test, to'liq savollar banki, ikkala lug'at va AI repetitor — <span style={{ color: B.green }}>bepul!</span>
+            <div style={{ marginTop: 10 }}><button onClick={onStart} style={{ background: B.green, color: "#fff", border: "none", borderRadius: 10, padding: "10px 22px", fontSize: 13.5, fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>Bepul boshlash</button></div>
+          </div>
+        )}
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+          <div data-reveal className="sws-lift" style={{ "--d": "0ms", background: "#fff", border: `1px solid ${B.border}`, borderRadius: 16, padding: 24 }}>
             <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 6 }}>Bepul</div>
             <div style={{ fontSize: 26, fontWeight: 800, marginBottom: 14 }}>0 so'm</div>
             {["2 ta mock test", "Har domendan 10 savol", "10 ta lug'at so'zi", "AI repetitor — 5 ta savol"].map((x) => (
@@ -599,7 +782,7 @@ function Landing({ onStart }) {
             ))}
             <button onClick={onStart} style={{ marginTop: 10, width: "100%", background: "#fff", border: `1px solid ${B.border}`, borderRadius: 10, padding: 11, fontSize: 13.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT, color: B.text }}>Boshlash</button>
           </div>
-          <div style={{ background: "#fff", border: `2px solid ${B.plum}`, borderRadius: 16, padding: 24, position: "relative" }}>
+          <div data-reveal className="sws-lift" style={{ "--d": "120ms", background: "#fff", border: `2px solid ${B.plum}`, borderRadius: 16, padding: 24, position: "relative" }}>
             <div style={{ position: "absolute", top: 16, right: 16, background: B.plum, color: "#fff", fontSize: 10.5, fontWeight: 800, padding: "4px 10px", borderRadius: 10 }}>OMMABOP</div>
             <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 6 }}>Standard</div>
             <div style={{ fontSize: 26, fontWeight: 800, marginBottom: 14 }}>{PRICE.standard} <span style={{ fontSize: 13, fontWeight: 600, color: B.muted }}>so'm/oy</span></div>
@@ -608,7 +791,7 @@ function Landing({ onStart }) {
             ))}
             <button onClick={onStart} style={{ marginTop: 10, width: "100%", background: B.plum, color: "#fff", border: "none", borderRadius: 10, padding: 11, fontSize: 13.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Standardni olish</button>
           </div>
-          <div style={{ background: B.navy, color: "#fff", borderRadius: 16, padding: 24 }}>
+          <div data-reveal className="sws-lift" style={{ "--d": "240ms", background: B.navy, color: "#fff", borderRadius: 16, padding: 24 }}>
             <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 6 }}>Premium</div>
             <div style={{ fontSize: 26, fontWeight: 800, marginBottom: 14 }}>{PRICE.premium} <span style={{ fontSize: 13, fontWeight: 600, opacity: 0.7 }}>so'm/oy</span></div>
             {["200 ta mock test — barchasi", "Har domendan 500 savol", "Ikkala lug'at papkasi", "AI repetitor — cheksiz, ustuvor"].map((x) => (
@@ -619,19 +802,19 @@ function Landing({ onStart }) {
         </div>
       </section>
       <section style={{ maxWidth: 900, margin: "0 auto", padding: "56px 32px" }}>
-        <h2 style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 8px" }}>Yolg'iz emassiz</h2>
-        <p style={{ textAlign: "center", color: B.muted, fontSize: 13.5, margin: "0 0 26px" }}>Boshqa o'quvchilar bilan bir vaqtda mashq qiling va bir-biringizni qo'llab-quvvatlang</p>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 16, padding: 22, boxShadow: "0 12px 28px -18px rgba(22,32,77,0.25)" }}>
+        <h2 data-reveal style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 8px" }}>Yolg'iz emassiz</h2>
+        <p data-reveal style={{ "--d": "100ms", textAlign: "center", color: B.muted, fontSize: 13.5, margin: "0 0 26px" }}>Boshqa o'quvchilar bilan bir vaqtda mashq qiling va bir-biringizni qo'llab-quvvatlang</p>
+        <div data-reveal style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 16, padding: 22, boxShadow: "0 12px 28px -18px rgba(22,32,77,0.25)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, paddingBottom: 14, borderBottom: `1px solid ${B.bg}` }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: B.green }} />
+            <span className="sws-pulse" style={{ width: 8, height: 8, borderRadius: "50%", background: B.green }} />
             <span style={{ fontSize: 12.5, fontWeight: 700, color: B.muted }}>3 kishi hozir onlayn</span>
           </div>
           {[
             ["Malika", "Advanced math to'plamini tugatdim, kimdir tekshirib bera oladimi?"],
             ["Jasur", "8-savolda ajoyib qisqa yo'l bor edi 👍"],
             ["Nodira", "Grammatika bo'limida boundaries mavzusi hali qiyin, kimda maslahat bor?"],
-          ].map(([n, t]) => (
-            <div key={n} style={{ display: "flex", gap: 10, marginBottom: 14, alignItems: "flex-start" }}>
+          ].map(([n, t], i) => (
+            <div key={n} data-reveal={i % 2 ? "right" : "left"} style={{ "--d": `${250 + i * 180}ms`, display: "flex", gap: 10, marginBottom: 14, alignItems: "flex-start" }}>
               <div style={{ width: 30, height: 30, borderRadius: "50%", background: "#F2EAFB", color: B.plum, fontSize: 12.5, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{n[0]}</div>
               <div>
                 <div style={{ fontSize: 12.5, fontWeight: 700, marginBottom: 2 }}>{n}</div>
@@ -645,8 +828,8 @@ function Landing({ onStart }) {
 
       <section style={{ background: "#fff", borderTop: `1px solid ${B.border}`, padding: "56px 32px" }}>
         <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 16px" }}>Bizning maqsadimiz</h2>
-          <p style={{ fontSize: 14.5, color: B.muted, lineHeight: 1.7 }}>
+          <h2 data-reveal style={{ fontSize: 24, fontWeight: 800, margin: "0 0 16px" }}>Bizning maqsadimiz</h2>
+          <p data-reveal style={{ "--d": "120ms", fontSize: 14.5, color: B.muted, lineHeight: 1.7 }}>
             SAT'ga tayyorgarlik ko'rish qimmat va yolg'iz his qilinishi mumkin. Biz bu platformani shu ikkala muammoni hal qilish uchun qurdik:
             har bir o'quvchi uchun tushunarli narx va bir-biriga yordam beradigan jamiyat. Maqsadimiz — har bir o'quvchi o'z salohiyatiga
             yetguncha, aniq reja va to'g'ri vositalar bilan ta'minlash.
@@ -656,13 +839,13 @@ function Landing({ onStart }) {
 
       <section style={{ background: "#fff", borderTop: `1px solid ${B.border}`, padding: "52px 32px" }}>
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 26px" }}>Ko'p so'raladigan savollar</h2>
+          <h2 data-reveal style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 26px" }}>Ko'p so'raladigan savollar</h2>
           {faqs.map((f, i) => (
-            <div key={f.q} style={{ borderBottom: `1px solid ${B.border}` }}>
+            <div key={f.q} data-reveal style={{ "--d": `${i * 80}ms`,  borderBottom: `1px solid ${B.border}` }}>
               <button onClick={() => setOpenFaq(openFaq === i ? -1 : i)} style={{ width: "100%", background: "transparent", border: "none", padding: "16px 4px", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", fontSize: 14.5, fontWeight: 700, color: B.text, textAlign: "left", fontFamily: FONT }}>
                 {f.q}<ChevronDown size={17} style={{ transform: openFaq === i ? "rotate(180deg)" : "none", transition: "0.2s", flexShrink: 0 }} />
               </button>
-              {openFaq === i && <p style={{ margin: "0 4px 16px", fontSize: 13.5, color: B.muted, lineHeight: 1.6 }}>{f.a}</p>}
+              {openFaq === i && <p className="sws-fade-in" style={{ margin: "0 4px 16px", fontSize: 13.5, color: B.muted, lineHeight: 1.6 }}>{f.a}</p>}
             </div>
           ))}
         </div>
@@ -696,38 +879,38 @@ function PaymentModal({ onClose, onPaid, suggestedTier }) {
   const [plan, setPlan] = useState(suggestedTier === "premium" ? "premium" : "standard");
   const [step, setStep] = useState("plan");
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(22,32,77,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, fontFamily: FONT }}>
-      <div style={{ background: "#fff", borderRadius: 18, width: 440, maxWidth: "90vw", padding: 28, position: "relative" }}>
+    <div className="sws-app" style={{ position: "fixed", inset: 0, background: "rgba(22,32,77,0.35)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, fontFamily: FONT }}>
+      <div className="sws-fade-in" style={{ background: "#fff", borderRadius: 24, boxShadow: "0 40px 80px -30px rgba(22,32,77,0.45)", width: 440, maxWidth: "90vw", padding: 28, position: "relative" }}>
         <button onClick={onClose} style={{ position: "absolute", top: 16, right: 16, background: "transparent", border: "none", cursor: "pointer", color: B.muted }}><X size={18} /></button>
         {step === "plan" ? (
           <>
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}><Lock size={28} color={B.plum} /></div>
-            <h3 style={{ textAlign: "center", fontSize: 18, fontWeight: 800, margin: "0 0 16px", color: B.text }}>Tarifni tanlang</h3>
+            <h3 style={{ textAlign: "center", fontSize: 20, fontWeight: 800, margin: "0 0 16px", color: B.text }}>Tarifni tanlang</h3>
             {[["standard", "Standard", PRICE.standard, "100 mock test, kengaytirilgan bank, asosiy lug'at"], ["premium", "Premium", PRICE.premium, "200 mock test, cheksiz bank, ikkala lug'at"]].map(([id, name, price, desc]) => (
-              <div key={id} onClick={() => setPlan(id)} style={{ border: `2px solid ${plan === id ? B.plum : B.border}`, borderRadius: 12, padding: 14, marginBottom: 10, cursor: "pointer", background: plan === id ? "#F8F5FD" : "#fff" }}>
+              <div key={id} onClick={() => setPlan(id)} style={{ border: `2px solid ${plan === id ? B.plum : B.border}`, borderRadius: 16, padding: 14, marginBottom: 10, cursor: "pointer", background: plan === id ? "#F8F5FD" : "#fff" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ fontWeight: 800, fontSize: 14.5 }}>{name}</span><span style={{ fontWeight: 800, fontSize: 14.5, color: B.plum }}>{price} so'm/oy</span>
+                  <span style={{ fontWeight: 800, fontSize: 16 }}>{name}</span><span style={{ fontWeight: 800, fontSize: 16, color: B.plum }}>{price} so'm/oy</span>
                 </div>
-                <div style={{ fontSize: 12, color: B.muted }}>{desc}</div>
+                <div style={{ fontSize: 13.5, color: B.muted }}>{desc}</div>
               </div>
             ))}
-            <button onClick={() => setStep("card")} style={{ width: "100%", background: B.plum, color: "#fff", border: "none", borderRadius: 10, padding: 13, fontSize: 14.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 4 }}>
+            <button onClick={() => setStep("card")} style={{ width: "100%", background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: 13, fontSize: 16, fontWeight: 700, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 4 }}>
               <CreditCard size={17} /> To'lovga o'tish
             </button>
           </>
         ) : (
           <>
-            <h3 style={{ fontSize: 18, fontWeight: 800, margin: "0 0 18px", color: B.text }}>Karta ma'lumotlari — {plan === "premium" ? "Premium" : "Standard"}</h3>
+            <h3 style={{ fontSize: 20, fontWeight: 800, margin: "0 0 18px", color: B.text }}>Karta ma'lumotlari — {plan === "premium" ? "Premium" : "Standard"}</h3>
             {[["Karta raqami", "8600 •••• •••• ••••"], ["Amal qilish muddati", "MM / YY"], ["Karta egasi", "ISM FAMILIYA"]].map(([l, p]) => (
               <div key={l} style={{ marginBottom: 12 }}>
-                <label style={{ fontSize: 12.5, color: B.muted, display: "block", marginBottom: 5 }}>{l}</label>
-                <input placeholder={p} style={{ width: "100%", padding: "11px 12px", border: `1px solid ${B.border}`, borderRadius: 9, fontSize: 14, fontFamily: FONT, boxSizing: "border-box" }} />
+                <label style={{ fontSize: 14, color: B.muted, display: "block", marginBottom: 5 }}>{l}</label>
+                <input placeholder={p} style={{ width: "100%", padding: "11px 12px", border: `1px solid ${B.border}`, borderRadius: 12, fontSize: 15.5, fontFamily: FONT, boxSizing: "border-box" }} />
               </div>
             ))}
-            <button onClick={() => onPaid(plan)} style={{ width: "100%", marginTop: 8, background: B.green, color: "#fff", border: "none", borderRadius: 10, padding: 13, fontSize: 14.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>
+            <button onClick={() => onPaid(plan)} style={{ width: "100%", marginTop: 8, background: B.green, color: "#fff", border: "none", borderRadius: 12, padding: 13, fontSize: 16, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>
               {plan === "premium" ? PRICE.premium : PRICE.standard} so'm to'lash
             </button>
-            <p style={{ fontSize: 11.5, color: B.muted, textAlign: "center", marginTop: 12, marginBottom: 0 }}>Demo oqim — haqiqiy to'lov gatewayi ulanmagan (Payme/Click integratsiyasi backend talab qiladi).</p>
+            <p style={{ fontSize: 12.5, color: B.muted, textAlign: "center", marginTop: 12, marginBottom: 0 }}>Demo oqim — haqiqiy to'lov gatewayi ulanmagan (Payme/Click integratsiyasi backend talab qiladi).</p>
           </>
         )}
       </div>
@@ -921,7 +1104,7 @@ function TestRunner({ test, onExit, onFinish }) {
             <Mascot size={70} />
             <h2 style={{ fontSize: 24, fontWeight: 800, margin: "16px 0 8px", color: B.text }}>{mod.label}</h2>
             <p style={{ fontSize: 15, color: B.muted, marginBottom: 6 }}>{mod.section}</p>
-            <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 20 }}>{mod.kind === "rw" ? 27 : 22} savol · {mod.minutes} daqiqa</p>
+            <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 20 }}>{(mod.kind === "rw" ? RW_BLUEPRINT : MATH_BLUEPRINT).length} savol · {mod.minutes} daqiqa</p>
             {mod.adaptive && (
               <div style={{ background: "#FFF7E8", borderRadius: 10, padding: "12px 16px", fontSize: 13, marginBottom: 20, display: "flex", gap: 8, textAlign: "left" }}>
                 <AlertCircle size={16} color={B.gold} style={{ flexShrink: 0, marginTop: 1 }} />Bu modul qiyinligi oldingi moduldagi natijangizga qarab tanlandi.
@@ -1010,49 +1193,49 @@ function ScoreReport({ test, report, onBack }) {
   const domains = Object.entries(report.perDomain);
   const weakest = [...domains].sort((a, b) => a[1].c / a[1].t - b[1].c / b[1].t).slice(0, 2);
   return (
-    <div style={{ minHeight: "100vh", background: B.bg, fontFamily: FONT, color: B.text, padding: "40px 24px" }}>
+    <div className="sws-app" style={{ minHeight: "100vh", background: B.bg, fontFamily: FONT, color: B.text, padding: "40px 24px" }}>
       <div style={{ maxWidth: 760, margin: "0 auto" }}>
-        <button onClick={onBack} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 14, marginBottom: 20, fontFamily: FONT }}><ChevronLeft size={16} /> Orqaga</button>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 16, padding: 30, textAlign: "center", marginBottom: 18 }}>
-          <div style={{ fontSize: 13, color: B.muted }}>{test.name} · Umumiy ball</div>
+        <button onClick={onBack} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 15.5, marginBottom: 20, fontFamily: FONT }}><ChevronLeft size={16} /> Orqaga</button>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 30, textAlign: "center", marginBottom: 18 }}>
+          <div style={{ fontSize: 14.5, color: B.muted }}>{test.name} · Umumiy ball</div>
           <div style={{ fontSize: 54, fontWeight: 800, margin: "6px 0 4px" }}>{report.total}</div>
-          <div style={{ fontSize: 13, color: B.muted, marginBottom: 20 }}>400–1600 shkalasi</div>
+          <div style={{ fontSize: 14.5, color: B.muted, marginBottom: 20 }}>400–1600 shkalasi</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
             {[["Reading and Writing", report.rwScore, report.rwRaw], ["Math", report.mathScore, report.mathRaw]].map(([l, s, raw]) => (
-              <div key={l} style={{ background: B.bg, borderRadius: 12, padding: 16 }}><div style={{ fontSize: 12.5, color: B.muted, marginBottom: 4 }}>{l}</div><div style={{ fontSize: 26, fontWeight: 800 }}>{s}</div><div style={{ fontSize: 11.5, color: B.muted }}>{raw.c} / {raw.t} to'g'ri</div></div>
+              <div key={l} style={{ background: B.bg, borderRadius: 16, padding: 16 }}><div style={{ fontSize: 14, color: B.muted, marginBottom: 4 }}>{l}</div><div style={{ fontSize: 29, fontWeight: 800 }}>{s}</div><div style={{ fontSize: 12.5, color: B.muted }}>{raw.c} / {raw.t} to'g'ri</div></div>
             ))}
           </div>
         </div>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 16, padding: 24, marginBottom: 18 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 800, margin: "0 0 18px" }}>Domen bo'yicha aniqlik</h3>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 24, marginBottom: 18 }}>
+          <h3 style={{ fontSize: 17.5, fontWeight: 800, margin: "0 0 18px" }}>Domen bo'yicha aniqlik</h3>
           {domains.map(([d, v]) => { const p = Math.round((v.c / v.t) * 100);
             return (
               <div key={d} style={{ marginBottom: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 5 }}><span>{d}</span><span style={{ fontWeight: 700, color: p < 60 ? B.rose : B.green }}>{v.c}/{v.t} · {p}%</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14.5, marginBottom: 5 }}><span>{d}</span><span style={{ fontWeight: 700, color: p < 60 ? B.rose : B.green }}>{v.c}/{v.t} · {p}%</span></div>
                 <div style={{ height: 6, background: B.bg, borderRadius: 3 }}><div style={{ height: 6, width: `${p}%`, background: p < 60 ? B.rose : B.plum, borderRadius: 3 }} /></div>
               </div>
             );
           })}
           {weakest.length > 0 && (
-            <div style={{ marginTop: 18, background: "#FFF7E8", borderRadius: 10, padding: "13px 16px", fontSize: 13.5, display: "flex", gap: 9 }}>
+            <div style={{ marginTop: 18, background: "#FFF7E8", borderRadius: 12, padding: "13px 16px", fontSize: 15, display: "flex", gap: 9 }}>
               <Target size={16} color={B.gold} style={{ flexShrink: 0, marginTop: 2 }} /><span>Eng zaif domenlar: <b>{weakest.map((w) => w[0]).join(" va ")}</b>. Savollar bankidan shu mavzular bo'yicha mashq qiling.</span>
             </div>
           )}
         </div>
         {report.wrong.length > 0 && (
-          <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 16, padding: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 800, margin: "0 0 14px" }}>Xatolar ({report.wrong.length})</h3>
+          <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 24 }}>
+            <h3 style={{ fontSize: 17.5, fontWeight: 800, margin: "0 0 14px" }}>Xatolar ({report.wrong.length})</h3>
             {report.wrong.slice(0, 12).map((w, i) => (
               <div key={i} style={{ borderBottom: `1px solid ${B.bg}`, padding: "12px 0" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
-                  <div style={{ fontSize: 11, color: B.muted, marginBottom: 4 }}>{w.module} · {w.skill}</div>
-                  <button onClick={() => addSaved({ domain: w.domain, skill: w.skill, prompt: w.prompt, expl: w.expl })} style={{ background: "transparent", border: `1px solid ${B.border}`, borderRadius: 7, padding: "3px 9px", fontSize: 11, color: B.plum, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}><Bookmark size={11} /> Saqlash</button>
+                  <div style={{ fontSize: 12, color: B.muted, marginBottom: 4 }}>{w.module} · {w.skill}</div>
+                  <button onClick={() => addSaved({ domain: w.domain, skill: w.skill, prompt: w.prompt, expl: w.expl })} style={{ background: "transparent", border: `1px solid ${B.border}`, borderRadius: 7, padding: "3px 9px", fontSize: 12, color: B.plum, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}><Bookmark size={11} /> Saqlash</button>
                 </div>
-                <div style={{ fontSize: 13.5, marginBottom: 5, whiteSpace: "pre-line" }}>{w.prompt}</div>
-                <div style={{ fontSize: 12.5, color: B.green }}>{w.expl}</div>
+                <div style={{ fontSize: 15, marginBottom: 5, whiteSpace: "pre-line" }}>{w.prompt}</div>
+                <div style={{ fontSize: 14, color: B.green }}>{w.expl}</div>
               </div>
             ))}
-            {report.wrong.length > 12 && <div style={{ fontSize: 12.5, color: B.muted, paddingTop: 10 }}>va yana {report.wrong.length - 12} ta…</div>}
+            {report.wrong.length > 12 && <div style={{ fontSize: 14, color: B.muted, paddingTop: 10 }}>va yana {report.wrong.length - 12} ta…</div>}
           </div>
         )}
       </div>
@@ -1067,33 +1250,33 @@ function MockTests({ tier, history, onOpenTest, onNeedPay }) {
   const done = new Set(history.map((h) => h.testId));
   return (
     <div>
-      <h1 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 4px" }}>Mock testlar</h1>
-      <p style={{ fontSize: 14, color: B.muted, margin: "0 0 18px" }}>Tarifingiz: <b>{TIERS[tier].label}</b> · {TIERS[tier].mockLimit} ta test ochiq</p>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", border: `1px solid ${B.border}`, borderRadius: 10, padding: "9px 13px", marginBottom: 18, maxWidth: 300 }}>
-        <Search size={15} color={B.muted} /><input value={query} onChange={(e) => { setQuery(e.target.value); setPage(0); }} placeholder="Test raqamini qidiring" style={{ border: "none", outline: "none", fontSize: 13.5, fontFamily: FONT, flex: 1 }} />
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Mock testlar</h1>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 18px" }}>Tarifingiz: <b>{tierLabel(tier)}</b> · {TIERS[tier].mockLimit} ta test ochiq</p>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", border: `1px solid ${B.border}`, borderRadius: 12, padding: "9px 13px", marginBottom: 18, maxWidth: 300 }}>
+        <Search size={15} color={B.muted} /><input value={query} onChange={(e) => { setQuery(e.target.value); setPage(0); }} placeholder="Test raqamini qidiring" style={{ border: "none", outline: "none", fontSize: 15, fontFamily: FONT, flex: 1 }} />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
         {slice.map((t) => {
           const locked = !unlocked(tier, t.tier); const completed = done.has(t.id);
           return (
-            <div key={t.id} onClick={() => (locked ? onNeedPay(t.tier) : onOpenTest(t))} style={{ background: "#fff", border: `1px solid ${completed ? B.green + "55" : B.border}`, borderRadius: 12, padding: 14, cursor: "pointer", opacity: locked ? 0.7 : 1 }}>
+            <div key={t.id} onClick={() => (locked ? onNeedPay(t.tier) : onOpenTest(t))} style={{ background: "#fff", border: `1px solid ${completed ? B.green + "55" : B.border}`, borderRadius: 16, padding: 14, cursor: "pointer", opacity: locked ? 0.7 : 1 }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
                 <div style={{ width: 30, height: 30, borderRadius: 8, background: locked ? "#F0F1F6" : "#F2EAFB", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {locked ? <Lock size={14} color={B.muted} /> : completed ? <Check size={15} color={B.green} /> : <FileText size={15} color={B.plum} />}
                 </div>
-                {t.tier === "free" && <span style={{ fontSize: 9.5, fontWeight: 800, padding: "3px 7px", borderRadius: 8, background: "#E6F6EE", color: B.green, height: 16 }}>BEPUL</span>}
-                {t.tier === "premium" && <span style={{ fontSize: 9.5, fontWeight: 800, padding: "3px 7px", borderRadius: 8, background: "#FFF3D9", color: "#9A6800", height: 16 }}>PREMIUM</span>}
+                {t.tier === "free" && <span style={{ fontSize: 10.5, fontWeight: 800, padding: "3px 7px", borderRadius: 8, background: "#E6F6EE", color: B.green, height: 16 }}>BEPUL</span>}
+                {t.tier === "premium" && <span style={{ fontSize: 10.5, fontWeight: 800, padding: "3px 7px", borderRadius: 8, background: "#FFF3D9", color: "#9A6800", height: 16 }}>PREMIUM</span>}
               </div>
-              <div style={{ fontSize: 13.5, fontWeight: 700 }}>Test {t.id}</div>
-              <div style={{ fontSize: 11.5, color: B.muted }}>{t.difficulty}</div>
+              <div style={{ fontSize: 15, fontWeight: 700 }}>Test {t.id}</div>
+              <div style={{ fontSize: 12.5, color: B.muted }}>{t.difficulty}</div>
             </div>
           );
         })}
       </div>
       <div style={{ display: "flex", justifyContent: "center", gap: 10, marginTop: 20, alignItems: "center" }}>
-        <button disabled={page === 0} onClick={() => setPage((p) => p - 1)} style={{ padding: "8px 16px", borderRadius: 8, border: `1px solid ${B.border}`, background: "#fff", cursor: page === 0 ? "default" : "pointer", fontFamily: FONT, fontSize: 13 }}>Oldingi</button>
-        <span style={{ fontSize: 13, color: B.muted }}>{page + 1} / {Math.max(1, Math.ceil(filtered.length / per))}</span>
-        <button disabled={(page + 1) * per >= filtered.length} onClick={() => setPage((p) => p + 1)} style={{ padding: "8px 16px", borderRadius: 8, border: `1px solid ${B.border}`, background: "#fff", cursor: "pointer", fontFamily: FONT, fontSize: 13 }}>Keyingi</button>
+        <button disabled={page === 0} onClick={() => setPage((p) => p - 1)} style={{ padding: "8px 16px", borderRadius: 8, border: `1px solid ${B.border}`, background: "#fff", cursor: page === 0 ? "default" : "pointer", fontFamily: FONT, fontSize: 14.5 }}>Oldingi</button>
+        <span style={{ fontSize: 14.5, color: B.muted }}>{page + 1} / {Math.max(1, Math.ceil(filtered.length / per))}</span>
+        <button disabled={(page + 1) * per >= filtered.length} onClick={() => setPage((p) => p + 1)} style={{ padding: "8px 16px", borderRadius: 8, border: `1px solid ${B.border}`, background: "#fff", cursor: "pointer", fontFamily: FONT, fontSize: 14.5 }}>Keyingi</button>
       </div>
     </div>
   );
@@ -1134,43 +1317,43 @@ function PracticeSession({ domain, limit, onExit, onRecord, onNeedPay }) {
   const diffColor = q.difficulty === "Easy" ? B.green : q.difficulty === "Medium" ? B.gold : B.rose;
   return (
     <div>
-      <button onClick={finish} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 14, marginBottom: 14, fontFamily: FONT }}><ChevronLeft size={16} /> Savollar bankiga qaytish</button>
+      <button onClick={finish} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 15.5, marginBottom: 14, fontFamily: FONT }}><ChevronLeft size={16} /> Savollar bankiga qaytish</button>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
-        <div><div style={{ fontSize: 17, fontWeight: 800 }}>{domain.d}</div><div style={{ fontSize: 12.5, color: B.muted }}>Savol {i + 1} / {limit} (jami havzada {POOL_TOTAL} ta savol)</div></div>
+        <div><div style={{ fontSize: 19, fontWeight: 800 }}>{domain.d}</div><div style={{ fontSize: 14, color: B.muted }}>Savol {i + 1} / {limit} (jami havzada {POOL_TOTAL} ta savol)</div></div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          {domain.kind === "math" && <button onClick={() => setCalcOpen((v) => !v)} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12.5, border: `1px solid ${B.border}`, background: calcOpen ? B.plum : "#fff", color: calcOpen ? "#fff" : B.text, borderRadius: 7, padding: "6px 10px", cursor: "pointer", fontFamily: FONT }}><Calculator size={13} /> Kalkulyator</button>}
-          <div style={{ fontSize: 13, fontWeight: 700, color: B.green }}>{score} to'g'ri</div>
+          {domain.kind === "math" && <button onClick={() => setCalcOpen((v) => !v)} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 14, border: `1px solid ${B.border}`, background: calcOpen ? B.plum : "#fff", color: calcOpen ? "#fff" : B.text, borderRadius: 7, padding: "6px 10px", cursor: "pointer", fontFamily: FONT }}><Calculator size={13} /> Kalkulyator</button>}
+          <div style={{ fontSize: 14.5, fontWeight: 700, color: B.green }}>{score} to'g'ri</div>
         </div>
       </div>
       {calcOpen && <CalcPanel onClose={() => setCalcOpen(false)} />}
-      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 24 }}>
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 24 }}>
         <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
-          <span style={{ fontSize: 10.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.4, background: B.bg, color: B.muted, padding: "4px 9px", borderRadius: 7 }}>{q.domain}</span>
-          <span style={{ fontSize: 10.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.4, background: B.bg, color: B.muted, padding: "4px 9px", borderRadius: 7 }}>{q.skill}</span>
-          <span style={{ fontSize: 10.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.4, background: diffColor + "22", color: diffColor, padding: "4px 9px", borderRadius: 7 }}>{q.difficulty}</span>
+          <span style={{ fontSize: 11.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.4, background: B.bg, color: B.muted, padding: "4px 9px", borderRadius: 7 }}>{q.domain}</span>
+          <span style={{ fontSize: 11.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.4, background: B.bg, color: B.muted, padding: "4px 9px", borderRadius: 7 }}>{q.skill}</span>
+          <span style={{ fontSize: 11.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.4, background: diffColor + "22", color: diffColor, padding: "4px 9px", borderRadius: 7 }}>{q.difficulty}</span>
         </div>
-        {q.passage && <div style={{ fontSize: 14.5, lineHeight: 1.7, marginBottom: 18, whiteSpace: "pre-line", paddingBottom: 16, borderBottom: `1px solid ${B.bg}` }}>{q.passage}</div>}
-        <p style={{ fontSize: 15, marginBottom: 18, lineHeight: 1.6, whiteSpace: "pre-line" }}>{q.prompt}</p>
+        {q.passage && <div style={{ fontSize: 16, lineHeight: 1.7, marginBottom: 18, whiteSpace: "pre-line", paddingBottom: 16, borderBottom: `1px solid ${B.bg}` }}>{q.passage}</div>}
+        <p style={{ fontSize: 16.5, marginBottom: 18, lineHeight: 1.6, whiteSpace: "pre-line" }}>{q.prompt}</p>
         {q.type === "spr" ? (
           <div>
-            <div style={{ fontSize: 13, color: "#5B6270", marginBottom: 8 }}>Javobingizni yozing:</div>
+            <div style={{ fontSize: 14.5, color: "#5B6270", marginBottom: 8 }}>Javobingizni yozing:</div>
             <input value={picked === null ? "" : picked} onChange={(e) => !revealed && choose(e.target.value)} disabled={revealed}
-              style={{ width: 160, padding: "11px 14px", border: `1.5px solid ${revealed ? (String(picked).trim() === String(q.answer) ? B.green : B.rose) : "#B7BBC4"}`, borderRadius: 8, fontSize: 15 }} placeholder="Javob" />
-            {revealed && <span style={{ marginLeft: 10, fontSize: 13, color: B.muted }}>To'g'ri javob: {q.answer}</span>}
+              style={{ width: 160, padding: "11px 14px", border: `1.5px solid ${revealed ? (String(picked).trim() === String(q.answer) ? B.green : B.rose) : "#B7BBC4"}`, borderRadius: 8, fontSize: 16.5 }} placeholder="Javob" />
+            {revealed && <span style={{ marginLeft: 10, fontSize: 14.5, color: B.muted }}>To'g'ri javob: {q.answer}</span>}
           </div>
         ) : q.choices.map((c, idx) => {
           const isCorrect = idx === q.answer; const isPicked = idx === picked;
           let bg = "#fff", bd = B.border;
           if (revealed && isCorrect) { bg = "#E6F6EE"; bd = B.green; } else if (revealed && isPicked) { bg = "#FDECF1"; bd = B.rose; }
           return (
-            <div key={idx} onClick={() => choose(idx)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 9, border: `1.5px solid ${bd}`, background: bg, marginBottom: 9, cursor: revealed ? "default" : "pointer" }}>
-              <div style={{ width: 25, height: 25, borderRadius: "50%", flexShrink: 0, border: `1.5px solid ${bd}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>{String.fromCharCode(65 + idx)}</div>
-              <span style={{ fontSize: 14 }}>{c}</span>
+            <div key={idx} onClick={() => choose(idx)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, border: `1.5px solid ${bd}`, background: bg, marginBottom: 9, cursor: revealed ? "default" : "pointer" }}>
+              <div style={{ width: 25, height: 25, borderRadius: "50%", flexShrink: 0, border: `1.5px solid ${bd}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13.5, fontWeight: 700 }}>{String.fromCharCode(65 + idx)}</div>
+              <span style={{ fontSize: 15.5 }}>{c}</span>
             </div>
           );
         })}
         {revealed && (
-          <div style={{ marginTop: 14, background: B.bg, borderRadius: 10, padding: "13px 16px", fontSize: 13.5, lineHeight: 1.6 }}>
+          <div style={{ marginTop: 14, background: B.bg, borderRadius: 12, padding: "13px 16px", fontSize: 15, lineHeight: 1.6 }}>
             <b style={{ color: (q.type === "spr" ? String(picked).trim() === String(q.answer) : picked === q.answer) ? B.green : B.rose }}>
               {(q.type === "spr" ? String(picked).trim() === String(q.answer) : picked === q.answer) ? "To'g'ri!" : "Noto'g'ri."}
             </b> {q.expl}
@@ -1178,14 +1361,14 @@ function PracticeSession({ domain, limit, onExit, onRecord, onNeedPay }) {
         )}
         {revealed && (
           atLimit ? (
-            <div style={{ marginTop: 16, background: "#FFF7E8", borderRadius: 10, padding: "14px 16px" }}>
-              <div style={{ fontSize: 13.5, marginBottom: 10 }}>Tarifingizda bu domen uchun {limit} ta savol ochiq. Ko'proq mashq qilish uchun tarifni oshiring.</div>
-              <button onClick={next} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 9, padding: "10px 22px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Tariflarni ko'rish</button>
+            <div style={{ marginTop: 16, background: "#FFF7E8", borderRadius: 12, padding: "14px 16px" }}>
+              <div style={{ fontSize: 15, marginBottom: 10 }}>Tarifingizda bu domen uchun {limit} ta savol ochiq. Ko'proq mashq qilish uchun tarifni oshiring.</div>
+              <button onClick={next} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "10px 22px", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Tariflarni ko'rish</button>
             </div>
           ) : (
             <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
-              <button onClick={next} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 9, padding: "11px 26px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Keyingi savol</button>
-              <button onClick={() => addSaved(q)} style={{ background: "#fff", color: B.plum, border: `1px solid ${B.plum}`, borderRadius: 9, padding: "11px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6 }}><Bookmark size={14} /> Saqlash</button>
+              <button onClick={next} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "11px 26px", fontSize: 15.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Keyingi savol</button>
+              <button onClick={() => addSaved(q)} style={{ background: "#fff", color: B.plum, border: `1px solid ${B.plum}`, borderRadius: 12, padding: "11px 18px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6 }}><Bookmark size={14} /> Saqlash</button>
             </div>
           )
         )}
@@ -1199,16 +1382,16 @@ function QuestionBank({ tier, bankStats, onRecord, onNeedPay }) {
   if (active) return <PracticeSession domain={active} limit={limit} onExit={() => setActive(null)} onRecord={onRecord} onNeedPay={() => onNeedPay("premium")} />;
   return (
     <div>
-      <h1 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 4px" }}>Savollar banki</h1>
-      <p style={{ fontSize: 14, color: B.muted, margin: "0 0 22px" }}>Har domenda {POOL_TOTAL} ta savol havzasi mavjud · tarifingizda {limit} tasi ochiq.</p>
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Savollar banki</h1>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 22px" }}>Har domenda {POOL_TOTAL} ta savol havzasi mavjud · tarifingizda {limit} tasi ochiq.</p>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 13 }}>
         {BANK_DOMAINS.map((dm) => {
           const st = bankStats[dm.d];
           return (
-            <div key={dm.d} onClick={() => setActive(dm)} style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 18, display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}>
+            <div key={dm.d} onClick={() => setActive(dm)} style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 18, display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}>
               <div>
-                <div style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 3 }}>{dm.d}</div>
-                <div style={{ fontSize: 12.5, color: st ? B.green : B.muted }}>{st ? `Oxirgi mashq: ${st.c}/${st.t} to'g'ri` : `${limit} ta savol ochiq`}</div>
+                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 3 }}>{dm.d}</div>
+                <div style={{ fontSize: 14, color: st ? B.green : B.muted }}>{st ? `Oxirgi mashq: ${st.c}/${st.t} to'g'ri` : `${limit} ta savol ochiq`}</div>
               </div>
               <ChevronRight size={18} color={B.muted} />
             </div>
@@ -1232,55 +1415,55 @@ function VocabFolder({ words, freeLimit, folderLocked, onNeedPay }) {
   const knownCount = Object.values(known).filter(Boolean).length;
   if (folderLocked) {
     return (
-      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 40, textAlign: "center" }}>
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 40, textAlign: "center" }}>
         <Lock size={30} color={B.muted} />
-        <div style={{ fontSize: 15, fontWeight: 700, margin: "14px 0 6px" }}>Bu papka qulflangan</div>
-        <div style={{ fontSize: 13.5, color: B.muted, marginBottom: 16 }}>Premium tarifda {words.length} ta so'zning barchasi ochiladi.</div>
-        <button onClick={() => onNeedPay("premium")} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 9, padding: "10px 22px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Premium olish</button>
+        <div style={{ fontSize: 16.5, fontWeight: 700, margin: "14px 0 6px" }}>Bu papka qulflangan</div>
+        <div style={{ fontSize: 15, color: B.muted, marginBottom: 16 }}>Premium tarifda {words.length} ta so'zning barchasi ochiladi.</div>
+        <button onClick={() => onNeedPay("premium")} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "10px 22px", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Premium olish</button>
       </div>
     );
   }
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
-        <div style={{ fontSize: 13, color: B.muted }}>{limited.length}{freeLimit !== Infinity ? ` / ${words.length}` : ""} ta so'z ochiq · {knownCount} tasi o'zlashtirildi</div>
+        <div style={{ fontSize: 14.5, color: B.muted }}>{limited.length}{freeLimit !== Infinity ? ` / ${words.length}` : ""} ta so'z ochiq · {knownCount} tasi o'zlashtirildi</div>
         <div style={{ display: "flex", gap: 6 }}>
           {[["cards", "Kartochka"], ["list", "Ro'yxat"]].map(([m, l]) => (
-            <button key={m} onClick={() => setMode(m)} style={{ padding: "7px 14px", borderRadius: 9, border: `1px solid ${B.border}`, background: mode === m ? B.plum : "#fff", color: mode === m ? "#fff" : B.text, cursor: "pointer", fontSize: 12.5, fontWeight: 700, fontFamily: FONT }}>{l}</button>
+            <button key={m} onClick={() => setMode(m)} style={{ padding: "7px 14px", borderRadius: 12, border: `1px solid ${B.border}`, background: mode === m ? B.plum : "#fff", color: mode === m ? "#fff" : B.text, cursor: "pointer", fontSize: 14, fontWeight: 700, fontFamily: FONT }}>{l}</button>
           ))}
         </div>
       </div>
       {mode === "cards" ? (
         <>
-          <div onClick={() => setFlip((f) => !f)} style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 16, padding: "50px 28px", textAlign: "center", cursor: "pointer", maxWidth: 460, margin: "0 auto 16px", minHeight: 120 }}>
-            {!flip ? (<><div style={{ fontSize: 30, fontWeight: 800 }}>{c[0]}</div><div style={{ fontSize: 12.5, color: B.muted, marginTop: 14 }}>Ma'nosini ko'rish uchun bosing</div></>) : (<div style={{ fontSize: 20, fontWeight: 700 }}>{c[1]}</div>)}
+          <div onClick={() => setFlip((f) => !f)} style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: "50px 28px", textAlign: "center", cursor: "pointer", maxWidth: 460, margin: "0 auto 16px", minHeight: 120 }}>
+            {!flip ? (<><div style={{ fontSize: 33, fontWeight: 800 }}>{c[0]}</div><div style={{ fontSize: 14, color: B.muted, marginTop: 14 }}>Ma'nosini ko'rish uchun bosing</div></>) : (<div style={{ fontSize: 22, fontWeight: 700 }}>{c[1]}</div>)}
           </div>
           <div style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 10, flexWrap: "wrap" }}>
-            <button onClick={() => { setI((x) => (x - 1 + limited.length) % limited.length); setFlip(false); }} style={{ padding: "10px 20px", borderRadius: 9, border: `1px solid ${B.border}`, background: "#fff", cursor: "pointer", fontFamily: FONT, fontSize: 14 }}>Oldingi</button>
-            <button onClick={() => setKnown((k) => ({ ...k, [c[0]]: !k[c[0]] }))} style={{ padding: "10px 20px", borderRadius: 9, border: `1px solid ${known[c[0]] ? B.green : B.border}`, background: known[c[0]] ? "#E6F6EE" : "#fff", color: known[c[0]] ? B.green : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 14, fontWeight: 700 }}>{known[c[0]] ? "Bilaman ✓" : "Bilaman"}</button>
+            <button onClick={() => { setI((x) => (x - 1 + limited.length) % limited.length); setFlip(false); }} style={{ padding: "10px 20px", borderRadius: 12, border: `1px solid ${B.border}`, background: "#fff", cursor: "pointer", fontFamily: FONT, fontSize: 15.5 }}>Oldingi</button>
+            <button onClick={() => setKnown((k) => ({ ...k, [c[0]]: !k[c[0]] }))} style={{ padding: "10px 20px", borderRadius: 12, border: `1px solid ${known[c[0]] ? B.green : B.border}`, background: known[c[0]] ? "#E6F6EE" : "#fff", color: known[c[0]] ? B.green : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 15.5, fontWeight: 700 }}>{known[c[0]] ? "Bilaman ✓" : "Bilaman"}</button>
             {atEnd ? (
-              <button onClick={() => onNeedPay("standard")} style={{ padding: "10px 20px", borderRadius: 9, border: "none", background: B.gold, color: B.navy, cursor: "pointer", fontFamily: FONT, fontSize: 14, fontWeight: 800 }}>Ko'proq — tarifni oshiring</button>
+              <button onClick={() => onNeedPay("standard")} style={{ padding: "10px 20px", borderRadius: 12, border: "none", background: B.gold, color: B.navy, cursor: "pointer", fontFamily: FONT, fontSize: 15.5, fontWeight: 800 }}>Ko'proq — tarifni oshiring</button>
             ) : (
-              <button onClick={() => { setI((x) => (x + 1) % limited.length); setFlip(false); }} style={{ padding: "10px 20px", borderRadius: 9, border: "none", background: B.plum, color: "#fff", cursor: "pointer", fontFamily: FONT, fontSize: 14, fontWeight: 700 }}>Keyingi</button>
+              <button onClick={() => { setI((x) => (x + 1) % limited.length); setFlip(false); }} style={{ padding: "10px 20px", borderRadius: 12, border: "none", background: B.plum, color: "#fff", cursor: "pointer", fontFamily: FONT, fontSize: 15.5, fontWeight: 700 }}>Keyingi</button>
             )}
           </div>
-          <div style={{ textAlign: "center", fontSize: 12.5, color: B.muted }}>{(i % limited.length) + 1} / {limited.length}</div>
+          <div style={{ textAlign: "center", fontSize: 14, color: B.muted }}>{(i % limited.length) + 1} / {limited.length}</div>
         </>
       ) : (
         <>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", border: `1px solid ${B.border}`, borderRadius: 10, padding: "9px 13px", marginBottom: 14, maxWidth: 300 }}>
-            <Search size={15} color={B.muted} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="So'z qidiring" style={{ border: "none", outline: "none", fontSize: 13.5, fontFamily: FONT, flex: 1 }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", border: `1px solid ${B.border}`, borderRadius: 12, padding: "9px 13px", marginBottom: 14, maxWidth: 300 }}>
+            <Search size={15} color={B.muted} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="So'z qidiring" style={{ border: "none", outline: "none", fontSize: 15, fontFamily: FONT, flex: 1 }} />
           </div>
-          <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, overflow: "hidden" }}>
+          <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, overflow: "hidden" }}>
             {limited.map(([w, d], idx) => (
-              <div key={w} style={{ display: "flex", justifyContent: "space-between", padding: "11px 18px", borderBottom: idx < limited.length - 1 ? `1px solid ${B.bg}` : "none", fontSize: 13.5, flexWrap: "wrap", gap: 6 }}>
+              <div key={w} style={{ display: "flex", justifyContent: "space-between", padding: "11px 18px", borderBottom: idx < limited.length - 1 ? `1px solid ${B.bg}` : "none", fontSize: 15, flexWrap: "wrap", gap: 6 }}>
                 <span style={{ fontWeight: 700, minWidth: 140 }}>{w}</span><span style={{ color: B.muted, flex: 1, textAlign: "right" }}>{d}</span>
               </div>
             ))}
           </div>
           {freeLimit !== Infinity && list.length > freeLimit && (
             <div style={{ marginTop: 14, textAlign: "center" }}>
-              <button onClick={() => onNeedPay("standard")} style={{ background: B.gold, color: B.navy, border: "none", borderRadius: 9, padding: "10px 22px", fontSize: 13.5, fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>Yana {list.length - freeLimit} ta so'zni ochish</button>
+              <button onClick={() => onNeedPay("standard")} style={{ background: B.gold, color: B.navy, border: "none", borderRadius: 12, padding: "10px 22px", fontSize: 15, fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>Yana {list.length - freeLimit} ta so'zni ochish</button>
             </div>
           )}
         </>
@@ -1294,11 +1477,11 @@ function Vocabulary({ tier, onNeedPay }) {
   const extraLocked = !TIERS[tier].vocabFolders.includes("extra");
   return (
     <div>
-      <h1 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 4px" }}>Lug'at</h1>
-      <p style={{ fontSize: 14, color: B.muted, margin: "0 0 18px" }}>2 ta papka · jami {VOCAB_CORE.length + VOCAB_EXTRA.length} ta so'z</p>
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Lug'at</h1>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 18px" }}>2 ta papka · jami {VOCAB_CORE.length + VOCAB_EXTRA.length} ta so'z</p>
       <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
         {[["core", `Asosiy lug'at (${VOCAB_CORE.length})`], ["extra", `Qo'shimcha 400 so'z (${VOCAB_EXTRA.length})`]].map(([id, label]) => (
-          <button key={id} onClick={() => setFolder(id)} style={{ display: "flex", alignItems: "center", gap: 7, padding: "10px 16px", borderRadius: 10, border: `1px solid ${folder === id ? B.plum : B.border}`, background: folder === id ? "#F2EAFB" : "#fff", color: folder === id ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 13.5, fontWeight: 700 }}>
+          <button key={id} onClick={() => setFolder(id)} style={{ display: "flex", alignItems: "center", gap: 7, padding: "10px 16px", borderRadius: 12, border: `1px solid ${folder === id ? B.plum : B.border}`, background: folder === id ? "#F2EAFB" : "#fff", color: folder === id ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 15, fontWeight: 700 }}>
             <Folder size={15} /> {label} {id === "extra" && extraLocked && <Lock size={12} />}
           </button>
         ))}
@@ -1324,8 +1507,18 @@ function AITutor({ tier }) {
     setMsgs([...history, { role: "assistant", text: "" }]);
     setInput(""); setBusy(true); setUsed((u) => u + 1);
     try {
+      const setLast = (t) => setMsgs((m) => { const n = [...m]; n[n.length - 1] = { role: "assistant", text: t }; return n; });
       const sample = window.claude && window.claude.use ? await window.claude.use("sample") : null;
-      if (!sample) { setMsgs((m) => { const n = [...m]; n[n.length - 1] = { role: "assistant", text: "AI repetitor bu ko'rinishda mavjud emas." }; return n; }); setBusy(false); return; }
+      if (!sample) {
+        // Oddiy saytda (Vercel): server funksiyasi orqali Gemini'dan javob olamiz
+        const r = await fetch("/api/tutor", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: history.slice(1) }) });
+        const data = await r.json().catch(() => ({}));
+        if (r.ok && data.text) setLast(data.text);
+        else if (r.status === 429) setLast("Hozir juda ko'p so'rov bor. Bir daqiqadan keyin qayta urinib ko'ring.");
+        else if (data.error === "no_key") setLast("AI repetitor hali sozlanmagan (API kalit qo'shilmagan).");
+        else setLast("AI repetitor hozir javob bera olmadi. Qayta urinib ko'ring.");
+        setBusy(false); return;
+      }
       const promptText = "You are a concise SAT tutor for Uzbek students. Answer in the language the student uses. Keep answers under 150 words unless asked for full working or a quiz. If asked to quiz the student, write 3 short multiple-choice SAT-style questions with labeled choices (A-D) on the requested topic, then an answer key at the end. No preamble.\n\n" +
         history.map((m) => (m.role === "user" ? "Student: " : "Tutor: ") + m.text).join("\n");
       const result = await sample(promptText, { onText: ({ text: t }) => setMsgs((m) => { const n = [...m]; n[n.length - 1] = { role: "assistant", text: t }; return n; }) });
@@ -1341,31 +1534,31 @@ function AITutor({ tier }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 150px)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 6 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>AI repetitor</h1>
-        {limit !== Infinity && <span style={{ fontSize: 12.5, color: B.muted }}>{used}/{limit} savol ishlatildi</span>}
+        <h1 style={{ fontSize: 24, fontWeight: 800, margin: 0 }}>AI repetitor</h1>
+        {limit !== Infinity && <span style={{ fontSize: 14, color: B.muted }}>{used}/{limit} savol ishlatildi</span>}
       </div>
-      <div style={{ flex: 1, overflowY: "auto", background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 18, marginBottom: 12 }}>
+      <div style={{ flex: 1, overflowY: "auto", background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 18, marginBottom: 12 }}>
         {msgs.map((m, i) => (
           <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start", marginBottom: 12 }}>
-            <div style={{ maxWidth: "78%", background: m.role === "user" ? B.plum : B.bg, color: m.role === "user" ? "#fff" : B.text, padding: "11px 15px", borderRadius: 12, fontSize: 14, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{m.text || (busy && i === msgs.length - 1 ? "…" : "")}</div>
+            <div style={{ maxWidth: "78%", background: m.role === "user" ? B.plum : B.bg, color: m.role === "user" ? "#fff" : B.text, padding: "11px 15px", borderRadius: 16, fontSize: 15.5, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{m.text || (busy && i === msgs.length - 1 ? "…" : "")}</div>
           </div>
         ))}
         <div ref={endRef} />
       </div>
       {used >= limit ? (
-        <div style={{ background: "#FFF7E8", borderRadius: 12, padding: "16px 18px", textAlign: "center" }}>
-          <div style={{ fontSize: 13.5 }}>Bepul tarifda {limit} ta savol limiti tugadi. Standard yoki Premium'da cheksiz foydalaning.</div>
+        <div style={{ background: "#FFF7E8", borderRadius: 16, padding: "16px 18px", textAlign: "center" }}>
+          <div style={{ fontSize: 15 }}>Bepul tarifda {limit} ta savol limiti tugadi. Standard yoki Premium'da cheksiz foydalaning.</div>
         </div>
       ) : (
         <>
           <div style={{ display: "flex", gap: 6, marginBottom: 8, flexWrap: "wrap" }}>
             {["Algebra", "Grammatika", "Words in Context", "Geometriya"].map((t) => (
-              <button key={t} onClick={() => quizMe(t)} disabled={busy} style={{ fontSize: 11.5, padding: "6px 12px", borderRadius: 20, border: `1px solid ${B.border}`, background: "#fff", color: B.plum, cursor: busy ? "default" : "pointer", fontFamily: FONT, fontWeight: 700 }}>🎯 {t} bo'yicha sinang</button>
+              <button key={t} onClick={() => quizMe(t)} disabled={busy} style={{ fontSize: 12.5, padding: "6px 12px", borderRadius: 24, border: `1px solid ${B.border}`, background: "#fff", color: B.plum, cursor: busy ? "default" : "pointer", fontFamily: FONT, fontWeight: 700 }}>🎯 {t} bo'yicha sinang</button>
             ))}
           </div>
           <div style={{ display: "flex", gap: 8 }}>
-            <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Savolingizni yozing…" style={{ flex: 1, padding: "13px 16px", border: `1px solid ${B.border}`, borderRadius: 11, fontSize: 14, fontFamily: FONT, outline: "none" }} />
-            <button onClick={send} disabled={busy} style={{ background: busy ? B.muted : B.plum, border: "none", borderRadius: 11, padding: "0 20px", color: "#fff", cursor: busy ? "default" : "pointer", display: "flex", alignItems: "center" }}><Send size={17} /></button>
+            <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Savolingizni yozing…" style={{ flex: 1, padding: "13px 16px", border: `1px solid ${B.border}`, borderRadius: 14, fontSize: 15.5, fontFamily: FONT, outline: "none" }} />
+            <button onClick={send} disabled={busy} style={{ background: busy ? B.muted : B.plum, border: "none", borderRadius: 14, padding: "0 20px", color: "#fff", cursor: busy ? "default" : "pointer", display: "flex", alignItems: "center" }}><Send size={17} /></button>
           </div>
         </>
       )}
@@ -1377,11 +1570,11 @@ function Analytics({ history }) {
   if (history.length === 0) {
     return (
       <div>
-        <h1 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 4px" }}>Tahlil</h1>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 50, textAlign: "center", marginTop: 20 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Tahlil</h1>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 50, textAlign: "center", marginTop: 20 }}>
           <BarChart3 size={36} color={B.muted} />
-          <div style={{ fontSize: 15, fontWeight: 700, marginTop: 14, marginBottom: 6 }}>Hali ma'lumot yo'q</div>
-          <div style={{ fontSize: 13.5, color: B.muted }}>Birinchi mock testni yeching — tahlil shundan keyin javoblaringiz asosida chiqadi.</div>
+          <div style={{ fontSize: 16.5, fontWeight: 700, marginTop: 14, marginBottom: 6 }}>Hali ma'lumot yo'q</div>
+          <div style={{ fontSize: 15, color: B.muted }}>Birinchi mock testni yeching — tahlil shundan keyin javoblaringiz asosida chiqadi.</div>
         </div>
       </div>
     );
@@ -1392,35 +1585,35 @@ function Analytics({ history }) {
   const topWrong = Object.entries(wrongByDomain).sort((a, b) => b[1] - a[1]).slice(0, 6);
   return (
     <div>
-      <h1 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 4px" }}>Tahlil</h1>
-      <p style={{ fontSize: 14, color: B.muted, margin: "0 0 20px" }}>{history.length} ta yechilgan test asosida</p>
-      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 24, marginBottom: 16 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 20 }}>Ball dinamikasi</div>
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Tahlil</h1>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 20px" }}>{history.length} ta yechilgan test asosida</p>
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 24, marginBottom: 16 }}>
+        <div style={{ fontSize: 15.5, fontWeight: 700, marginBottom: 20 }}>Ball dinamikasi</div>
         <div style={{ display: "flex", alignItems: "flex-end", gap: 18, height: 160, overflowX: "auto" }}>
           {scores.map((s, i) => (
             <div key={i} style={{ flex: "0 0 60px", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-              <div style={{ fontSize: 12.5, fontWeight: 700, color: B.plum }}>{s}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: B.plum }}>{s}</div>
               <div style={{ width: 40, height: `${((s - min) / (max - min)) * 120}px`, background: B.plum, borderRadius: "6px 6px 0 0" }} />
-              <div style={{ fontSize: 10.5, color: B.muted, textAlign: "center" }}>#{history[i].testId}</div>
+              <div style={{ fontSize: 11.5, color: B.muted, textAlign: "center" }}>#{history[i].testId}</div>
             </div>
           ))}
         </div>
       </div>
-      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 24, marginBottom: 16 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 16 }}>Domen bo'yicha umumiy aniqlik</div>
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 24, marginBottom: 16 }}>
+        <div style={{ fontSize: 15.5, fontWeight: 700, marginBottom: 16 }}>Domen bo'yicha umumiy aniqlik</div>
         {Object.entries(agg).map(([d, v]) => { const p = Math.round((v.c / v.t) * 100);
           return (
             <div key={d} style={{ marginBottom: 11 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 4 }}><span>{d}</span><span style={{ fontWeight: 700, color: p < 60 ? B.rose : B.green }}>{v.c}/{v.t} · {p}%</span></div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14.5, marginBottom: 4 }}><span>{d}</span><span style={{ fontWeight: 700, color: p < 60 ? B.rose : B.green }}>{v.c}/{v.t} · {p}%</span></div>
               <div style={{ height: 6, background: B.bg, borderRadius: 3 }}><div style={{ height: 6, width: `${p}%`, background: p < 60 ? B.rose : B.plum, borderRadius: 3 }} /></div>
             </div>
           );
         })}
       </div>
       {topWrong.length > 0 && (
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 24 }}>
-          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}><RotateCcw size={15} color={B.rose} /> Eng ko'p xato qilingan ko'nikmalar</div>
-          {topWrong.map(([s, n]) => (<div key={s} style={{ display: "flex", justifyContent: "space-between", fontSize: 13.5, padding: "9px 0", borderBottom: `1px solid ${B.bg}` }}><span>{s}</span><span style={{ color: B.rose, fontWeight: 700 }}>{n} ta xato</span></div>))}
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 24 }}>
+          <div style={{ fontSize: 15.5, fontWeight: 700, marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}><RotateCcw size={15} color={B.rose} /> Eng ko'p xato qilingan ko'nikmalar</div>
+          {topWrong.map(([s, n]) => (<div key={s} style={{ display: "flex", justifyContent: "space-between", fontSize: 15, padding: "9px 0", borderBottom: `1px solid ${B.bg}` }}><span>{s}</span><span style={{ color: B.rose, fontWeight: 700 }}>{n} ta xato</span></div>))}
         </div>
       )}
     </div>
@@ -1441,29 +1634,29 @@ function DashHome({ history, onGoTests, todaySeconds, goalMinutes, streak, onGoP
   const perDomainMinutes = weakest.length ? Math.max(5, Math.round(goalMinutes / weakest.length)) : 0;
   return (
     <div>
-      <h1 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 4px" }}>Xush kelibsiz</h1>
-      <p style={{ fontSize: 14, color: B.muted, margin: "0 0 22px" }}>{history.length === 0 ? "Hali test yechmagansiz." : `${history.length} ta test yechildi.`}</p>
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Xush kelibsiz</h1>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 22px" }}>{history.length === 0 ? "Hali test yechmagansiz." : `${history.length} ta test yechildi.`}</p>
 
       {(targetScore || daysLeft !== null) && (
-        <div style={{ background: B.navy, color: "#fff", borderRadius: 14, padding: "16px 20px", marginBottom: 16, display: "flex", gap: 24, flexWrap: "wrap" }}>
-          {targetScore && <div><div style={{ fontSize: 11, opacity: 0.7 }}>MAQSAD BALL</div><div style={{ fontSize: 22, fontWeight: 800 }}>{targetScore}</div></div>}
-          {daysLeft !== null && <div><div style={{ fontSize: 11, opacity: 0.7 }}>IMTIHONGACHA</div><div style={{ fontSize: 22, fontWeight: 800 }}>{daysLeft} kun</div></div>}
-          {last && targetScore && <div><div style={{ fontSize: 11, opacity: 0.7 }}>MAQSADGACHA QOLDI</div><div style={{ fontSize: 22, fontWeight: 800, color: targetScore - last.total <= 0 ? B.green : B.gold }}>{Math.max(0, targetScore - last.total)} ball</div></div>}
+        <div style={{ background: B.navy, color: "#fff", borderRadius: 18, padding: "16px 20px", marginBottom: 16, display: "flex", gap: 24, flexWrap: "wrap" }}>
+          {targetScore && <div><div style={{ fontSize: 12, opacity: 0.7 }}>MAQSAD BALL</div><div style={{ fontSize: 24, fontWeight: 800 }}>{targetScore}</div></div>}
+          {daysLeft !== null && <div><div style={{ fontSize: 12, opacity: 0.7 }}>IMTIHONGACHA</div><div style={{ fontSize: 24, fontWeight: 800 }}>{daysLeft} kun</div></div>}
+          {last && targetScore && <div><div style={{ fontSize: 12, opacity: 0.7 }}>MAQSADGACHA QOLDI</div><div style={{ fontSize: 24, fontWeight: 800, color: targetScore - last.total <= 0 ? B.green : B.gold }}>{Math.max(0, targetScore - last.total)} ball</div></div>}
         </div>
       )}
 
       {remindToStudy && (
-        <div style={{ background: "#FFF7E8", border: `1px solid ${B.gold}44`, borderRadius: 12, padding: "13px 16px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
-          <span style={{ fontSize: 13.5 }}>⏰ Bugun hali {fmtMinutes(Math.max(0, goalMinutes * 60 - todaySeconds))} maqsadingizgacha qoldi. Streak: 🔥{streak}</span>
-          <button onClick={onGoProfile} style={{ background: B.gold, color: B.navy, border: "none", borderRadius: 8, padding: "7px 14px", fontSize: 12.5, fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>Maqsadni ko'rish</button>
+        <div style={{ background: "#FFF7E8", border: `1px solid ${B.gold}44`, borderRadius: 16, padding: "13px 16px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+          <span style={{ fontSize: 15 }}>⏰ Bugun hali {fmtMinutes(Math.max(0, goalMinutes * 60 - todaySeconds))} maqsadingizgacha qoldi. Streak: 🔥{streak}</span>
+          <button onClick={onGoProfile} style={{ background: B.gold, color: B.navy, border: "none", borderRadius: 8, padding: "7px 14px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>Maqsadni ko'rish</button>
         </div>
       )}
 
       {weakest.length > 0 && (
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 18, marginBottom: 18 }}>
-          <div style={{ fontSize: 13.5, fontWeight: 700, marginBottom: 10 }}>📋 Bugungi shaxsiy reja</div>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 18, marginBottom: 18 }}>
+          <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 10 }}>📋 Bugungi shaxsiy reja</div>
           {weakest.map(([d, v]) => (
-            <div key={d} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, padding: "7px 0", borderBottom: `1px solid ${B.bg}` }}>
+            <div key={d} style={{ display: "flex", justifyContent: "space-between", fontSize: 14.5, padding: "7px 0", borderBottom: `1px solid ${B.bg}` }}>
               <span>{d} <span style={{ color: B.muted }}>{v.t > 0 ? `(${Math.round((v.c / v.t) * 100)}% aniqlik)` : "(tanlangan)"}</span></span>
               <span style={{ fontWeight: 700, color: B.plum }}>{perDomainMinutes} daq</span>
             </div>
@@ -1472,28 +1665,28 @@ function DashHome({ history, onGoTests, todaySeconds, goalMinutes, streak, onGoP
       )}
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, marginBottom: 18 }}>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 22, display: "flex", alignItems: "center", gap: 22 }}>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 22, display: "flex", alignItems: "center", gap: 22 }}>
           <div style={{ position: "relative", width: 88, height: 88 }}>
             <svg width="88" height="88" viewBox="0 0 88 88">
               <circle cx="44" cy="44" r="38" stroke={B.border} strokeWidth="9" fill="none" />
               <circle cx="44" cy="44" r="38" stroke={B.plum} strokeWidth="9" fill="none" strokeDasharray={2 * Math.PI * 38} strokeDashoffset={2 * Math.PI * 38 * (1 - (last ? last.total : 0) / 1600)} strokeLinecap="round" transform="rotate(-90 44 44)" />
             </svg>
-            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 800 }}>{last ? last.total : "—"}</div>
+            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 800 }}>{last ? last.total : "—"}</div>
           </div>
           <div>
-            <div style={{ fontSize: 13, color: B.muted, marginBottom: 4 }}>Oxirgi umumiy ball</div>
-            {prev && <div style={{ fontSize: 13, color: last.total >= prev.total ? B.green : B.rose, fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}><TrendingUp size={14} /> {last.total - prev.total >= 0 ? "+" : ""}{last.total - prev.total} oxirgi testdan beri</div>}
+            <div style={{ fontSize: 14.5, color: B.muted, marginBottom: 4 }}>Oxirgi umumiy ball</div>
+            {prev && <div style={{ fontSize: 14.5, color: last.total >= prev.total ? B.green : B.rose, fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}><TrendingUp size={14} /> {last.total - prev.total >= 0 ? "+" : ""}{last.total - prev.total} oxirgi testdan beri</div>}
           </div>
         </div>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 22 }}>
-          <div style={{ fontSize: 13, color: B.muted, marginBottom: 12 }}>Bo'limlar</div>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 22 }}>
+          <div style={{ fontSize: 14.5, color: B.muted, marginBottom: 12 }}>Bo'limlar</div>
           {last ? [["Reading & Writing", last.rwScore], ["Math", last.mathScore]].map(([n, s]) => (
-            <div key={n} style={{ marginBottom: 11 }}><div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, marginBottom: 4 }}><span>{n}</span><span style={{ fontWeight: 700 }}>{s}</span></div><div style={{ height: 6, background: B.bg, borderRadius: 3 }}><div style={{ height: 6, width: `${((s - 200) / 600) * 100}%`, background: B.plum, borderRadius: 3 }} /></div></div>
-          )) : <div style={{ fontSize: 13, color: B.muted }}>Test yechganingizdan keyin chiqadi.</div>}
+            <div key={n} style={{ marginBottom: 11 }}><div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 4 }}><span>{n}</span><span style={{ fontWeight: 700 }}>{s}</span></div><div style={{ height: 6, background: B.bg, borderRadius: 3 }}><div style={{ height: 6, width: `${((s - 200) / 600) * 100}%`, background: B.plum, borderRadius: 3 }} /></div></div>
+          )) : <div style={{ fontSize: 14.5, color: B.muted }}>Test yechganingizdan keyin chiqadi.</div>}
         </div>
       </div>
-      <button onClick={onGoTests} style={{ width: "100%", background: B.plum, color: "#fff", border: "none", borderRadius: 14, padding: "18px 22px", textAlign: "left", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: FONT }}>
-        <div><div style={{ fontSize: 15, fontWeight: 700, marginBottom: 3 }}>Mock testni boshlash</div><div style={{ fontSize: 12.5, opacity: 0.85 }}>200 ta testdan tanlang</div></div>
+      <button onClick={onGoTests} style={{ width: "100%", background: B.plum, color: "#fff", border: "none", borderRadius: 18, padding: "18px 22px", textAlign: "left", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: FONT }}>
+        <div><div style={{ fontSize: 16.5, fontWeight: 700, marginBottom: 3 }}>Mock testni boshlash</div><div style={{ fontSize: 14, opacity: 0.85 }}>200 ta testdan tanlang</div></div>
         <ChevronRight size={20} />
       </button>
     </div>
@@ -1525,33 +1718,33 @@ function Profile({ name, setName, goalMinutes, setGoalMinutes, streak, todaySeco
   const daysLeft = examDate ? Math.max(0, Math.ceil((new Date(examDate) - new Date()) / 86400000)) : null;
   return (
     <div>
-      <h1 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 4px" }}>Profil</h1>
-      <p style={{ fontSize: 14, color: B.muted, margin: "0 0 22px" }}>Ism, kunlik maqsad va statistikangiz.</p>
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Profil</h1>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 22px" }}>Ism, kunlik maqsad va statistikangiz.</p>
 
       {(targetScore || daysLeft !== null) && (
-        <div style={{ background: B.navy, color: "#fff", borderRadius: 14, padding: "16px 20px", marginBottom: 18, display: "flex", gap: 24, flexWrap: "wrap" }}>
-          {targetScore && <div><div style={{ fontSize: 11, opacity: 0.7 }}>MAQSAD BALL</div><div style={{ fontSize: 22, fontWeight: 800 }}>{targetScore}</div></div>}
-          {daysLeft !== null && <div><div style={{ fontSize: 11, opacity: 0.7 }}>IMTIHONGACHA</div><div style={{ fontSize: 22, fontWeight: 800 }}>{daysLeft} kun</div></div>}
+        <div style={{ background: B.navy, color: "#fff", borderRadius: 18, padding: "16px 20px", marginBottom: 18, display: "flex", gap: 24, flexWrap: "wrap" }}>
+          {targetScore && <div><div style={{ fontSize: 12, opacity: 0.7 }}>MAQSAD BALL</div><div style={{ fontSize: 24, fontWeight: 800 }}>{targetScore}</div></div>}
+          {daysLeft !== null && <div><div style={{ fontSize: 12, opacity: 0.7 }}>IMTIHONGACHA</div><div style={{ fontSize: 24, fontWeight: 800 }}>{daysLeft} kun</div></div>}
         </div>
       )}
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginBottom: 18 }}>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 20, textAlign: "center" }}>
-          <div style={{ fontSize: 30, fontWeight: 800, color: B.plum }}>🔥 {streak}</div>
-          <div style={{ fontSize: 12.5, color: B.muted, marginTop: 4 }}>kunlik streak</div>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 20, textAlign: "center" }}>
+          <div style={{ fontSize: 33, fontWeight: 800, color: B.plum }}>🔥 {streak}</div>
+          <div style={{ fontSize: 14, color: B.muted, marginTop: 4 }}>kunlik streak</div>
         </div>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 20, textAlign: "center" }}>
-          <div style={{ fontSize: 30, fontWeight: 800, color: B.text }}>{fmtMinutes(todaySeconds)}</div>
-          <div style={{ fontSize: 12.5, color: B.muted, marginTop: 4 }}>bugun ishlangan</div>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 20, textAlign: "center" }}>
+          <div style={{ fontSize: 33, fontWeight: 800, color: B.text }}>{fmtMinutes(todaySeconds)}</div>
+          <div style={{ fontSize: 14, color: B.muted, marginTop: 4 }}>bugun ishlangan</div>
         </div>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 20, textAlign: "center" }}>
-          <div style={{ fontSize: 30, fontWeight: 800, color: B.text }}>{allTimeMinutes} daq</div>
-          <div style={{ fontSize: 12.5, color: B.muted, marginTop: 4 }}>jami (barcha vaqt)</div>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 20, textAlign: "center" }}>
+          <div style={{ fontSize: 33, fontWeight: 800, color: B.text }}>{allTimeMinutes} daq</div>
+          <div style={{ fontSize: 14, color: B.muted, marginTop: 4 }}>jami (barcha vaqt)</div>
         </div>
       </div>
 
-      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 22, marginBottom: 18 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 14 }}>Haftalik streak</div>
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 22, marginBottom: 18 }}>
+        <div style={{ fontSize: 15.5, fontWeight: 700, marginBottom: 14 }}>Haftalik streak</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 8 }}>
           {["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"].map((d, i) => {
             const daysAgo = 6 - i;
@@ -1559,9 +1752,9 @@ function Profile({ name, setName, goalMinutes, setGoalMinutes, streak, todaySeco
             const isToday = i === 6;
             return (
               <div key={d} style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 11, color: B.muted, marginBottom: 6 }}>{d}</div>
+                <div style={{ fontSize: 12, color: B.muted, marginBottom: 6 }}>{d}</div>
                 <div style={{
-                  width: "100%", aspectRatio: "1", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center",
+                  width: "100%", aspectRatio: "1", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
                   background: active ? B.plum : B.bg, border: isToday ? `2px solid ${B.gold}` : "none",
                 }}>
                   {active && <Check size={15} color="#fff" />}
@@ -1572,27 +1765,27 @@ function Profile({ name, setName, goalMinutes, setGoalMinutes, streak, todaySeco
         </div>
       </div>
 
-      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 22, marginBottom: 18 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 12 }}>Bugungi maqsad</div>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 6 }}>
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 22, marginBottom: 18 }}>
+        <div style={{ fontSize: 15.5, fontWeight: 700, marginBottom: 12 }}>Bugungi maqsad</div>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14.5, marginBottom: 6 }}>
           <span>{fmtMinutes(todaySeconds)} / {goalMinutes} daq</span><span style={{ fontWeight: 700, color: pct >= 100 ? B.green : B.plum }}>{pct}%</span>
         </div>
         <div style={{ height: 8, background: B.bg, borderRadius: 4, marginBottom: 16 }}><div style={{ height: 8, width: `${pct}%`, background: pct >= 100 ? B.green : B.plum, borderRadius: 4 }} /></div>
-        <label style={{ fontSize: 12.5, color: B.muted, display: "block", marginBottom: 8 }}>Kuniga necha daqiqa dars qilishni xohlaysiz?</label>
+        <label style={{ fontSize: 14, color: B.muted, display: "block", marginBottom: 8 }}>Kuniga necha daqiqa dars qilishni xohlaysiz?</label>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {[15, 30, 45, 60, 90, 120].map((m) => (
-            <button key={m} onClick={() => setGoalMinutes(m)} style={{ padding: "8px 16px", borderRadius: 9, border: `1px solid ${goalMinutes === m ? B.plum : B.border}`, background: goalMinutes === m ? "#F2EAFB" : "#fff", color: goalMinutes === m ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 13, fontWeight: 700 }}>{m} daq</button>
+            <button key={m} onClick={() => setGoalMinutes(m)} style={{ padding: "8px 16px", borderRadius: 12, border: `1px solid ${goalMinutes === m ? B.plum : B.border}`, background: goalMinutes === m ? "#F2EAFB" : "#fff", color: goalMinutes === m ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: 700 }}>{m} daq</button>
           ))}
         </div>
       </div>
 
-      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 22 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 12 }}>Ismingiz</div>
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 22 }}>
+        <div style={{ fontSize: 15.5, fontWeight: 700, marginBottom: 12 }}>Ismingiz</div>
         <div style={{ display: "flex", gap: 8 }}>
-          <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Ismingizni kiriting" style={{ flex: 1, padding: "10px 14px", border: `1px solid ${B.border}`, borderRadius: 9, fontSize: 14, fontFamily: FONT }} />
-          <button onClick={() => setName(draft)} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 9, padding: "10px 20px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Saqlash</button>
+          <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Ismingizni kiriting" style={{ flex: 1, padding: "10px 14px", border: `1px solid ${B.border}`, borderRadius: 12, fontSize: 15.5, fontFamily: FONT }} />
+          <button onClick={() => setName(draft)} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "10px 20px", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Saqlash</button>
         </div>
-        <div style={{ fontSize: 11.5, color: B.muted, marginTop: 8 }}>Ismingiz "Jamiyat" bo'limida boshqa o'quvchilarga ko'rinadi.</div>
+        <div style={{ fontSize: 12.5, color: B.muted, marginTop: 8 }}>Ismingiz "Jamiyat" bo'limida boshqa o'quvchilarga ko'rinadi.</div>
       </div>
     </div>
   );
@@ -1610,27 +1803,27 @@ function Community({ clientId, name, peers, roster, roomReady, dbReady }) {
 
   return (
     <div>
-      <h1 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 4px" }}>Jamiyat</h1>
-      <p style={{ fontSize: 14, color: B.muted, margin: "0 0 18px" }}>Boshqa o'quvchilar bilan bir vaqtda mashq qiling.</p>
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Jamiyat</h1>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 18px" }}>Boshqa o'quvchilar bilan bir vaqtda mashq qiling.</p>
 
       {!roomReady && !dbReady && (
-        <div style={{ background: "#FFF7E8", borderRadius: 10, padding: "13px 16px", fontSize: 13, marginBottom: 16 }}>
+        <div style={{ background: "#FFF7E8", borderRadius: 12, padding: "13px 16px", fontSize: 14.5, marginBottom: 16 }}>
           Jamiyat funksiyasi bu ko'rinishda mavjud emas.
         </div>
       )}
 
-      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, overflow: "hidden" }}>
-        <div style={{ padding: "14px 20px", borderBottom: `1px solid ${B.border}`, fontSize: 13.5, fontWeight: 700 }}>
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, overflow: "hidden" }}>
+        <div style={{ padding: "14px 20px", borderBottom: `1px solid ${B.border}`, fontSize: 15, fontWeight: 700 }}>
           {merged.length > 0 ? `${merged.length} ta o'quvchi` : "Hozircha boshqa o'quvchi yo'q"}
         </div>
         {merged.map((r) => (
           <div key={r.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "13px 20px", borderBottom: `1px solid ${B.bg}` }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{ width: 9, height: 9, borderRadius: "50%", background: r.online ? B.green : B.border, flexShrink: 0 }} />
-              <span style={{ fontSize: 14, fontWeight: 600 }}>{r.name || "Mehmon"}</span>
-              {r.online && <span style={{ fontSize: 10.5, fontWeight: 800, color: B.green, background: "#E6F6EE", padding: "2px 8px", borderRadius: 8 }}>ONLAYN</span>}
+              <span style={{ fontSize: 15.5, fontWeight: 600 }}>{r.name || "Mehmon"}</span>
+              {r.online && <span style={{ fontSize: 11.5, fontWeight: 800, color: B.green, background: "#E6F6EE", padding: "2px 8px", borderRadius: 8 }}>ONLAYN</span>}
             </div>
-            <div style={{ fontSize: 12.5, color: B.muted }}>bugun {fmtMinutes((r.minutesToday || 0) * 60)} · 🔥{r.streak || 0}</div>
+            <div style={{ fontSize: 14, color: B.muted }}>bugun {fmtMinutes((r.minutesToday || 0) * 60)} · 🔥{r.streak || 0}</div>
           </div>
         ))}
       </div>
@@ -1657,40 +1850,40 @@ function SavedPage() {
   if (active) {
     return (
       <div>
-        <button onClick={() => setActive(null)} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 14, marginBottom: 14, fontFamily: FONT }}><ChevronLeft size={16} /> Ro'yxatga qaytish</button>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 24 }}>
-          <div style={{ fontSize: 10.5, color: B.muted, marginBottom: 12, textTransform: "uppercase" }}>{active.domain} {active.skill ? `· ${active.skill}` : ""}</div>
-          {active.passage && <div style={{ fontSize: 14.5, lineHeight: 1.7, marginBottom: 18, whiteSpace: "pre-line", paddingBottom: 16, borderBottom: `1px solid ${B.bg}` }}>{active.passage}</div>}
-          <p style={{ fontSize: 15, marginBottom: 18, whiteSpace: "pre-line" }}>{active.prompt}</p>
+        <button onClick={() => setActive(null)} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 15.5, marginBottom: 14, fontFamily: FONT }}><ChevronLeft size={16} /> Ro'yxatga qaytish</button>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 24 }}>
+          <div style={{ fontSize: 11.5, color: B.muted, marginBottom: 12, textTransform: "uppercase" }}>{active.domain} {active.skill ? `· ${active.skill}` : ""}</div>
+          {active.passage && <div style={{ fontSize: 16, lineHeight: 1.7, marginBottom: 18, whiteSpace: "pre-line", paddingBottom: 16, borderBottom: `1px solid ${B.bg}` }}>{active.passage}</div>}
+          <p style={{ fontSize: 16.5, marginBottom: 18, whiteSpace: "pre-line" }}>{active.prompt}</p>
           {active.choices ? active.choices.map((c, idx) => (
-            <div key={idx} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 9, border: `1.5px solid ${idx === active.answer ? B.green : B.border}`, background: idx === active.answer ? "#E6F6EE" : "#fff", marginBottom: 9 }}>
-              <div style={{ width: 25, height: 25, borderRadius: "50%", border: `1.5px solid ${idx === active.answer ? B.green : B.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>{String.fromCharCode(65 + idx)}</div>
-              <span style={{ fontSize: 14 }}>{c}</span>
+            <div key={idx} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, border: `1.5px solid ${idx === active.answer ? B.green : B.border}`, background: idx === active.answer ? "#E6F6EE" : "#fff", marginBottom: 9 }}>
+              <div style={{ width: 25, height: 25, borderRadius: "50%", border: `1.5px solid ${idx === active.answer ? B.green : B.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13.5, fontWeight: 700 }}>{String.fromCharCode(65 + idx)}</div>
+              <span style={{ fontSize: 15.5 }}>{c}</span>
             </div>
-          )) : <div style={{ fontSize: 14, marginBottom: 12 }}>To'g'ri javob: <b>{active.answer}</b></div>}
-          {active.expl && <div style={{ marginTop: 14, background: B.bg, borderRadius: 10, padding: "13px 16px", fontSize: 13.5, lineHeight: 1.6 }}>{active.expl}</div>}
-          <button onClick={() => remove(active.prompt)} style={{ marginTop: 16, background: "transparent", border: `1px solid ${B.rose}`, color: B.rose, borderRadius: 9, padding: "9px 20px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>O'chirish</button>
+          )) : <div style={{ fontSize: 15.5, marginBottom: 12 }}>To'g'ri javob: <b>{active.answer}</b></div>}
+          {active.expl && <div style={{ marginTop: 14, background: B.bg, borderRadius: 12, padding: "13px 16px", fontSize: 15, lineHeight: 1.6 }}>{active.expl}</div>}
+          <button onClick={() => remove(active.prompt)} style={{ marginTop: 16, background: "transparent", border: `1px solid ${B.rose}`, color: B.rose, borderRadius: 12, padding: "9px 20px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>O'chirish</button>
         </div>
       </div>
     );
   }
   return (
     <div>
-      <h1 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 4px" }}>Xatolar va saqlangan</h1>
-      <p style={{ fontSize: 14, color: B.muted, margin: "0 0 22px" }}>Savollar bankida "Saqlash" tugmasi bilan belgilagan savollaringiz shu yerda.</p>
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Xatolar va saqlangan</h1>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 22px" }}>Savollar bankida "Saqlash" tugmasi bilan belgilagan savollaringiz shu yerda.</p>
       {list.length === 0 ? (
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 50, textAlign: "center" }}>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 50, textAlign: "center" }}>
           <Bookmark size={32} color={B.muted} />
-          <div style={{ fontSize: 15, fontWeight: 700, marginTop: 14 }}>Hali hech narsa saqlanmagan</div>
-          <div style={{ fontSize: 13.5, color: B.muted, marginTop: 4 }}>Savollar bankida mashq qilib, muhim savollarni saqlab qo'ying.</div>
+          <div style={{ fontSize: 16.5, fontWeight: 700, marginTop: 14 }}>Hali hech narsa saqlanmagan</div>
+          <div style={{ fontSize: 15, color: B.muted, marginTop: 4 }}>Savollar bankida mashq qilib, muhim savollarni saqlab qo'ying.</div>
         </div>
       ) : (
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, overflow: "hidden" }}>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, overflow: "hidden" }}>
           {list.map((item, i) => (
             <div key={i} onClick={() => setActive(item)} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "13px 20px", borderBottom: i < list.length - 1 ? `1px solid ${B.bg}` : "none", cursor: "pointer" }}>
               <div style={{ overflow: "hidden" }}>
-                <div style={{ fontSize: 11, color: B.muted, marginBottom: 3 }}>{item.domain}</div>
-                <div style={{ fontSize: 13.5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 420 }}>{item.prompt}</div>
+                <div style={{ fontSize: 12, color: B.muted, marginBottom: 3 }}>{item.domain}</div>
+                <div style={{ fontSize: 15, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 420 }}>{item.prompt}</div>
               </div>
               <button onClick={(e) => { e.stopPropagation(); remove(item.prompt); }} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", flexShrink: 0 }}><X size={15} /></button>
             </div>
@@ -1728,35 +1921,35 @@ function Drill({ onExit }) {
     return (
       <div style={{ textAlign: "center", padding: "60px 20px" }}>
         <Trophy size={44} color={B.gold} />
-        <h2 style={{ fontSize: 24, fontWeight: 800, margin: "16px 0 6px" }}>Mashq tugadi!</h2>
-        <p style={{ fontSize: 17, fontWeight: 700, color: B.plum, marginBottom: 20 }}>{score} / {questions.length} to'g'ri</p>
-        <button onClick={onExit} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 9, padding: "11px 26px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Orqaga</button>
+        <h2 style={{ fontSize: 26, fontWeight: 800, margin: "16px 0 6px" }}>Mashq tugadi!</h2>
+        <p style={{ fontSize: 19, fontWeight: 700, color: B.plum, marginBottom: 20 }}>{score} / {questions.length} to'g'ri</p>
+        <button onClick={onExit} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "11px 26px", fontSize: 15.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Orqaga</button>
       </div>
     );
   }
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-        <button onClick={onExit} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 14, fontFamily: FONT }}><ChevronLeft size={16} /> Chiqish</button>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, color: seconds < 30 ? B.rose : B.text }}><Clock size={14} /> {fmt(seconds)}</div>
+        <button onClick={onExit} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 15.5, fontFamily: FONT }}><ChevronLeft size={16} /> Chiqish</button>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 14.5, fontWeight: 700, color: seconds < 30 ? B.rose : B.text }}><Clock size={14} /> {fmt(seconds)}</div>
       </div>
-      <div style={{ fontSize: 12.5, color: B.muted, marginBottom: 10 }}>Savol {i + 1} / {questions.length}</div>
-      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 24 }}>
-        <div style={{ fontSize: 10.5, color: B.muted, marginBottom: 14, textTransform: "uppercase" }}>{q.domain}</div>
-        {q.passage && <div style={{ fontSize: 14, lineHeight: 1.6, marginBottom: 16, whiteSpace: "pre-line" }}>{q.passage}</div>}
-        <p style={{ fontSize: 15, marginBottom: 16, whiteSpace: "pre-line" }}>{q.prompt}</p>
+      <div style={{ fontSize: 14, color: B.muted, marginBottom: 10 }}>Savol {i + 1} / {questions.length}</div>
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 24 }}>
+        <div style={{ fontSize: 11.5, color: B.muted, marginBottom: 14, textTransform: "uppercase" }}>{q.domain}</div>
+        {q.passage && <div style={{ fontSize: 15.5, lineHeight: 1.6, marginBottom: 16, whiteSpace: "pre-line" }}>{q.passage}</div>}
+        <p style={{ fontSize: 16.5, marginBottom: 16, whiteSpace: "pre-line" }}>{q.prompt}</p>
         {q.choices ? q.choices.map((c, idx) => {
           const sel = picked === idx; const correct = picked !== null && idx === q.answer;
           return (
-            <div key={idx} onClick={() => choose(idx)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 14px", borderRadius: 9, border: `1.5px solid ${correct ? B.green : sel ? B.rose : B.border}`, background: correct ? "#E6F6EE" : sel ? "#FDECF1" : "#fff", marginBottom: 8, cursor: picked === null ? "pointer" : "default" }}>
-              <div style={{ width: 24, height: 24, borderRadius: "50%", border: `1.5px solid ${correct ? B.green : sel ? B.rose : B.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11.5, fontWeight: 700 }}>{String.fromCharCode(65 + idx)}</div>
-              <span style={{ fontSize: 13.5 }}>{c}</span>
+            <div key={idx} onClick={() => choose(idx)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 14px", borderRadius: 12, border: `1.5px solid ${correct ? B.green : sel ? B.rose : B.border}`, background: correct ? "#E6F6EE" : sel ? "#FDECF1" : "#fff", marginBottom: 8, cursor: picked === null ? "pointer" : "default" }}>
+              <div style={{ width: 24, height: 24, borderRadius: "50%", border: `1.5px solid ${correct ? B.green : sel ? B.rose : B.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12.5, fontWeight: 700 }}>{String.fromCharCode(65 + idx)}</div>
+              <span style={{ fontSize: 15 }}>{c}</span>
             </div>
           );
         }) : (
-          <input value={picked ?? ""} onChange={(e) => setPicked(e.target.value)} disabled={picked !== null} style={{ padding: "10px 14px", border: "1.5px solid #B7BBC4", borderRadius: 8, fontSize: 15 }} />
+          <input value={picked ?? ""} onChange={(e) => setPicked(e.target.value)} disabled={picked !== null} style={{ padding: "10px 14px", border: "1.5px solid #B7BBC4", borderRadius: 8, fontSize: 16.5 }} />
         )}
-        {picked !== null && <button onClick={next} style={{ marginTop: 14, background: B.plum, color: "#fff", border: "none", borderRadius: 9, padding: "10px 24px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>{i === questions.length - 1 ? "Yakunlash" : "Keyingi"}</button>}
+        {picked !== null && <button onClick={next} style={{ marginTop: 14, background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "10px 24px", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>{i === questions.length - 1 ? "Yakunlash" : "Keyingi"}</button>}
       </div>
     </div>
   );
@@ -1766,13 +1959,13 @@ function DrillsHome() {
   if (active) return <Drill onExit={() => setActive(false)} />;
   return (
     <div>
-      <h1 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 4px" }}>Tezkor mashqlar</h1>
-      <p style={{ fontSize: 14, color: B.muted, margin: "0 0 22px" }}>5 daqiqada 5 ta aralash savol — kunlik qisqa mashq uchun.</p>
-      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 16, padding: 30, textAlign: "center", maxWidth: 420 }}>
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Tezkor mashqlar</h1>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 22px" }}>5 daqiqada 5 ta aralash savol — kunlik qisqa mashq uchun.</p>
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 30, textAlign: "center", maxWidth: 420 }}>
         <Timer size={36} color={B.plum} />
-        <div style={{ fontSize: 16, fontWeight: 800, margin: "14px 0 6px" }}>5 daqiqalik drill</div>
-        <div style={{ fontSize: 13, color: B.muted, marginBottom: 18 }}>Turli domenlardan aralash savollar</div>
-        <button onClick={() => setActive(true)} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 10, padding: "12px 28px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Boshlash</button>
+        <div style={{ fontSize: 17.5, fontWeight: 800, margin: "14px 0 6px" }}>5 daqiqalik drill</div>
+        <div style={{ fontSize: 14.5, color: B.muted, marginBottom: 18 }}>Turli domenlardan aralash savollar</div>
+        <button onClick={() => setActive(true)} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "12px 28px", fontSize: 15.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Boshlash</button>
       </div>
     </div>
   );
@@ -1780,7 +1973,8 @@ function DrillsHome() {
 
 function AppShell({ onHome }) {
   const [page, setPage] = useState("home");
-  const [tier, setTier] = useState(() => loadLocal("sws_tier", "free"));
+  const [storedTier, setTier] = useState(() => loadLocal("sws_tier", "free"));
+  const tier = LAUNCH_FREE ? "premium" : storedTier;
   const [payOpen, setPayOpen] = useState(false);
   const [suggestedTier, setSuggestedTier] = useState("standard");
   const [activeTest, setActiveTest] = useState(null);
@@ -1898,34 +2092,35 @@ function AppShell({ onHome }) {
   if (report) return <ScoreReport test={activeTest} report={report} onBack={() => { setReport(null); setActiveTest(null); setPage("analytics"); }} />;
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", fontFamily: FONT, background: B.bg, color: B.text, flexWrap: "wrap" }}>
-      <aside style={{ width: 232, background: "#fff", borderRight: `1px solid ${B.border}`, padding: "20px 14px", flexShrink: 0 }}>
+    <div className="sws-app" style={{ display: "flex", minHeight: "100vh", fontFamily: FONT, background: B.bg, color: B.text, flexWrap: "wrap" }}>
+      <aside style={{ width: 248, background: "rgba(255,255,255,0.78)", backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)", boxShadow: "1px 0 0 rgba(22,32,77,0.05)", padding: "20px 14px", flexShrink: 0 }}>
         <button onClick={onHome} style={{ display: "flex", alignItems: "center", gap: 9, background: "transparent", border: "none", cursor: "pointer", marginBottom: 24, padding: "0 6px" }}>
-          <Mascot size={30} /><span style={{ fontSize: 14.5, fontWeight: 800, color: B.text, fontFamily: FONT, textAlign: "left", lineHeight: 1.2 }}>SAT with<br />Shirinabonu</span>
+          <Mascot size={30} /><span style={{ fontSize: 16, fontWeight: 800, color: B.text, fontFamily: FONT, textAlign: "left", lineHeight: 1.2 }}>SAT with<br />Shirinabonu</span>
         </button>
         {nav.map((n) => (
-          <button key={n.id} onClick={() => setPage(n.id)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", marginBottom: 3, borderRadius: 9, border: "none", cursor: "pointer", fontSize: 14, fontWeight: page === n.id ? 700 : 600, fontFamily: FONT, background: page === n.id ? "#F2EAFB" : "transparent", color: page === n.id ? B.plum : B.muted, textAlign: "left" }}><n.icon size={17} /> {n.label}</button>
+          <button key={n.id} onClick={() => setPage(n.id)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", marginBottom: 3, borderRadius: 12, border: "none", cursor: "pointer", fontSize: 15.5, fontWeight: page === n.id ? 700 : 600, fontFamily: FONT, background: page === n.id ? "#F2EAFB" : "transparent", color: page === n.id ? B.plum : B.muted, textAlign: "left" }}><n.icon size={17} /> {n.label}</button>
         ))}
-        <div style={{ marginTop: 22, background: B.navy, borderRadius: 12, padding: 16, color: "#fff" }}>
-          <div style={{ fontSize: 13.5, fontWeight: 800, marginBottom: 5 }}>Tarif: {TIERS[tier].label}</div>
+        <div style={{ marginTop: 22, background: B.navy, borderRadius: 16, padding: 16, color: "#fff" }}>
+          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 5 }}>Tarif: {tierLabel(tier)}</div>
+          {LAUNCH_FREE && <div style={{ fontSize: 13.5, opacity: 0.8, lineHeight: 1.5 }}>Hozircha barcha testlar, savollar va AI repetitor bepul.</div>}
           {tier !== "premium" && (
             <>
-              <div style={{ fontSize: 12, opacity: 0.8, marginBottom: 12, lineHeight: 1.5 }}>Ko'proq test, savol va cheksiz AI repetitor.</div>
-              <button onClick={() => needPay(tier === "free" ? "standard" : "premium")} style={{ width: "100%", background: B.gold, border: "none", borderRadius: 8, padding: 9, fontSize: 13, fontWeight: 800, cursor: "pointer", color: B.navy, fontFamily: FONT }}>Tarifni oshirish</button>
+              <div style={{ fontSize: 13.5, opacity: 0.8, marginBottom: 12, lineHeight: 1.5 }}>Ko'proq test, savol va cheksiz AI repetitor.</div>
+              <button onClick={() => needPay(tier === "free" ? "standard" : "premium")} style={{ width: "100%", background: B.gold, border: "none", borderRadius: 8, padding: 9, fontSize: 14.5, fontWeight: 800, cursor: "pointer", color: B.navy, fontFamily: FONT }}>Tarifni oshirish</button>
             </>
           )}
         </div>
       </aside>
       <main style={{ flex: 1, overflowY: "auto", minWidth: 280 }}>
-        <div style={{ background: "#fff", borderBottom: `1px solid ${B.border}`, padding: "12px 30px", display: "flex", justifyContent: "flex-end", gap: 10, flexWrap: "wrap" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, background: B.bg, padding: "6px 13px", borderRadius: 20, fontSize: 12.5 }}>🔥 {streak}</div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, background: B.bg, padding: "6px 13px", borderRadius: 20, fontSize: 12.5 }}><Clock size={13} /> {fmtMinutes(todaySeconds)}</div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, background: B.bg, padding: "6px 13px", borderRadius: 20, fontSize: 13 }}>
+        <div style={{ background: "rgba(255,255,255,0.78)", backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)", boxShadow: "0 1px 0 rgba(22,32,77,0.05)", position: "sticky", top: 0, zIndex: 10, padding: "12px 30px", display: "flex", justifyContent: "flex-end", gap: 10, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, background: B.bg, padding: "6px 13px", borderRadius: 24, fontSize: 14 }}>🔥 {streak}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, background: B.bg, padding: "6px 13px", borderRadius: 24, fontSize: 14 }}><Clock size={13} /> {fmtMinutes(todaySeconds)}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: B.bg, padding: "6px 13px", borderRadius: 24, fontSize: 14.5 }}>
             <User size={15} color={B.muted} /> {name || "O'quvchi"}
-            <span style={{ background: tier === "premium" ? B.gold : tier === "standard" ? B.plum : B.border, color: tier === "free" ? B.muted : (tier === "premium" ? B.navy : "#fff"), fontSize: 10, fontWeight: 800, padding: "2px 7px", borderRadius: 8 }}>{TIERS[tier].label.toUpperCase()}</span>
+            <span style={{ background: tier === "premium" ? B.gold : tier === "standard" ? B.plum : B.border, color: tier === "free" ? B.muted : (tier === "premium" ? B.navy : "#fff"), fontSize: 11, fontWeight: 800, padding: "2px 7px", borderRadius: 8 }}>{tierLabel(tier).toUpperCase()}</span>
           </div>
         </div>
-        <div style={{ padding: "28px 30px", maxWidth: 960 }}>
+        <div key={page} className="sws-fade-in" style={{ padding: "32px 34px", maxWidth: 1000 }}>
           {page === "home" && <DashHome history={history} onGoTests={() => setPage("tests")} todaySeconds={todaySeconds} goalMinutes={goalMinutes} streak={streak} onGoProfile={() => setPage("profile")} targetScore={targetScore} examDate={examDate} />}
           {page === "tests" && <MockTests tier={tier} history={history} onOpenTest={setActiveTest} onNeedPay={needPay} />}
           {page === "bank" && <QuestionBank tier={tier} bankStats={bankStats} onRecord={(d, c, t) => setBankStats((s) => ({ ...s, [d]: { c, t } }))} onNeedPay={needPay} />}
@@ -1970,8 +2165,8 @@ function Onboarding({ onDone }) {
   const domainOptions = ["Craft and Structure", "Information and Ideas", "Standard English Conventions", "Expression of Ideas", "Algebra", "Advanced Math", "Problem-Solving and Data Analysis", "Geometry and Trigonometry"];
 
   return (
-    <div style={{ minHeight: "100vh", background: B.bg, fontFamily: FONT, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
-      <div style={{ width: "100%", maxWidth: 520, background: "#fff", borderRadius: 20, padding: 34, boxShadow: "0 20px 44px -22px rgba(22,32,77,0.3)" }}>
+    <div className="sws-app" style={{ minHeight: "100vh", background: B.bg, fontFamily: FONT, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div className="sws-fade-in" style={{ width: "100%", maxWidth: 560, background: "#fff", borderRadius: 28, padding: 40, boxShadow: "0 1px 2px rgba(22,32,77,0.04), 0 30px 60px -30px rgba(22,32,77,0.28)" }}>
         <div style={{ display: "flex", gap: 6, marginBottom: 24 }}>
           {steps.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 3, background: i <= step ? B.plum : B.bg }} />)}
         </div>
@@ -1979,19 +2174,19 @@ function Onboarding({ onDone }) {
         {step === 0 && (
           <div style={{ textAlign: "center" }}>
             <Mascot size={64} />
-            <h2 style={{ fontSize: 21, fontWeight: 800, margin: "16px 0 6px" }}>Keling, tanishaylik</h2>
-            <p style={{ fontSize: 13.5, color: B.muted, marginBottom: 20 }}>Shaxsiy reja tuzish uchun bir necha savol beramiz.</p>
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ismingiz" style={{ width: "100%", padding: "12px 16px", border: `1px solid ${B.border}`, borderRadius: 10, fontSize: 15, fontFamily: FONT, boxSizing: "border-box", textAlign: "center" }} />
+            <h2 style={{ fontSize: 23, fontWeight: 800, margin: "16px 0 6px" }}>Keling, tanishaylik</h2>
+            <p style={{ fontSize: 15, color: B.muted, marginBottom: 20 }}>Shaxsiy reja tuzish uchun bir necha savol beramiz.</p>
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ismingiz" style={{ width: "100%", padding: "12px 16px", border: `1px solid ${B.border}`, borderRadius: 12, fontSize: 16.5, fontFamily: FONT, boxSizing: "border-box", textAlign: "center" }} />
           </div>
         )}
 
         {step === 1 && (
           <div>
-            <h2 style={{ fontSize: 20, fontWeight: 800, margin: "0 0 6px", textAlign: "center" }}>Maqsad balingiz nechi?</h2>
-            <p style={{ fontSize: 13.5, color: B.muted, marginBottom: 20, textAlign: "center" }}>Bu reja va tavsiyalarni moslashtirishga yordam beradi</p>
+            <h2 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 6px", textAlign: "center" }}>Maqsad balingiz nechi?</h2>
+            <p style={{ fontSize: 15, color: B.muted, marginBottom: 20, textAlign: "center" }}>Bu reja va tavsiyalarni moslashtirishga yordam beradi</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
               {[1200, 1300, 1400, 1450, 1500, 1550].map((s) => (
-                <button key={s} onClick={() => setTarget(s)} style={{ padding: "14px 0", borderRadius: 12, border: `2px solid ${target === s ? B.plum : B.border}`, background: target === s ? "#F2EAFB" : "#fff", color: target === s ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 16, fontWeight: 800 }}>{s}</button>
+                <button key={s} onClick={() => setTarget(s)} style={{ padding: "14px 0", borderRadius: 16, border: `2px solid ${target === s ? B.plum : B.border}`, background: target === s ? "#F2EAFB" : "#fff", color: target === s ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 17.5, fontWeight: 800 }}>{s}</button>
               ))}
             </div>
           </div>
@@ -1999,11 +2194,11 @@ function Onboarding({ onDone }) {
 
         {step === 2 && (
           <div>
-            <h2 style={{ fontSize: 20, fontWeight: 800, margin: "0 0 6px", textAlign: "center" }}>Imtihoningiz qachon?</h2>
-            <p style={{ fontSize: 13.5, color: B.muted, marginBottom: 20, textAlign: "center" }}>Kunlik mashq maqsadingizni shunga moslab beramiz</p>
+            <h2 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 6px", textAlign: "center" }}>Imtihoningiz qachon?</h2>
+            <p style={{ fontSize: 15, color: B.muted, marginBottom: 20, textAlign: "center" }}>Kunlik mashq maqsadingizni shunga moslab beramiz</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {[[1, "1 oydan kam"], [2, "~2 oy"], [3, "~3 oy"], [6, "~6 oy"], [12, "Hali bilmayman"]].map(([m, l]) => (
-                <button key={m} onClick={() => setMonthsAway(m)} style={{ padding: "13px 18px", borderRadius: 10, border: `2px solid ${monthsAway === m ? B.plum : B.border}`, background: monthsAway === m ? "#F2EAFB" : "#fff", color: monthsAway === m ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 14, fontWeight: 700, textAlign: "left" }}>{l}</button>
+                <button key={m} onClick={() => setMonthsAway(m)} style={{ padding: "13px 18px", borderRadius: 12, border: `2px solid ${monthsAway === m ? B.plum : B.border}`, background: monthsAway === m ? "#F2EAFB" : "#fff", color: monthsAway === m ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 15.5, fontWeight: 700, textAlign: "left" }}>{l}</button>
               ))}
             </div>
           </div>
@@ -2011,11 +2206,11 @@ function Onboarding({ onDone }) {
 
         {step === 3 && (
           <div>
-            <h2 style={{ fontSize: 20, fontWeight: 800, margin: "0 0 6px", textAlign: "center" }}>Qaysi mavzular qiyinroq?</h2>
-            <p style={{ fontSize: 13.5, color: B.muted, marginBottom: 20, textAlign: "center" }}>Bir nechtasini tanlashingiz mumkin (ixtiyoriy)</p>
+            <h2 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 6px", textAlign: "center" }}>Qaysi mavzular qiyinroq?</h2>
+            <p style={{ fontSize: 15, color: B.muted, marginBottom: 20, textAlign: "center" }}>Bir nechtasini tanlashingiz mumkin (ixtiyoriy)</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {domainOptions.map((d) => (
-                <button key={d} onClick={() => toggleWeak(d)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", borderRadius: 10, border: `2px solid ${weak.includes(d) ? B.plum : B.border}`, background: weak.includes(d) ? "#F2EAFB" : "#fff", color: weak.includes(d) ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 13.5, fontWeight: 700, textAlign: "left" }}>
+                <button key={d} onClick={() => toggleWeak(d)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", borderRadius: 12, border: `2px solid ${weak.includes(d) ? B.plum : B.border}`, background: weak.includes(d) ? "#F2EAFB" : "#fff", color: weak.includes(d) ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 15, fontWeight: 700, textAlign: "left" }}>
                   {weak.includes(d) ? <Check size={15} /> : <span style={{ width: 15 }} />} {d}
                 </button>
               ))}
@@ -2026,8 +2221,8 @@ function Onboarding({ onDone }) {
         {step === 4 && (
           <div style={{ textAlign: "center" }}>
             <Trophy size={48} color={B.gold} />
-            <h2 style={{ fontSize: 21, fontWeight: 800, margin: "16px 0 16px" }}>Rejangiz tayyor, {name || "do'stim"}!</h2>
-            <div style={{ background: B.bg, borderRadius: 12, padding: 18, textAlign: "left", fontSize: 13.5, lineHeight: 2 }}>
+            <h2 style={{ fontSize: 23, fontWeight: 800, margin: "16px 0 16px" }}>Rejangiz tayyor, {name || "do'stim"}!</h2>
+            <div style={{ background: B.bg, borderRadius: 16, padding: 18, textAlign: "left", fontSize: 15, lineHeight: 2 }}>
               <div>🎯 Maqsad ball: <b>{target}</b></div>
               <div>📅 Imtihon: <b>{examDate.toLocaleDateString("uz-UZ")}</b> atrofida</div>
               <div>⏱ Kunlik maqsad: <b>{suggestedGoal} daqiqa</b></div>
@@ -2037,11 +2232,11 @@ function Onboarding({ onDone }) {
         )}
 
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 26 }}>
-          <button onClick={() => setStep((s) => Math.max(0, s - 1))} style={{ visibility: step === 0 ? "hidden" : "visible", background: "transparent", border: "none", color: B.muted, cursor: "pointer", fontFamily: FONT, fontSize: 14, fontWeight: 700 }}>Orqaga</button>
+          <button onClick={() => setStep((s) => Math.max(0, s - 1))} style={{ visibility: step === 0 ? "hidden" : "visible", background: "transparent", border: "none", color: B.muted, cursor: "pointer", fontFamily: FONT, fontSize: 15.5, fontWeight: 700 }}>Orqaga</button>
           {step < 4 ? (
-            <button onClick={() => setStep((s) => s + 1)} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 10, padding: "11px 26px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6 }}>Keyingi <ChevronRight size={16} /></button>
+            <button onClick={() => setStep((s) => s + 1)} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "11px 26px", fontSize: 15.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6 }}>Keyingi <ChevronRight size={16} /></button>
           ) : (
-            <button onClick={finish} style={{ background: B.green, color: "#fff", border: "none", borderRadius: 10, padding: "11px 26px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Boshlash</button>
+            <button onClick={finish} style={{ background: B.green, color: "#fff", border: "none", borderRadius: 12, padding: "11px 26px", fontSize: 15.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Boshlash</button>
           )}
         </div>
       </div>
