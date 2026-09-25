@@ -36,6 +36,21 @@ function verifyAuth(auth) {
   if (Date.now() / 1000 - Number(auth.auth_date || 0) > 60 * 60 * 24 * 60) return null;
   return Number(auth.id);
 }
+// Telegram Mini App initData tekshiruvi — har safar hozir ochgan akkauntni aniq bildiradi
+function verifyWebApp(initData) {
+  try {
+    const params = new URLSearchParams(String(initData || ""));
+    const hash = params.get("hash"); if (!hash) return null;
+    params.delete("hash");
+    const dcs = Array.from(params.keys()).sort().map((k) => k + "=" + params.get(k)).join("\n");
+    const secret = crypto.createHmac("sha256", "WebAppData").update(token()).digest();
+    const calc = crypto.createHmac("sha256", secret).update(dcs).digest("hex");
+    if (calc.length !== hash.length || !crypto.timingSafeEqual(Buffer.from(calc), Buffer.from(hash))) return null;
+    if (Date.now() / 1000 - Number(params.get("auth_date") || 0) > 60 * 60 * 24 * 7) return null;
+    const user = JSON.parse(params.get("user") || "null");
+    return user && user.id ? Number(user.id) : null;
+  } catch (e) { return null; }
+}
 async function memberStatus(userId) {
   const m = await tg("getChatMember", { chat_id: CHANNEL, user_id: Number(userId) });
   if (!m.ok) return { ok: false, error: m.description || "unknown" };
@@ -44,4 +59,4 @@ async function memberStatus(userId) {
 }
 function webhookSecret() { return crypto.createHash("sha256").update("sws-hook:" + token()).digest("hex").slice(0, 40); }
 
-module.exports = { CHANNEL, SITE, token, tg, signLink, verifyLink, verifyAuth, memberStatus, webhookSecret };
+module.exports = { CHANNEL, SITE, token, tg, signLink, verifyLink, verifyAuth, verifyWebApp, memberStatus, webhookSecret };

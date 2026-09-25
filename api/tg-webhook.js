@@ -8,7 +8,7 @@ async function reply(chatId, userId, firstName) {
     await T.tg("sendMessage", {
       chat_id: chatId,
       text: "✅ " + (firstName ? firstName + ", " : "") + "obunangiz tasdiqlandi!\n\nQuyidagi tugma orqali SAT with Shirinabonu saytiga kiring. Kanalda qolsangiz, sayt siz uchun doim ochiq.",
-      reply_markup: { inline_keyboard: [[{ text: "🚀 Saytga kirish", url: T.SITE + "/?tg=" + T.signLink(userId) }]] },
+      reply_markup: { inline_keyboard: [[{ text: "🚀 Saytga kirish", web_app: { url: T.SITE + "/" } }], [{ text: "🌐 Brauzerda ochish", url: T.SITE + "/?tg=" + T.signLink(userId) }]] },
     });
   } else {
     await T.tg("sendMessage", {

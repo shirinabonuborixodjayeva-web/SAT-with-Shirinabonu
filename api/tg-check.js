@@ -15,6 +15,7 @@ module.exports = async (req, res) => {
     if (q.diag && botCache) { const st = await T.memberStatus(botCache.id); const wh = await T.tg("getWebhookInfo"); res.status(200).json({ ...base, botInChannel: st, webhook: wh.ok ? { url: wh.result.url, pending: wh.result.pending_update_count, lastError: wh.result.last_error_message || null } : null }); return; }
     if (q.setup && botCache) {
       const r = await T.tg("setWebhook", { url: T.SITE + "/api/tg-webhook", secret_token: T.webhookSecret(), allowed_updates: ["message", "callback_query"] });
+      await T.tg("setChatMenuButton", { menu_button: { type: "web_app", text: "Sayt", web_app: { url: T.SITE + "/" } } });
       await T.tg("setMyCommands", { commands: [{ command: "start", description: "Saytga kirish havolasini olish" }] });
       res.status(200).json({ ...base, webhookSet: r.ok, description: r.description }); return;
     }
@@ -24,7 +25,7 @@ module.exports = async (req, res) => {
 
   let body = req.body;
   if (typeof body === "string") { try { body = JSON.parse(body); } catch (e) { body = {}; } }
-  const userId = (body && body.link && T.verifyLink(body.link)) || (body && body.auth && T.verifyAuth(body.auth));
+  const userId = (body && body.webapp) ? T.verifyWebApp(body.webapp) : (body && body.link && T.verifyLink(body.link)) || (body && body.auth && T.verifyAuth(body.auth));
   if (!userId) { res.status(200).json({ ...base, ok: false, reason: "bad_auth" }); return; }
   const m = await T.memberStatus(userId);
   if (!m.ok) { res.status(200).json({ ...base, ok: false, reason: "check_failed", detail: m.error }); return; }
