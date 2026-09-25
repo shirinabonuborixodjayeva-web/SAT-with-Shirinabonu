@@ -1,0 +1,50 @@
+// Vercel serverless funksiyasi: AI repetitor uchun Google Gemini'ga so'rov yuboradi.
+// Kalit brauzerga chiqmaydi — u Vercel'dagi GEMINI_API_KEY muhit o'zgaruvchisida saqlanadi.
+const SYSTEM =
+  "You are a friendly, concise SAT tutor for Uzbek students on the site 'SAT with Shirinabonu'. " +
+  "Answer in the language the student uses (Uzbek or English). Keep answers under 150 words unless the student asks for full working or a quiz. " +
+  "Explain step by step for math. If asked to quiz the student, write 3 short multiple-choice Digital SAT-style questions (A–D) on the topic, " +
+  "and give the answers with one-line explanations only after the student replies. Stay on SAT, English, and math topics.";
+
+const MODELS = [process.env.GEMINI_MODEL, "gemini-flash-latest", "gemini-2.5-flash", "gemini-2.0-flash"].filter(Boolean);
+
+module.exports = async (req, res) => {
+  if (req.method !== "POST") { res.status(405).json({ error: "method_not_allowed" }); return; }
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) { res.status(503).json({ error: "no_key" }); return; }
+
+  let body = req.body;
+  if (typeof body === "string") { try { body = JSON.parse(body); } catch (e) { body = {}; } }
+  const msgs = Array.isArray(body && body.messages) ? body.messages : [];
+  const contents = msgs
+    .filter((m) => m && typeof m.text === "string" && m.text.trim())
+    .slice(-12)
+    .map((m) => ({ role: m.role === "user" ? "user" : "model", parts: [{ text: m.text.slice(0, 4000) }] }));
+  while (contents.length && contents[0].role !== "user") contents.shift();
+  if (!contents.length || contents[contents.length - 1].role !== "user") { res.status(400).json({ error: "bad_request" }); return; }
+
+  const payload = {
+    systemInstruction: { parts: [{ text: SYSTEM }] },
+    contents,
+    generationConfig: { temperature: 0.6, maxOutputTokens: 1024 },
+  };
+
+  let lastErr = "unknown";
+  for (const model of MODELS) {
+    try {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+        body: JSON.stringify(payload),
+      });
+      const data = await r.json().catch(() => ({}));
+      if (r.status === 404) { lastErr = "model_not_found:" + model; continue; }
+      if (r.status === 429) { res.status(429).json({ error: "rate_limited" }); return; }
+      if (!r.ok) { lastErr = (data.error && data.error.message) || "http_" + r.status; continue; }
+      const text = (((data.candidates || [])[0] || {}).content || {}).parts?.map((p) => p.text || "").join("").trim();
+      if (text) { res.status(200).json({ text, model }); return; }
+      lastErr = "empty_response";
+    } catch (e) { lastErr = String(e && e.message || e); }
+  }
+  res.status(502).json({ error: "upstream_failed", detail: lastErr });
+};
