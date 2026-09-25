@@ -63,10 +63,13 @@
   .sws-app [style*="border-right: 1px solid rgb(228, 231, 245)"] { border-right-color: rgba(22,32,77,0.06) !important; }
   .sws-app input:not([type="range"]):not([type="checkbox"]):not([type="radio"]), .sws-app textarea, .sws-app select { border-color: transparent !important; background-color: #F2F3F8 !important; box-shadow: none !important; }
   .sws-app input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):focus, .sws-app textarea:focus, .sws-app select:focus { background-color: #fff !important; box-shadow: 0 0 0 3px rgba(107,63,160,0.18) !important; }
+  @keyframes swsTimerLow { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+  .sws-timer-low { animation: swsTimerLow 1.2s ease-in-out infinite; }
   @media (prefers-reduced-motion: reduce) {
     [data-reveal], .sws-hero-up, .sws-tilt-in, .sws-float, .sws-gradient-text, .sws-blob, .sws-bar, .sws-pulse { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
   }
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 <div id="root"></div>
@@ -218,7 +221,11 @@ function pickUnseenRW(skill) {
   const pick = available[Math.floor(Math.random() * available.length)];
   seenMap[skill] = [...seenIdx, pick];
   saveLocal("sws_seen_rw", seenMap);
-  return pool[pick];
+  // Javob variantlarini aralashtiramiz — to'g'ri javob har safar boshqa harfda (A/B/C/D) chiqadi
+  const src = pool[pick];
+  const order = src.choices.map((_, k) => k);
+  for (let k = order.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [order[k], order[j]] = [order[j], order[k]]; }
+  return { ...src, choices: order.map((k) => src.choices[k]), answer: order.indexOf(src.answer) };
 }
 const ri = (rng, min, max) => Math.floor(rng() * (max - min + 1)) + min;
 const pickOne = (rng, arr) => arr[Math.floor(rng() * arr.length)];
@@ -228,10 +235,10 @@ function buildChoices(rng, correct, distractors) {
   return { choices: all, answer: all.indexOf(String(correct)) };
 }
 
-function genMath(skill, rng, isSPR) {
+function genMath(skill, rng, isSPR, forceT) {
   let q;
   if (skill === "Linear equations & systems") {
-    const t = ri(rng, 0, 7);
+    const t = forceT != null ? forceT : ri(rng, 0, 7);
     if (t === 0) { const a = ri(rng, 2, 24), x = ri(rng, 2, 40), b = ri(rng, 1, 60); const c = a * x - b;
       q = { prompt: `If ${a}x − ${b} = ${c}, what is the value of x?`, correct: x, dist: [x + 1, x - 1, x + ri(rng, 2, 6)], expl: `${a}x = ${c + b}, so x = ${x}.` };
     } else if (t === 1) { const x = ri(rng, 2, 45), y = ri(rng, 1, 40);
@@ -249,7 +256,7 @@ function genMath(skill, rng, isSPR) {
     } else { const a = ri(rng, 2, 20), b = ri(rng, 1, 50), x = ri(rng, 2, 30), c = a * x + b;
       q = { prompt: `${a}x + ${b} = ${c}\n\nWhich equation has the same solution as the given equation?`, correct: `${a}x = ${c - b}`, dist: [`${a}x = ${c}`, `${a}x = ${c + b}`, `${a}x = ${b - c}`], expl: `Subtracting ${b} from both sides gives ${a}x = ${c - b}.` }; }
   } else if (skill === "Nonlinear functions") {
-    const t = ri(rng, 0, 7);
+    const t = forceT != null ? forceT : ri(rng, 0, 7);
     if (t === 0) { const h = ri(rng, 1, 25), c = ri(rng, 1, 40);
       q = { prompt: `The function f is defined by f(x) = x² − ${2 * h}x + ${c}. What is the x-coordinate of the vertex of the graph of f?`, correct: h, dist: [2 * h, -h, c], expl: `x = −b/2a = ${2 * h}/2 = ${h}.` };
     } else if (t === 1) { const p = ri(rng, 1, 30), r = ri(rng, 1, 30);
@@ -267,7 +274,7 @@ function genMath(skill, rng, isSPR) {
     } else { const k = ri(rng, 2, 9), m = ri(rng, 2, 9), n = ri(rng, 2, 9), p = k * m, qc = k * n;
       q = { prompt: `Which expression is equivalent to ${p}x² + ${qc}x?`, correct: `${k}x(${m}x + ${n})`, dist: [`x(${p}x + ${qc})`, `${n}x(${k}x + ${m})`, `${k}x²(${m} + ${n})`], expl: `The GCF of ${p} and ${qc} is ${k}: ${p}x² + ${qc}x = ${k}x(${m}x + ${n}).` }; }
   } else if (skill === "Ratios, rates, data") {
-    const t = ri(rng, 0, 7);
+    const t = forceT != null ? forceT : ri(rng, 0, 7);
     if (t === 0) { const p = ri(rng, 2, 18), r = ri(rng, 2, 18), k = ri(rng, 2, 15);
       q = { prompt: `A recipe uses ${p} cups of flour for every ${r} cups of milk. If ${p * k} cups of flour are used, how many cups of milk are needed?`, correct: r * k, dist: [r + k, p * k, r * k + p], expl: `${p * k} ÷ ${p} = ${k} batches; ${k} × ${r} = ${r * k}.` };
     } else if (t === 1) { const base = ri(rng, 8, 240) * 5, pct = pickOne(rng, [4, 5, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60, 75]);
@@ -287,7 +294,7 @@ function genMath(skill, rng, isSPR) {
       const N = Math.round((M * p) / 100);
       q = { prompt: `${N} is p% of ${M}. What is the value of p?`, correct: p, dist: [p + 5, Math.max(1, p - 5), Math.round((N / M) * 10)], expl: `${N}/${M} = ${(N / M).toFixed(2)} = ${p}%.` }; }
   } else {
-    const t = ri(rng, 0, 7);
+    const t = forceT != null ? forceT : ri(rng, 0, 7);
     if (t === 0) { const a = ri(rng, 15, 130), b = ri(rng, 15, Math.max(16, 165 - a));
       q = { prompt: `In triangle ABC, angle A measures ${a}° and angle B measures ${b}°. What is the measure, in degrees, of angle C?`, correct: 180 - a - b, dist: [180 - a, a + b, 90 - a], expl: `Angles sum to 180°: 180 − ${a} − ${b} = ${180 - a - b}.` };
     } else if (t === 1) { const r = ri(rng, 2, 300);
@@ -520,17 +527,32 @@ const MODULES = [
 ];
 function buildModule(mod, testId, diffPath) {
   const bp = mod.kind === "rw" ? RW_BLUEPRINT : MATH_BLUEPRINT;
-  return bp.map(([domain, skill], i) => {
+  return balanceAnswers(bp.map(([domain, skill], i) => {
     const isSPR = mod.kind === "math" && i >= Math.floor(bp.length * 0.75);
     if (mod.kind === "math") return { n: i + 1, domain, skill, ...genMath(skill, freshRng(), isSPR), passage: null };
     const v = pickUnseenRW(skill);
     return { n: i + 1, domain, skill, type: "mc", passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl };
+  }));
+}
+// Bir xil harfdagi to'g'ri javob ketma-ket 3 martadan ko'p kelmasin (haqiqiy SAT'dagidek aralash)
+function balanceAnswers(qs) {
+  let prev = -1, run = 0;
+  return qs.map((q) => {
+    if (q.type === "spr" || !q.choices) { prev = -1; run = 0; return q; }
+    let out = q;
+    if (q.answer === prev && run >= 2) {
+      const n = q.choices.length; const target = (q.answer + 1 + Math.floor(Math.random() * (n - 1))) % n;
+      const ch = [...q.choices]; [ch[q.answer], ch[target]] = [ch[target], ch[q.answer]];
+      out = { ...q, choices: ch, answer: target };
+    }
+    run = out.answer === prev ? run + 1 : 1; prev = out.answer;
+    return out;
   });
 }
 function buildModuleCached(mod, testId, diffPath) {
   if (mod.kind === "break") return [];
   const basis = mod.adaptive ? (diffPath || "easy") : "standard";
-  const cacheKey = `sws_qcache_v2_${testId}_${mod.id}_${basis}`;
+  const cacheKey = `sws_qcache_v3_${testId}_${mod.id}_${basis}`;
   const cached = loadLocal(cacheKey, null);
   if (cached) return cached;
   const fresh = buildModule(mod, testId, diffPath);
@@ -621,6 +643,203 @@ function useIsMobile() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
   return isMobile;
+}
+
+/* ============================================================
+   IPHONE 16 PRO FRAME — adapted from a shared SVG component into
+   plain JS/JSX: no TypeScript, and instead of an external image
+   URL for the screen, it renders real React content (children)
+   so the "screen" can show our own UI, not a stock photo.
+============================================================ */
+function Iphone16Pro({ width = 200, height = 400, className, style, children }) {
+  return (
+    <div style={{ position: "relative", width, height, flexShrink: 0, ...style }} className={className}>
+      <svg width="100%" height="100%" viewBox="0 0 200 400" fill="none" style={{ position: "absolute", inset: 0 }}>
+        <path fill="#303333" d="M196.11,128.09c0-.25-.2-.45-.45-.45-.11.04-.37.03-.69,0V36.69c0-17.84-14.46-32.31-32.31-32.31H37.48C19.63,4.39,5.17,18.85,5.17,36.69v48.99c-.3.02-.55.03-.66-.02-.25,0-.45.2-.45.45,0,0,0,17.29,0,17.29-.03.41.5.49,1.11.48v13.63c-.61,0-1.14.08-1.11.48,0,0,0,28.54,0,28.54-.03.42.5.49,1.11.48v7.95c-.61,0-1.14.08-1.11.48,0,0,0,28.54,0,28.54-.03.42.5.49,1.11.48v178.86c0,17.84,14.46,32.31,32.31,32.31h125.2c17.84,0,32.31-14.46,32.31-32.31v-188.87c.32-.02.58-.03.69.04,1.26.1.03-45.94.45-46.38ZM186.07,362.63c0,13.56-10.99,24.56-24.56,24.56H38.64c-13.56,0-24.56-10.99-24.56-24.56V37.37c0-13.56,10.99-24.56,24.56-24.56h122.87c13.56,0,24.56,10.99,24.56,24.56v325.26Z" />
+        <path fill="#000000" d="M161.38,7.29H38.78c-16.54,0-29.95,13.41-29.95,29.95v325.52c0,16.54,13.41,29.95,29.95,29.95h122.6c16.54,0,29.95-13.41,29.95-29.95V37.24c0-16.54-13.41-29.95-29.95-29.95ZM186.07,362.57c0,13.6-11.02,24.62-24.62,24.62H38.7c-13.6,0-24.62-11.02-24.62-24.62V37.43c0-13.6,11.02-24.62,24.62-24.62h122.75c13.6,0,24.62,11.02,24.62,24.62v325.14Z" />
+        <rect fill={B.navy} x="14.08" y="12.81" width="171.98" height="374.37" rx="24.62" ry="24.62" />
+        <path fill="#000000" d="M119.61,33.86h-38.93c-10.48-.18-10.5-15.78,0-15.96,0,0,38.93,0,38.93,0,4.41,0,7.98,3.57,7.98,7.98,0,4.41-3.57,7.98-7.98,7.98Z" />
+        <path fill="#080d4c" d="M118.78,29.21c-4.32.06-4.32-6.73,0-6.66,4.32-.06,4.32,6.73,0,6.66Z" />
+      </svg>
+      <div style={{ position: "absolute", left: "7.04%", top: "3.23%", width: "85.99%", height: "93.6%", borderRadius: 22, overflow: "hidden", background: "#fff" }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function PhoneLivePreview({ isMobile }) {
+  const screens = [
+    { key: "score", render: () => (
+      <div style={{ position: "relative", height: "100%", padding: "22px 16px", display: "flex", flexDirection: "column" }}>
+        <div style={{ position: "absolute", top: -6, right: 6 }}><Mascot size={isMobile ? 44 : 54} /></div>
+        <div style={{ fontSize: 11.5, color: B.muted, marginBottom: 5 }}>Namuna ball hisoboti</div>
+        <div style={{ fontSize: isMobile ? 30 : 36, fontWeight: 800, marginBottom: 12, color: B.text }}>1420</div>
+        {[["Reading & Writing", 710, 71], ["Math", 710, 71]].map(([s, sc, v]) => (
+          <div key={s} style={{ marginBottom: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, marginBottom: 5, color: B.text }}><span>{s}</span><span style={{ fontWeight: 700 }}>{sc}</span></div>
+            <div style={{ height: 6, background: B.bg, borderRadius: 4 }}><div style={{ height: 6, width: `${v}%`, background: B.plum, borderRadius: 4 }} /></div>
+          </div>
+        ))}
+        <div style={{ marginTop: "auto", background: B.bg, borderRadius: 10, padding: "10px 12px" }}>
+          <div style={{ fontSize: 10.5, color: B.muted, marginBottom: 2 }}>Bugungi maqsad</div>
+          <div style={{ fontSize: 11.5, fontWeight: 700, color: B.plum }}>🔥 4 kunlik streak</div>
+        </div>
+      </div>
+    ) },
+    { key: "question", render: () => (
+      <div style={{ height: "100%", padding: "20px 14px", display: "flex", flexDirection: "column" }}>
+        <div style={{ fontSize: 9.5, color: B.muted, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 10 }}>Advanced Math · Medium</div>
+        <div style={{ fontSize: 11.5, lineHeight: 1.5, marginBottom: 14, color: B.text }}>Agar f(x) = x² − 6x + 5 bo'lsa, f ning eng kichik qiymati qanday x da bo'ladi?</div>
+        {["1", "3", "5", "6"].map((c, i) => (
+          <div key={c} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 8, border: `1.5px solid ${i === 1 ? B.plum : B.border}`, background: i === 1 ? "#F2EAFB" : "#fff", marginBottom: 7 }}>
+            <div style={{ width: 18, height: 18, borderRadius: "50%", border: `1.5px solid ${i === 1 ? B.plum : B.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: i === 1 ? B.plum : B.muted, flexShrink: 0 }}>{String.fromCharCode(65 + i)}</div>
+            <span style={{ fontSize: 11.5 }}>{c}</span>
+          </div>
+        ))}
+        <div style={{ marginTop: "auto", background: B.plum, color: "#fff", borderRadius: 8, padding: "8px 0", textAlign: "center", fontSize: 11.5, fontWeight: 700 }}>Keyingi savol</div>
+      </div>
+    ) },
+    { key: "vocab", render: () => (
+      <div style={{ height: "100%", padding: "20px 14px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ fontSize: 10, color: B.muted, marginBottom: 14 }}>Lug'at · Asosiy</div>
+        <div style={{ width: "100%", background: B.bg, borderRadius: 14, padding: "26px 14px", textAlign: "center", marginBottom: 14 }}>
+          <div style={{ fontSize: 20, fontWeight: 800, color: B.text, marginBottom: 8 }}>resilient</div>
+          <div style={{ fontSize: 12, color: B.plum, fontWeight: 700 }}>chidamli, tez tiklanuvchi</div>
+        </div>
+        <div style={{ display: "flex", gap: 8, width: "100%" }}>
+          <div style={{ flex: 1, textAlign: "center", padding: "7px 0", borderRadius: 8, border: `1px solid ${B.border}`, fontSize: 10.5, color: B.muted }}>Oldingi</div>
+          <div style={{ flex: 1, textAlign: "center", padding: "7px 0", borderRadius: 8, background: "#E6F6EE", color: B.green, fontSize: 10.5, fontWeight: 700 }}>Bilaman ✓</div>
+        </div>
+      </div>
+    ) },
+  ];
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setIdx((i) => (i + 1) % screens.length), 2800);
+    return () => clearInterval(t);
+  }, []);
+  return <div key={screens[idx].key} className="sws-fade-in" style={{ height: "100%" }}>{screens[idx].render()}</div>;
+}
+
+/* ============================================================
+   MAC-STYLE DOCK — adapted from a shared React component into
+   plain JS/JSX for this single-file app: no TypeScript, no
+   external icon images (uses our own Icon set), no GSAP.
+============================================================ */
+function MacDock({ apps, activeId, onAppClick, className = "" }) {
+  const [mouseX, setMouseX] = useState(null);
+  const [currentScales, setCurrentScales] = useState(() => apps.map(() => 1));
+  const [currentPositions, setCurrentPositions] = useState([]);
+  const dockRef = useRef(null);
+  const iconRefs = useRef([]);
+  const animationFrameRef = useRef(undefined);
+  const lastMouseMoveTime = useRef(0);
+
+  const getResponsiveConfig = () => {
+    if (typeof window === "undefined") return { baseIconSize: 52, maxScale: 1.5, effectWidth: 220 };
+    const smaller = Math.min(window.innerWidth, window.innerHeight);
+    if (smaller < 480) return { baseIconSize: Math.max(34, smaller * 0.075), maxScale: 1.35, effectWidth: smaller * 0.45 };
+    if (smaller < 768) return { baseIconSize: Math.max(40, smaller * 0.055), maxScale: 1.45, effectWidth: smaller * 0.35 };
+    return { baseIconSize: 48, maxScale: 1.55, effectWidth: 260 };
+  };
+  const [config, setConfig] = useState(getResponsiveConfig);
+  const { baseIconSize, maxScale, effectWidth } = config;
+  const minScale = 1.0;
+  const baseSpacing = Math.max(4, baseIconSize * 0.1);
+
+  useEffect(() => {
+    const onResize = () => setConfig(getResponsiveConfig());
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const calcTargetScales = (mouseXPos) => {
+    if (mouseXPos === null) return apps.map(() => minScale);
+    return apps.map((_, i) => {
+      const center = i * (baseIconSize + baseSpacing) + baseIconSize / 2;
+      const minXb = mouseXPos - effectWidth / 2, maxXb = mouseXPos + effectWidth / 2;
+      if (center < minXb || center > maxXb) return minScale;
+      const theta = ((center - minXb) / effectWidth) * 2 * Math.PI;
+      const capped = Math.min(Math.max(theta, 0), 2 * Math.PI);
+      const factor = (1 - Math.cos(capped)) / 2;
+      return minScale + factor * (maxScale - minScale);
+    });
+  };
+  const calcPositions = (scales) => {
+    let x = 0;
+    return scales.map((s) => { const w = baseIconSize * s; const c = x + w / 2; x += w + baseSpacing; return c; });
+  };
+
+  useEffect(() => {
+    const initScales = apps.map(() => minScale);
+    setCurrentScales(initScales);
+    setCurrentPositions(calcPositions(initScales));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apps.length, baseIconSize]);
+
+  useEffect(() => {
+    const tick = () => {
+      const targetScales = calcTargetScales(mouseX);
+      const targetPositions = calcPositions(targetScales);
+      const lerp = mouseX !== null ? 0.22 : 0.14;
+      let stillMoving = mouseX !== null;
+      setCurrentScales((prev) => prev.map((s, i) => { const d = targetScales[i] - s; if (Math.abs(d) > 0.002) stillMoving = true; return s + d * lerp; }));
+      setCurrentPositions((prev) => prev.map((p, i) => { const d = targetPositions[i] - p; if (Math.abs(d) > 0.1) stillMoving = true; return p + d * lerp; }));
+      if (stillMoving) animationFrameRef.current = requestAnimationFrame(tick);
+      else animationFrameRef.current = null;
+    };
+    if (!animationFrameRef.current) animationFrameRef.current = requestAnimationFrame(tick);
+    return () => { if (animationFrameRef.current) { cancelAnimationFrame(animationFrameRef.current); animationFrameRef.current = null; } };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mouseX, baseIconSize]);
+
+  const handleMouseMove = (e) => {
+    const now = performance.now();
+    if (now - lastMouseMoveTime.current < 16) return;
+    lastMouseMoveTime.current = now;
+    if (dockRef.current) {
+      const rect = dockRef.current.getBoundingClientRect();
+      const padding = Math.max(8, baseIconSize * 0.12);
+      setMouseX(e.clientX - rect.left - padding);
+    }
+  };
+  const handleMouseLeave = () => setMouseX(null);
+
+  const bounce = (el, big) => {
+    if (!el) return;
+    const h = big ? -baseIconSize * 0.22 : -baseIconSize * 0.15;
+    el.style.transition = "transform 0.18s ease-out";
+    el.style.transform = `translateY(${h}px)`;
+    setTimeout(() => { el.style.transform = "translateY(0px)"; }, 180);
+  };
+
+  const contentWidth = currentPositions.length
+    ? Math.max(...currentPositions.map((p, i) => p + (baseIconSize * currentScales[i]) / 2))
+    : apps.length * (baseIconSize + baseSpacing) - baseSpacing;
+  const padding = Math.max(8, baseIconSize * 0.12);
+
+  return (
+    <div ref={dockRef} className={className} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
+      style={{ width: `${contentWidth + padding * 2}px`, maxWidth: "calc(100vw - 24px)", overflowX: currentPositions.length > 6 ? "visible" : "visible", background: "rgba(22,32,77,0.85)", backdropFilter: "blur(10px)", borderRadius: Math.max(14, baseIconSize * 0.35), border: "1px solid rgba(255,255,255,0.14)", boxShadow: "0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12)", padding: `${padding}px` }}>
+      <div style={{ position: "relative", height: baseIconSize, width: "100%" }}>
+        {apps.map((app, i) => {
+          const scale = currentScales[i] || 1, pos = currentPositions[i] || 0, size = baseIconSize * scale;
+          const IconEl = app.icon;
+          return (
+            <div key={app.id} ref={(el) => { iconRefs.current[i] = el; }} title={app.name}
+              onClick={() => { bounce(iconRefs.current[i], scale > 1.3); onAppClick(app.id); }}
+              style={{ position: "absolute", left: pos - size / 2, bottom: 0, width: size, height: size, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", cursor: "pointer", zIndex: Math.round(scale * 10) }}>
+              <div style={{ width: size, height: size, borderRadius: size * 0.28, background: app.id === activeId ? B.plum : "rgba(255,255,255,0.14)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: scale > 1.15 ? "0 6px 16px rgba(0,0,0,0.35)" : "none" }}>
+                <IconEl size={size * 0.5} color="#fff" />
+              </div>
+              {app.id === activeId && <div style={{ position: "absolute", bottom: -6, width: Math.max(3, size * 0.08), height: Math.max(3, size * 0.08), borderRadius: "50%", background: "#fff", boxShadow: "0 0 4px rgba(0,0,0,0.4)" }} />}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function useAppleMotion(rootRef) {
@@ -714,17 +933,27 @@ function Landing({ onStart }) {
           <p className="sws-hero-up" style={{ "--d": "260ms",  fontSize: 16, color: B.muted, lineHeight: 1.6, margin: "0 0 26px", maxWidth: 470 }}>200 ta mock test, adaptiv ikkinchi modul va javoblaringizdan hisoblanadigan haqiqiy ball hisoboti.</p>
           <button className="sws-hero-up" onClick={onStart} style={{ "--d": "400ms", background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "14px 26px", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, fontFamily: FONT }}>Bepul boshlash <ChevronRight size={17} /></button>
         </div>
-        <div data-parallax="0.08" style={{ position: "relative", zIndex: 1 }}><div className="sws-tilt-in" style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 24, boxShadow: "0 30px 60px -28px rgba(22,32,77,0.4)", position: "relative" }}>
-          <div className="sws-float" style={{ position: "absolute", top: -24, right: -12 }}><Mascot size={74} /></div>
-          <div style={{ fontSize: 12.5, color: B.muted, marginBottom: 6 }}>Namuna ball hisoboti</div>
-          <div style={{ fontSize: 40, fontWeight: 800, marginBottom: 14 }}><CountUp to={1420} duration={2000} /></div>
-          {[["Reading & Writing", 710, 71], ["Math", 710, 71]].map(([s, sc, v]) => (
-            <div key={s} style={{ marginBottom: 12 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, marginBottom: 5 }}><span>{s}</span><span style={{ fontWeight: 700 }}>{sc}</span></div>
-              <div style={{ height: 7, background: B.bg, borderRadius: 4 }}><div className="sws-bar" style={{ height: 7, width: `${v}%`, background: `linear-gradient(90deg, ${B.plum}, #C2185B)`, borderRadius: 4 }} /></div>
+        <div data-parallax="0.08" style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "center" }}>
+          <div className="sws-tilt-in" style={{ position: "relative" }}>
+            <div className="sws-float" style={{ animationDuration: "6s" }}>
+              <Iphone16Pro width={isMobile ? 210 : 250} height={isMobile ? 420 : 500} style={{ filter: "drop-shadow(0 40px 50px rgba(22,32,77,0.35))" }}>
+                <PhoneLivePreview isMobile={isMobile} />
+              </Iphone16Pro>
             </div>
-          ))}
-        </div></div>
+            {!isMobile && (
+              <>
+                <div className="sws-float" style={{ position: "absolute", left: -96, top: 90, animationDelay: "-1.5s", background: "rgba(255,255,255,0.82)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderRadius: 16, padding: "12px 16px", boxShadow: "0 18px 40px -18px rgba(22,32,77,0.35)" }}>
+                  <div style={{ fontSize: 11.5, color: B.muted }}>Namuna o'sish</div>
+                  <div style={{ fontSize: 20, fontWeight: 800, color: B.green }}>+<CountUp to={230} duration={2200} /> ball</div>
+                </div>
+                <div className="sws-float" style={{ position: "absolute", right: -84, bottom: 110, animationDelay: "-3s", background: "rgba(255,255,255,0.82)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderRadius: 16, padding: "12px 16px", boxShadow: "0 18px 40px -18px rgba(22,32,77,0.35)" }}>
+                  <div style={{ fontSize: 11.5, color: B.muted }}>Maqsad ball</div>
+                  <div style={{ fontSize: 20, fontWeight: 800, color: B.plum }}><CountUp to={1480} duration={2400} /></div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       </section>
       <section style={{ background: B.navy, color: "#fff", padding: 30 }}>
         <div style={{ maxWidth: 1060, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(4,1fr)", gap: 20, textAlign: "center" }}>
@@ -1053,15 +1282,107 @@ function CalcPanel({ onClose }) {
   );
 }
 
+/* ============================================================
+   MOCK TEST RUNNER — College Board Bluebook uslubida
+============================================================ */
+const BB = { blue: "#324DC7", blueSoft: "#EEF1FC", ink: "#1E1E1E", muted: "#5B5B5B", line: "#D9D9D9", bar: "#F2F2F2", red: "#C8102E", ui: "'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif", serif: "'Noto Serif', 'Source Serif 4', Georgia, 'Times New Roman', serif" };
+const bbDash = { height: 3, flexShrink: 0, backgroundImage: "repeating-linear-gradient(90deg, #324DC7 0 16px, transparent 16px 22px, #F5A623 22px 38px, transparent 38px 44px, #1C9A5B 44px 60px, transparent 60px 66px, #E8547C 66px 82px, transparent 82px 88px)" };
+const BbSvg = {
+  bookmark: (on, s = 18) => <svg width={s} height={s} viewBox="0 0 24 24" fill={on ? BB.red : "none"} stroke={on ? BB.red : BB.ink} strokeWidth="2" strokeLinejoin="round"><path d="M6 3h12v18l-6-4.5L6 21z" /></svg>,
+  more: <svg width="20" height="20" viewBox="0 0 24 24" fill={BB.ink}><circle cx="12" cy="5" r="2" /><circle cx="12" cy="12" r="2" /><circle cx="12" cy="19" r="2" /></svg>,
+  pin: <svg width="14" height="16" viewBox="0 0 24 28" fill={BB.ink}><path d="M12 0C5.4 0 0 5.2 0 11.6 0 20.3 12 28 12 28s12-7.7 12-16.4C24 5.2 18.6 0 12 0zm0 16a4.4 4.4 0 110-8.8 4.4 4.4 0 010 8.8z" /></svg>,
+  caret: (up) => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" style={{ transform: up ? "rotate(180deg)" : "none", transition: "transform .2s" }}><path d="M6 9l6 6 6-6" /></svg>,
+  ref: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={BB.ink} strokeWidth="1.8"><path d="M4 20L12 4l8 16z" /><circle cx="12" cy="14" r="2.5" /></svg>,
+};
+
+const DIRECTIONS = {
+  rw: "Bu bo'limdagi savollar muhim o'qish va yozish ko'nikmalarini tekshiradi. Har bir savolda bitta yoki bir nechta matn bo'ladi, ularda jadval yoki grafik ham bo'lishi mumkin. Har bir matnni va savolni diqqat bilan o'qing, so'ng matnga asoslanib eng to'g'ri javobni tanlang. Barcha savollar bir nechta javob variantli va har birida bitta to'g'ri javob bor.",
+  math: "Bu bo'limdagi savollar muhim matematik ko'nikmalarni tekshiradi. Kalkulyatordan har qanday savolda foydalanishingiz mumkin. Formulalar uchun \"Reference\" tugmasini bosing. Aksariyat savollar variantli; ba'zilarida javobni o'zingiz yozasiz. Agar bir nechta to'g'ri javob chiqsa, faqat bittasini yozing. Kasr va o'nli sonlarni kiritish mumkin (masalan 3/4 yoki 0.75), manfiy son uchun minus belgisini qo'ying.",
+};
+
+function BbButton({ children, onClick, primary, disabled, style }) {
+  return (
+    <button onClick={onClick} disabled={disabled} style={{ fontFamily: BB.ui, fontSize: 15, fontWeight: 700, padding: "10px 28px", borderRadius: 999, cursor: disabled ? "default" : "pointer", border: primary ? "none" : `1.5px solid ${BB.ink}`, background: primary ? (disabled ? "#AEB8E6" : BB.blue) : "#fff", color: primary ? "#fff" : BB.ink, ...style }}>{children}</button>
+  );
+}
+
+function BbModal({ title, onClose, children, width = 640 }) {
+  return (
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", zIndex: 300, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "80px 16px 16px" }}>
+      <div onClick={(e) => e.stopPropagation()} className="sws-fade-in" style={{ width, maxWidth: "100%", maxHeight: "80vh", overflowY: "auto", background: "#fff", borderRadius: 12, boxShadow: "0 24px 60px rgba(0,0,0,0.3)", fontFamily: BB.ui }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 24px", borderBottom: `1px solid ${BB.line}` }}>
+          <span style={{ fontSize: 18, fontWeight: 700, color: BB.ink }}>{title}</span>
+          <button onClick={onClose} style={{ background: "transparent", border: "none", cursor: "pointer", display: "flex", color: BB.ink }}><X size={20} /></button>
+        </div>
+        <div style={{ padding: "20px 24px 24px" }}>{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function ReferenceSheet({ onClose }) {
+  const items = [
+    ["Doira", "A = πr²,  C = 2πr"], ["To'rtburchak", "A = lw"], ["Uchburchak", "A = ½bh"], ["Pifagor", "c² = a² + b²"],
+    ["Maxsus uchburchaklar", "30°-60°-90°: x, x√3, 2x   ·   45°-45°-90°: s, s, s√2"],
+    ["To'g'ri burchakli parallelepiped", "V = lwh"], ["Silindr", "V = πr²h"], ["Shar", "V = 4/3 πr³"], ["Konus", "V = 1/3 πr²h"], ["Piramida", "V = 1/3 lwh"],
+  ];
+  return (
+    <BbModal title="Reference" onClose={onClose}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 10 }}>
+        {items.map(([n, f]) => (
+          <div key={n} style={{ border: `1px solid ${BB.line}`, borderRadius: 8, padding: "12px 14px" }}>
+            <div style={{ fontSize: 12.5, color: BB.muted, marginBottom: 4 }}>{n}</div>
+            <div style={{ fontSize: 16, fontFamily: BB.serif, color: BB.ink }}>{f}</div>
+          </div>
+        ))}
+      </div>
+      <p style={{ fontSize: 14, color: BB.muted, lineHeight: 1.6, margin: "16px 0 0" }}>Aylanadagi yoy darajasi 360°, radianda 2π. Uchburchak burchaklari yig'indisi 180°.</p>
+    </BbModal>
+  );
+}
+
+function QuestionGrid({ mod, questions, responses, marked, current, onPick }) {
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "center", gap: 22, fontSize: 13.5, color: BB.ink, paddingBottom: 14, marginBottom: 16, borderBottom: `1px solid ${BB.line}`, flexWrap: "wrap" }}>
+        <span style={{ display: "flex", alignItems: "center", gap: 6 }}>{BbSvg.pin} Joriy</span>
+        <span style={{ display: "flex", alignItems: "center", gap: 6 }}><span style={{ width: 16, height: 16, border: `1.5px dashed ${BB.muted}`, borderRadius: 3 }} /> Javobsiz</span>
+        <span style={{ display: "flex", alignItems: "center", gap: 6 }}>{BbSvg.bookmark(true, 15)} Ko'rib chiqish uchun</span>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, 42px)", gap: "18px 12px", justifyContent: "center" }}>
+        {questions.map((_, i) => {
+          const k = `${mod.id}-${i}`; const done = responses[k] !== undefined && responses[k] !== "";
+          return (
+            <button key={i} onClick={() => onPick(i)} style={{ position: "relative", width: 42, height: 42, borderRadius: 4, cursor: "pointer", fontFamily: BB.ui, fontSize: 15, fontWeight: 700, border: done ? "none" : `1.5px dashed ${BB.muted}`, background: done ? BB.blue : "#fff", color: done ? "#fff" : BB.blue }}>
+              {i + 1}
+              {i === current && <span style={{ position: "absolute", top: -17, left: "50%", transform: "translateX(-50%)" }}>{BbSvg.pin}</span>}
+              {marked[k] && <span style={{ position: "absolute", top: -7, right: -6 }}>{BbSvg.bookmark(true, 14)}</span>}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function TestRunner({ test, onExit, onFinish }) {
   const [stage, setStage] = useState({ type: "intro", modIdx: 0 });
   const [responses, setResponses] = useState({});
   const [marked, setMarked] = useState({});
+  const [crossed, setCrossed] = useState({});
+  const [strikeMode, setStrikeMode] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const [qIndex, setQIndex] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [diffPath, setDiffPath] = useState({});
   const [calcOpen, setCalcOpen] = useState(false);
+  const [refOpen, setRefOpen] = useState(false);
+  const [dirOpen, setDirOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [timerHidden, setTimerHidden] = useState(false);
+  const [split, setSplit] = useState(50);
+  const splitRef = useRef(null);
+  const studentName = loadLocal("sws_name", "") || "O'quvchi";
 
   const mod = MODULES[stage.modIdx];
   const questions = useMemo(() => {
@@ -1071,12 +1392,13 @@ function TestRunner({ test, onExit, onFinish }) {
   }, [stage.modIdx, test.id, diffPath.rw1, diffPath.m1]);
 
   useEffect(() => {
-    if (stage.type !== "module" && stage.type !== "break") return;
+    if (stage.type !== "module" && stage.type !== "review" && stage.type !== "break") return;
     const t = setInterval(() => setSeconds((s) => (s > 0 ? s - 1 : 0)), 1000);
     return () => clearInterval(t);
   }, [stage]);
 
   const advance = () => {
+    setNavOpen(false); setDirOpen(false); setMoreOpen(false); setStrikeMode(false);
     if (mod.kind !== "break") {
       let correct = 0;
       questions.forEach((q, i) => {
@@ -1092,99 +1414,266 @@ function TestRunner({ test, onExit, onFinish }) {
     else setStage({ type: "intro", modIdx: nextIdx });
   };
 
+  // Vaqt tugasa, haqiqiy imtihondagidek modul avtomatik yakunlanadi
+  const expiredRef = useRef(false);
+  useEffect(() => {
+    if ((stage.type === "module" || stage.type === "review" || stage.type === "break") && seconds === 0 && !expiredRef.current) { expiredRef.current = true; advance(); }
+    if (seconds > 0) expiredRef.current = false;
+  }, [seconds, stage.type]);
+
+  useEffect(() => {
+    const move = (e) => { if (!splitRef.current) return; const r = splitRef.current.getBoundingClientRect(); setSplit(Math.min(72, Math.max(28, ((e.clientX - r.left) / r.width) * 100))); };
+    const up = () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); document.body.style.userSelect = ""; };
+    splitRef.current && (splitRef.current.__start = () => { document.body.style.userSelect = "none"; window.addEventListener("mousemove", move); window.addEventListener("mouseup", up); });
+  });
+
+  const lowTime = seconds <= 300 && (stage.type === "module" || stage.type === "review");
+  const nQ = questions.length;
+
+  /* ---------- Intro ---------- */
   if (stage.type === "intro") {
+    const isRw = mod.kind === "rw";
     return (
-      <div style={{ height: "100vh", display: "flex", flexDirection: "column", background: "#fff", fontFamily: FONT }}>
-        <div style={{ background: "#0B0E14", color: "#fff", padding: "10px 22px", display: "flex", alignItems: "center", gap: 10, fontSize: 13.5 }}>
-          <button onClick={onExit} style={{ background: "transparent", border: "none", color: "#9AA1AE", cursor: "pointer", display: "flex" }}><X size={16} /></button>
-          <span style={{ fontWeight: 600 }}>{test.name}</span>
+      <div style={{ height: "100vh", display: "flex", flexDirection: "column", background: "#F7F7F8", fontFamily: BB.ui }}>
+        <div style={{ background: "#fff", padding: "0 28px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ fontSize: 17, fontWeight: 700, color: BB.ink }}>{test.name}</span>
+          <button onClick={onExit} style={{ background: "transparent", border: "none", color: BB.muted, cursor: "pointer", fontSize: 14, fontFamily: BB.ui, display: "flex", alignItems: "center", gap: 6 }}><X size={16} /> Chiqish</button>
         </div>
-        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ maxWidth: 460, textAlign: "center", padding: 24 }}>
-            <Mascot size={70} />
-            <h2 style={{ fontSize: 24, fontWeight: 800, margin: "16px 0 8px", color: B.text }}>{mod.label}</h2>
-            <p style={{ fontSize: 15, color: B.muted, marginBottom: 6 }}>{mod.section}</p>
-            <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 20 }}>{(mod.kind === "rw" ? RW_BLUEPRINT : MATH_BLUEPRINT).length} savol · {mod.minutes} daqiqa</p>
-            {mod.adaptive && (
-              <div style={{ background: "#FFF7E8", borderRadius: 10, padding: "12px 16px", fontSize: 13, marginBottom: 20, display: "flex", gap: 8, textAlign: "left" }}>
-                <AlertCircle size={16} color={B.gold} style={{ flexShrink: 0, marginTop: 1 }} />Bu modul qiyinligi oldingi moduldagi natijangizga qarab tanlandi.
+        <div style={bbDash} />
+        <div style={{ flex: 1, overflowY: "auto", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+          <div className="sws-fade-in" style={{ width: 620, maxWidth: "100%", background: "#fff", borderRadius: 16, boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 20px 50px -24px rgba(0,0,0,0.25)", overflow: "hidden" }}>
+            <div style={{ padding: "30px 34px 22px" }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: BB.blue, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 8 }}>{mod.label}</div>
+              <h2 style={{ fontSize: 28, fontWeight: 800, margin: "0 0 18px", color: BB.ink }}>{mod.section}</h2>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 20 }}>
+                {[[nQ || (isRw ? RW_BLUEPRINT : MATH_BLUEPRINT).length, "savol"], [mod.minutes, "daqiqa"], [isRw ? "4" : "4", "domen"]].map(([v, l]) => (
+                  <div key={l} style={{ background: "#F5F6FA", borderRadius: 10, padding: "14px 12px", textAlign: "center" }}>
+                    <div style={{ fontSize: 26, fontWeight: 800, color: BB.ink }}>{v}</div>
+                    <div style={{ fontSize: 13, color: BB.muted }}>{l}</div>
+                  </div>
+                ))}
               </div>
-            )}
-            <button onClick={() => { setSeconds(mod.minutes * 60); setQIndex(0); setStage({ type: "module", modIdx: stage.modIdx }); }} style={{ background: "#0060C8", color: "#fff", border: "none", borderRadius: 8, padding: "12px 34px", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Boshlash</button>
+              <p style={{ fontSize: 15, lineHeight: 1.7, color: "#333", margin: "0 0 16px" }}>{DIRECTIONS[isRw ? "rw" : "math"]}</p>
+              {!isRw && <p style={{ fontSize: 14, color: BB.muted, margin: "0 0 16px" }}>Kalkulyator (Desmos) va formulalar varag'i test ichida doim mavjud.</p>}
+              {mod.adaptive && (
+                <div style={{ background: "#FFF7E8", borderRadius: 10, padding: "12px 16px", fontSize: 14, display: "flex", gap: 10, lineHeight: 1.5 }}>
+                  <AlertCircle size={18} color="#D98A00" style={{ flexShrink: 0, marginTop: 1 }} />Bu modulning qiyinligi 1-moduldagi natijangizga qarab tanlandi — xuddi haqiqiy Digital SAT'dagidek.
+                </div>
+              )}
+            </div>
+            <div style={{ borderTop: `1px solid ${BB.line}`, padding: "16px 34px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#FAFAFB" }}>
+              <span style={{ fontSize: 13.5, color: BB.muted }}>Vaqt "Boshlash" bosilganda ketadi</span>
+              <BbButton primary onClick={() => { setSeconds(mod.minutes * 60); setQIndex(0); setStage({ type: "module", modIdx: stage.modIdx }); }}>Boshlash</BbButton>
+            </div>
           </div>
-        </div>
-      </div>
-    );
-  }
-  if (stage.type === "break") {
-    return (
-      <div style={{ height: "100vh", display: "flex", flexDirection: "column", background: "#fff", fontFamily: FONT }}>
-        <div style={{ background: "#0B0E14", color: "#fff", padding: "10px 22px", fontSize: 13.5, fontWeight: 600 }}>{test.name} — Tanaffus</div>
-        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 14 }}>
-          <Coffee size={42} color={B.plum} />
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: 0 }}>10 daqiqalik tanaffus</h2>
-          <div style={{ fontSize: 42, fontWeight: 800, color: B.plum, fontVariantNumeric: "tabular-nums" }}>{fmt(seconds)}</div>
-          <button onClick={advance} style={{ background: "#0060C8", color: "#fff", border: "none", borderRadius: 8, padding: "12px 30px", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Math bo'limiga o'tish</button>
         </div>
       </div>
     );
   }
 
-  const q = questions[qIndex]; const key = `${mod.id}-${qIndex}`; const answered = responses[key]; const isLast = qIndex === questions.length - 1;
-  return (
-    <div style={{ height: "100vh", display: "flex", flexDirection: "column", fontFamily: "'Segoe UI', Arial, sans-serif", background: "#fff", position: "relative" }}>
-      <div style={{ background: "#0B0E14", color: "#fff", padding: "10px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 13.5 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <button onClick={onExit} style={{ background: "transparent", border: "none", color: "#9AA1AE", cursor: "pointer", display: "flex" }}><X size={16} /></button>
-          <span style={{ fontWeight: 600 }}>{mod.label}: {mod.section}</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#1A1E27", padding: "5px 14px", borderRadius: 6 }}><Clock size={14} /><span style={{ fontVariantNumeric: "tabular-nums" }}>{fmt(seconds)}</span></div>
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-          {mod.kind === "math" && <button onClick={() => setCalcOpen((v) => !v)} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12.5, color: calcOpen ? "#fff" : "#9AA1AE", background: calcOpen ? "#1A1E27" : "transparent", border: "none", cursor: "pointer", padding: "5px 9px", borderRadius: 6 }}><Calculator size={14} /> Calculator</button>}
-          <button onClick={() => setNavOpen((v) => !v)} style={{ background: "#1A1E27", border: "none", color: "#fff", borderRadius: 6, padding: "6px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}><Grid3x3 size={14} /> Question {qIndex + 1} of {questions.length}</button>
+  /* ---------- Break ---------- */
+  if (stage.type === "break") {
+    return (
+      <div style={{ height: "100vh", display: "flex", flexDirection: "column", background: "#1B1D24", color: "#fff", fontFamily: BB.ui }}>
+        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 60, padding: 24, flexWrap: "wrap" }}>
+          <div className="sws-fade-in" style={{ border: "1px solid #3A3D46", borderRadius: 16, padding: "30px 44px", textAlign: "center", minWidth: 280 }}>
+            <div style={{ fontSize: 15, color: "#B9BCC6", marginBottom: 8 }}>Tanaffusdan qolgan vaqt</div>
+            <div style={{ fontSize: 64, fontWeight: 800, fontVariantNumeric: "tabular-nums", letterSpacing: 1 }}>{fmt(seconds)}</div>
+            <BbButton primary onClick={advance} style={{ marginTop: 18, background: "#FDDA24", color: BB.ink }}>Testni davom ettirish</BbButton>
+          </div>
+          <div style={{ maxWidth: 380 }}>
+            <h2 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 12px" }}>Tanaffus</h2>
+            <p style={{ fontSize: 15, lineHeight: 1.7, color: "#D4D6DD", margin: "0 0 14px" }}>Reading and Writing bo'limi tugadi. Keyingi — Math bo'limi.</p>
+            <ul style={{ fontSize: 14.5, lineHeight: 1.9, color: "#D4D6DD", paddingLeft: 18, margin: 0 }}>
+              <li>Haqiqiy imtihonda qurilmani yopmang va boshqa ilovalarni ochmang.</li>
+              <li>Suv iching, cho'zilib oling — 10 daqiqa tez o'tadi.</li>
+              <li>Vaqt tugaganda Math bo'limi avtomatik boshlanadi.</li>
+            </ul>
+          </div>
         </div>
       </div>
-      {calcOpen && <CalcPanel onClose={() => setCalcOpen(false)} />}
-      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
-        {q.passage && <div style={{ flex: 1, padding: "28px 34px", borderRight: "1px solid #E2E4E8", overflowY: "auto", fontSize: 15.5, lineHeight: 1.7, color: "#12151C", whiteSpace: "pre-line" }}>{q.passage}</div>}
-        <div style={{ flex: 1, padding: "28px 34px", overflowY: "auto", maxWidth: q.passage ? "none" : 680, margin: q.passage ? 0 : "0 auto" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-            <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#12151C", color: "#fff", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{qIndex + 1}</div>
-            <button onClick={() => setMarked((m) => ({ ...m, [key]: !m[key] }))} style={{ background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: marked[key] ? "#B8860B" : "#5B6270" }}><Flag size={15} fill={marked[key] ? "#F5A623" : "none"} color={marked[key] ? "#F5A623" : "#5B6270"} /> Mark for Review</button>
-          </div>
-          <div style={{ fontSize: 10.5, color: "#8A90A0", marginBottom: 14, textTransform: "uppercase", letterSpacing: 0.4 }}>{q.domain}</div>
-          <p style={{ fontSize: 15.5, marginBottom: 20, lineHeight: 1.6, whiteSpace: "pre-line" }}>{q.prompt}</p>
-          {q.type === "spr" ? (
-            <div><div style={{ fontSize: 13, color: "#5B6270", marginBottom: 8 }}>Javobingizni yozing:</div>
-              <input value={answered ?? ""} onChange={(e) => setResponses((r) => ({ ...r, [key]: e.target.value }))} style={{ width: 200, padding: "12px 14px", border: "1.5px solid #B7BBC4", borderRadius: 8, fontSize: 16 }} placeholder="Javob" /></div>
-          ) : q.choices.map((c, idx) => {
-            const sel = answered === idx;
-            return (
-              <div key={idx} onClick={() => setResponses((r) => ({ ...r, [key]: idx }))} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 8, border: sel ? "1.5px solid #0060C8" : "1px solid #E2E4E8", background: sel ? "#EAF2FC" : "#fff", marginBottom: 10, cursor: "pointer" }}>
-                <div style={{ width: 26, height: 26, borderRadius: "50%", flexShrink: 0, border: sel ? "1.5px solid #0060C8" : "1.5px solid #B7BBC4", color: sel ? "#0060C8" : "#5B6270", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12.5, fontWeight: 600 }}>{String.fromCharCode(65 + idx)}</div>
-                <span style={{ fontSize: 14.5 }}>{c}</span>
+    );
+  }
+
+  /* ---------- Header / footer (module & review) ---------- */
+  const header = (
+    <>
+      <div style={{ background: "#fff", height: 68, padding: "0 24px", display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", flexShrink: 0 }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontSize: 16.5, fontWeight: 700, color: BB.ink, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{mod.label}: {mod.section}</div>
+          <button onClick={() => setDirOpen(true)} style={{ background: "transparent", border: "none", padding: 0, marginTop: 2, cursor: "pointer", fontFamily: BB.ui, fontSize: 14, color: BB.ink, display: "flex", alignItems: "center", gap: 4 }}>Directions {BbSvg.caret(false)}</button>
+        </div>
+        <div style={{ textAlign: "center" }}>
+          {!timerHidden ? (
+            <div className={lowTime ? "sws-timer-low" : ""} style={{ fontSize: 22, fontWeight: 800, fontVariantNumeric: "tabular-nums", color: lowTime ? BB.red : BB.ink, lineHeight: 1.1 }}>{fmt(seconds)}</div>
+          ) : <div style={{ height: 24, display: "flex", alignItems: "center", justifyContent: "center" }}><Clock size={20} color={BB.ink} /></div>}
+          <button onClick={() => setTimerHidden((v) => !v)} style={{ marginTop: 4, fontSize: 12, fontFamily: BB.ui, padding: "2px 12px", borderRadius: 999, border: `1px solid ${BB.ink}`, background: "#fff", cursor: "pointer", color: BB.ink }}>{timerHidden ? "Show" : "Hide"}</button>
+        </div>
+        <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 6 }}>
+          {mod.kind === "math" && (
+            <>
+              <button onClick={() => setCalcOpen((v) => !v)} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, background: calcOpen ? BB.blueSoft : "transparent", border: "none", borderRadius: 8, padding: "6px 10px", cursor: "pointer", fontFamily: BB.ui, fontSize: 12.5, color: BB.ink }}><Calculator size={18} color={BB.ink} />Calculator</button>
+              <button onClick={() => setRefOpen(true)} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, background: "transparent", border: "none", borderRadius: 8, padding: "6px 10px", cursor: "pointer", fontFamily: BB.ui, fontSize: 12.5, color: BB.ink }}>{BbSvg.ref}Reference</button>
+            </>
+          )}
+          <div style={{ position: "relative" }}>
+            <button onClick={() => setMoreOpen((v) => !v)} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, background: moreOpen ? BB.bar : "transparent", border: "none", borderRadius: 8, padding: "6px 10px", cursor: "pointer", fontFamily: BB.ui, fontSize: 12.5, color: BB.ink }}>{BbSvg.more}More</button>
+            {moreOpen && (
+              <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 6, background: "#fff", borderRadius: 10, boxShadow: "0 12px 32px rgba(0,0,0,0.2)", padding: 6, zIndex: 50, minWidth: 190 }}>
+                <button onClick={() => { setMoreOpen(false); onExit(); }} style={{ width: "100%", textAlign: "left", background: "transparent", border: "none", padding: "10px 12px", borderRadius: 6, cursor: "pointer", fontFamily: BB.ui, fontSize: 14, color: BB.red }}>Testdan chiqish</button>
               </div>
-            );
-          })}
-        </div>
-      </div>
-      <div style={{ borderTop: "1px solid #E2E4E8", padding: "12px 26px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontSize: 13, color: "#5B6270" }}>{test.name}</span>
-        <div style={{ display: "flex", gap: 10 }}>
-          <button disabled={qIndex === 0} onClick={() => setQIndex((i) => Math.max(0, i - 1))} style={{ padding: "9px 22px", borderRadius: 6, border: "1px solid #B7BBC4", background: "#fff", color: qIndex === 0 ? "#C6C9D0" : "#12151C", cursor: qIndex === 0 ? "default" : "pointer", fontSize: 14 }}>Back</button>
-          <button onClick={() => (isLast ? advance() : setQIndex((i) => i + 1))} style={{ padding: "9px 22px", borderRadius: 6, border: "none", background: isLast ? B.green : "#0060C8", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 600 }}>{isLast ? "Modulni yakunlash" : "Next"}</button>
-        </div>
-      </div>
-      {navOpen && (
-        <div style={{ position: "absolute", bottom: 58, left: 0, right: 0, background: "#12151C", color: "#fff", padding: "18px 26px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}><span style={{ fontSize: 13.5, fontWeight: 600 }}>{mod.label}</span><button onClick={() => setNavOpen(false)} style={{ background: "transparent", border: "none", color: "#9AA1AE", cursor: "pointer" }}><X size={16} /></button></div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(9,1fr)", gap: 8 }}>
-            {questions.map((_, i) => { const k = `${mod.id}-${i}`; const done = responses[k] !== undefined && responses[k] !== "";
-              return <button key={i} onClick={() => { setQIndex(i); setNavOpen(false); }} style={{ position: "relative", height: 34, borderRadius: 4, fontSize: 12.5, fontWeight: 600, cursor: "pointer", border: i === qIndex ? "2px solid #4FA0FF" : "1px solid #3A3F4B", background: done ? "#28304A" : "#1A1E27", color: "#fff" }}>{i + 1}{marked[k] && <Flag size={9} style={{ position: "absolute", top: 2, right: 2 }} fill="#F5A623" color="#F5A623" />}</button>;
-            })}
+            )}
           </div>
         </div>
+      </div>
+      <div style={bbDash} />
+    </>
+  );
+
+  const footer = (leftBack, onNext, nextLabel, backDisabled) => (
+    <>
+      <div style={bbDash} />
+      <div style={{ background: "#fff", height: 68, padding: "0 24px", display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", flexShrink: 0, position: "relative" }}>
+        <span style={{ fontSize: 15, fontWeight: 700, color: BB.ink, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{studentName}</span>
+        {stage.type === "module" ? (
+          <button onClick={() => setNavOpen((v) => !v)} style={{ background: BB.ink, color: "#fff", border: "none", borderRadius: 8, padding: "9px 18px", fontFamily: BB.ui, fontSize: 14.5, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}>Question {qIndex + 1} of {nQ} {BbSvg.caret(navOpen)}</button>
+        ) : <span />}
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: 10 }}>
+          {!backDisabled && <BbButton primary onClick={leftBack}>Back</BbButton>}
+          <BbButton primary onClick={onNext}>{nextLabel}</BbButton>
+        </div>
+      </div>
+    </>
+  );
+
+  const modals = (
+    <>
+      {calcOpen && <CalcPanel onClose={() => setCalcOpen(false)} />}
+      {refOpen && <ReferenceSheet onClose={() => setRefOpen(false)} />}
+      {dirOpen && (
+        <BbModal title="Directions" onClose={() => setDirOpen(false)}>
+          <p style={{ fontSize: 15.5, lineHeight: 1.75, color: "#333", margin: 0 }}>{DIRECTIONS[mod.kind === "rw" ? "rw" : "math"]}</p>
+          <div style={{ textAlign: "right", marginTop: 20 }}><BbButton primary onClick={() => setDirOpen(false)} style={{ background: "#FDDA24", color: BB.ink }}>Close</BbButton></div>
+        </BbModal>
       )}
+    </>
+  );
+
+  /* ---------- Review page ---------- */
+  if (stage.type === "review") {
+    return (
+      <div style={{ height: "100vh", display: "flex", flexDirection: "column", background: "#fff", fontFamily: BB.ui }}>
+        {header}
+        <div style={{ flex: 1, overflowY: "auto", padding: "34px 20px", background: "#F7F7F8" }}>
+          <div style={{ maxWidth: 760, margin: "0 auto" }}>
+            <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: "center", margin: "0 0 10px", color: BB.ink }}>Check Your Work</h2>
+            <p style={{ textAlign: "center", fontSize: 15.5, color: "#333", lineHeight: 1.6, margin: "0 0 6px" }}>Haqiqiy imtihonda vaqt tugamaguncha keyingi modulga o'tolmaysiz.</p>
+            <p style={{ textAlign: "center", fontSize: 15.5, color: "#333", lineHeight: 1.6, margin: "0 0 26px" }}>Quyidagi raqamni bossangiz, o'sha savolga qaytasiz.</p>
+            <div className="sws-fade-in" style={{ background: "#fff", borderRadius: 14, boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 16px 40px -24px rgba(0,0,0,0.3)", padding: "22px 26px 30px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 16, flexWrap: "wrap", gap: 8 }}>
+                <span style={{ fontSize: 17, fontWeight: 700, color: BB.ink }}>{mod.label}: {mod.section} Questions</span>
+                <span style={{ fontSize: 14, color: BB.muted }}>{questions.filter((_, i) => responses[`${mod.id}-${i}`] !== undefined && responses[`${mod.id}-${i}`] !== "").length} / {nQ} javob berildi</span>
+              </div>
+              <QuestionGrid mod={mod} questions={questions} responses={responses} marked={marked} current={-1} onPick={(i) => { setQIndex(i); setStage({ type: "module", modIdx: stage.modIdx }); }} />
+            </div>
+          </div>
+        </div>
+        {footer(() => setStage({ type: "module", modIdx: stage.modIdx }), advance, stage.modIdx === MODULES.length - 1 ? "Testni yakunlash" : "Next", false)}
+        {modals}
+      </div>
+    );
+  }
+
+  /* ---------- Question screen ---------- */
+  const q = questions[qIndex]; const key = `${mod.id}-${qIndex}`; const answered = responses[key]; const isLast = qIndex === nQ - 1;
+  const isSpr = q.type === "spr";
+  const leftContent = q.passage ? (
+    <div style={{ fontFamily: BB.serif, fontSize: 17, lineHeight: 1.8, color: BB.ink, whiteSpace: "pre-line" }}>{q.passage}</div>
+  ) : isSpr ? (
+    <div style={{ fontSize: 14.5, lineHeight: 1.7, color: "#333" }}>
+      <div style={{ fontSize: 17, fontWeight: 700, color: BB.ink, marginBottom: 10 }}>Student-produced response directions</div>
+      <ul style={{ paddingLeft: 18, margin: 0 }}>
+        <li>Agar bir nechta to'g'ri javob topsangiz, faqat bittasini yozing.</li>
+        <li>Musbat javob uchun 5 ta, manfiy javob uchun 6 ta belgigacha yozish mumkin (minus belgisi bilan).</li>
+        <li>Javob kasr bo'lsa, oddiy kasr (3/4) yoki o'nli kasr (0.75) ko'rinishida yozing.</li>
+        <li>Aralash sonlar (3 1/2 kabi) qabul qilinmaydi — 7/2 yoki 3.5 deb yozing.</li>
+        <li>Belgilar ($, %) va vergul qo'ymang.</li>
+      </ul>
+    </div>
+  ) : null;
+  const twoPane = !!leftContent;
+
+  const choiceList = isSpr ? (
+    <div>
+      <input value={answered ?? ""} onChange={(e) => setResponses((r) => ({ ...r, [key]: e.target.value.replace(/[^0-9./-]/g, "").slice(0, 12) }))} placeholder="" style={{ width: 180, padding: "10px 4px", border: "none", borderBottom: `2px solid ${BB.ink}`, fontSize: 22, fontFamily: BB.ui, outline: "none", background: "transparent" }} />
+      <div style={{ marginTop: 18, fontSize: 15, color: BB.ink }}>Answer Preview: <b style={{ fontFamily: BB.serif, fontSize: 18 }}>{answered || ""}</b></div>
+    </div>
+  ) : q.choices.map((c, idx) => {
+    const sel = answered === idx; const ck = `${key}-${idx}`; const out = !!crossed[ck];
+    return (
+      <div key={idx} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+        <div onClick={() => { if (out) setCrossed((x) => ({ ...x, [ck]: false })); setResponses((r) => ({ ...r, [key]: idx })); }} style={{ flex: 1, position: "relative", display: "flex", alignItems: "center", gap: 14, padding: "12px 16px", borderRadius: 10, border: sel ? `3px solid ${BB.blue}` : `1.5px solid ${BB.ink}`, margin: sel ? 0 : "1.5px", background: "#fff", cursor: "pointer", opacity: out ? 0.45 : 1, transition: "border-color .15s, box-shadow .15s", boxShadow: sel ? "0 0 0 3px rgba(50,77,199,0.12)" : "none" }}>
+          <div style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0, border: `2px solid ${sel ? BB.blue : BB.ink}`, background: sel ? BB.blue : "#fff", color: sel ? "#fff" : BB.ink, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700, fontFamily: BB.ui }}>{String.fromCharCode(65 + idx)}</div>
+          <span style={{ fontSize: 16, fontFamily: BB.serif, color: BB.ink, lineHeight: 1.5 }}>{c}</span>
+          {out && <div style={{ position: "absolute", left: 8, right: 8, top: "50%", height: 2, background: BB.ink }} />}
+        </div>
+        {strikeMode && (
+          <button onClick={() => setCrossed((x) => ({ ...x, [ck]: !x[ck] }))} title="Variantni chiqarib tashlash" style={{ width: 30, height: 30, flexShrink: 0, borderRadius: "50%", border: `1.5px solid ${BB.ink}`, background: "#fff", cursor: "pointer", position: "relative", fontFamily: BB.ui, fontSize: 12.5, fontWeight: 700, color: BB.ink }}>
+            {out ? "Undo" : String.fromCharCode(65 + idx)}
+            {!out && <span style={{ position: "absolute", left: 3, right: 3, top: "50%", height: 1.5, background: BB.ink }} />}
+          </button>
+        )}
+      </div>
+    );
+  });
+
+  const questionPane = (
+    <div style={{ padding: "26px 34px 30px", maxWidth: twoPane ? "none" : 760, margin: twoPane ? 0 : "0 auto", width: "100%" }}>
+      <div style={{ display: "flex", alignItems: "center", background: BB.bar, borderBottom: `2px dashed ${BB.line}`, marginBottom: 20, height: 40 }}>
+        <div style={{ width: 40, height: 40, background: BB.ink, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 16, fontFamily: BB.ui }}>{qIndex + 1}</div>
+        <button onClick={() => setMarked((m) => ({ ...m, [key]: !m[key] }))} style={{ marginLeft: 12, background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 14, fontFamily: BB.ui, color: BB.ink, fontWeight: marked[key] ? 700 : 500 }}>{BbSvg.bookmark(!!marked[key])} Mark for Review</button>
+        {!isSpr && (
+          <button onClick={() => setStrikeMode((v) => !v)} title="Variantlarni chiqarib tashlash" style={{ marginLeft: "auto", marginRight: 6, height: 28, padding: "0 8px", borderRadius: 4, cursor: "pointer", fontFamily: BB.ui, fontSize: 13, fontWeight: 700, textDecoration: "line-through", border: `1.5px solid ${strikeMode ? BB.blue : BB.ink}`, background: strikeMode ? BB.blue : "#fff", color: strikeMode ? "#fff" : BB.ink }}>ABC</button>
+        )}
+      </div>
+      <p style={{ fontSize: 16.5, fontFamily: BB.serif, lineHeight: 1.65, color: BB.ink, margin: "0 0 22px", whiteSpace: "pre-line" }}>{q.prompt}</p>
+      {choiceList}
+    </div>
+  );
+
+  return (
+    <div style={{ height: "100vh", display: "flex", flexDirection: "column", fontFamily: BB.ui, background: "#fff", position: "relative" }}>
+      {header}
+      <div ref={splitRef} style={{ flex: 1, display: "flex", overflow: "hidden", minHeight: 0 }}>
+        {twoPane ? (
+          <>
+            <div style={{ width: `${split}%`, padding: "30px 40px", overflowY: "auto" }}>{leftContent}</div>
+            <div onMouseDown={() => splitRef.current.__start && splitRef.current.__start()} style={{ width: 14, flexShrink: 0, cursor: "col-resize", display: "flex", alignItems: "center", justifyContent: "center", background: "#fff" }}>
+              <div style={{ width: 3, height: "100%", background: BB.line, position: "relative" }}>
+                <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 12, height: 36, borderRadius: 6, background: BB.ink, display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ width: 2, height: 16, borderLeft: "1.5px solid #fff", borderRight: "1.5px solid #fff", boxSizing: "content-box", paddingLeft: 1 }} /></div>
+              </div>
+            </div>
+            <div style={{ flex: 1, overflowY: "auto" }}>{questionPane}</div>
+          </>
+        ) : <div style={{ flex: 1, overflowY: "auto" }}>{questionPane}</div>}
+      </div>
+      {footer(() => setQIndex((i) => Math.max(0, i - 1)), () => (isLast ? setStage({ type: "review", modIdx: stage.modIdx }) : setQIndex((i) => i + 1)), "Next", qIndex === 0)}
+      {navOpen && (
+        <>
+          <div onClick={() => setNavOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 40 }} />
+          <div style={{ position: "absolute", bottom: 80, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 41, pointerEvents: "none" }}>
+          <div className="sws-fade-in" style={{ pointerEvents: "auto", width: 600, maxWidth: "94vw", background: "#fff", borderRadius: 12, boxShadow: "0 18px 50px rgba(0,0,0,0.28)", padding: "18px 24px 22px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+              <span style={{ fontSize: 16, fontWeight: 700, color: BB.ink }}>{mod.label}: {mod.section} Questions</span>
+              <button onClick={() => setNavOpen(false)} style={{ background: "transparent", border: "none", cursor: "pointer", display: "flex", color: BB.ink }}><X size={18} /></button>
+            </div>
+            <QuestionGrid mod={mod} questions={questions} responses={responses} marked={marked} current={qIndex} onPick={(i) => { setQIndex(i); setNavOpen(false); }} />
+            <div style={{ textAlign: "center", marginTop: 22 }}><BbButton onClick={() => { setNavOpen(false); setStage({ type: "review", modIdx: stage.modIdx }); }} style={{ color: BB.blue, borderColor: BB.blue }}>Go to Review Page</BbButton></div>
+          </div>
+          </div>
+        </>
+      )}
+      {modals}
     </div>
   );
 }
@@ -1283,37 +1772,74 @@ function MockTests({ tier, history, onOpenTest, onNeedPay }) {
 }
 
 const BANK_DOMAINS = [
+  { d: "Information and Ideas", kind: "rw", skills: ["Central Ideas and Details", "Inferences", "Command of Evidence (Textual)", "Command of Evidence (Quantitative)"] },
   { d: "Craft and Structure", kind: "rw", skills: ["Words in Context", "Text Structure and Purpose", "Cross-Text Connections"] },
-  { d: "Information and Ideas", kind: "rw", skills: ["Central Ideas and Details", "Command of Evidence (Textual)", "Command of Evidence (Quantitative)", "Inferences"] },
+  { d: "Expression of Ideas", kind: "rw", skills: ["Rhetorical Synthesis", "Transitions"] },
   { d: "Standard English Conventions", kind: "rw", skills: ["Boundaries", "Form, Structure, and Sense"] },
-  { d: "Expression of Ideas", kind: "rw", skills: ["Transitions", "Rhetorical Synthesis"] },
-  { d: "Algebra", kind: "math" }, { d: "Advanced Math", kind: "math" },
-  { d: "Problem-Solving and Data Analysis", kind: "math" }, { d: "Geometry and Trigonometry", kind: "math" },
+  { d: "Algebra", kind: "math", skills: ["Linear equations in one variable", "Linear functions", "Systems of two linear equations in two variables"] },
+  { d: "Advanced Math", kind: "math", skills: ["Equivalent expressions", "Nonlinear equations in one variable and systems of equations in two variables", "Nonlinear functions"] },
+  { d: "Problem-Solving and Data Analysis", kind: "math", skills: ["Ratios, rates, proportional relationships, and units", "Percentages", "One-variable data: Distributions and measures of center and spread", "Probability and conditional probability"] },
+  { d: "Geometry and Trigonometry", kind: "math", skills: ["Area and volume", "Lines, angles, and triangles", "Right triangles and trigonometry", "Circles"] },
 ];
+// College Board ko'nikmasi -> savol generatoridagi shablonlar
+const MATH_SKILL_TEMPLATES = {
+  "Linear equations in one variable": ["Linear equations & systems", [0, 3, 7]],
+  "Linear functions": ["Linear equations & systems", [2]],
+  "Systems of two linear equations in two variables": ["Linear equations & systems", [1, 4, 5, 6]],
+  "Equivalent expressions": ["Nonlinear functions", [7]],
+  "Nonlinear equations in one variable and systems of equations in two variables": ["Nonlinear functions", [1, 6]],
+  "Nonlinear functions": ["Nonlinear functions", [0, 2, 3, 4, 5]],
+  "Ratios, rates, proportional relationships, and units": ["Ratios, rates, data", [0, 3, 6]],
+  "Percentages": ["Ratios, rates, data", [1, 7]],
+  "One-variable data: Distributions and measures of center and spread": ["Ratios, rates, data", [2, 5]],
+  "Probability and conditional probability": ["Ratios, rates, data", [4]],
+  "Area and volume": ["Lines, angles, circles", [7]],
+  "Lines, angles, and triangles": ["Lines, angles, circles", [0, 4, 6]],
+  "Right triangles and trigonometry": ["Lines, angles, circles", [3]],
+  "Circles": ["Lines, angles, circles", [1, 2, 5]],
+};
 const POOL_TOTAL = 500;
 const diffForIndex = (i, total) => (i < total / 3 ? "Easy" : i < (2 * total) / 3 ? "Medium" : "Hard");
+function genSkillQuestion(domain, skill, index) {
+  const difficulty = diffForIndex(index, POOL_TOTAL);
+  if (domain.kind === "math") {
+    const [gen, ts] = MATH_SKILL_TEMPLATES[skill];
+    const rng = freshRng();
+    const g = genMath(gen, rng, false, ts[Math.floor(rng() * ts.length)]);
+    return { domain: domain.d, skill, difficulty, passage: null, ...g };
+  }
+  const v = pickUnseenRW(skill);
+  return { domain: domain.d, skill, difficulty, type: "mc", passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl };
+}
 function genBankQuestion(domain, index) {
   const difficulty = diffForIndex(index, POOL_TOTAL);
   if (domain.kind === "math") {
-    const g = genMath(MATH_SKILL_MAP[domain.d], freshRng(), false);
-    return { domain: domain.d, skill: MATH_SKILL_MAP[domain.d], difficulty, passage: null, ...g };
+    return genSkillQuestion(domain, domain.skills[Math.floor(Math.random() * domain.skills.length)], index);
   }
   const skill = domain.skills[Math.floor(Math.random() * domain.skills.length)];
   const v = pickUnseenRW(skill);
   return { domain: domain.d, skill, difficulty, type: "mc", passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl };
 }
-function PracticeSession({ domain, limit, onExit, onRecord, onNeedPay }) {
+function PracticeSession({ selection, limit, onExit, onRecord, onNeedPay }) {
+  const perDomainRef = useRef({});
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState(null);
   const [score, setScore] = useState(0);
   const [answeredCount, setAnsweredCount] = useState(0);
   const [calcOpen, setCalcOpen] = useState(false);
-  const q = useMemo(() => genBankQuestion(domain, i), [domain, i]);
+  const q = useMemo(() => { const pick = selection[Math.floor(Math.random() * selection.length)]; return genSkillQuestion(pick.domain, pick.skill, i); }, [selection, i]);
+  const domain = { d: selection.length === 1 ? selection[0].skill : `${new Set(selection.map((x) => x.domain.d)).size} ta domen · ${selection.length} ta ko'nikma`, kind: selection.some((x) => x.domain.kind === "math") ? "math" : "rw" };
+  const flushStats = () => { Object.entries(perDomainRef.current).forEach(([d, v]) => onRecord(d, v.c, v.t)); };
   const revealed = picked !== null;
   const atLimit = i >= limit - 1;
-  const choose = (idx) => { if (revealed) return; setPicked(idx); setAnsweredCount((c) => c + 1); if (idx === q.answer) setScore((s) => s + 1); };
-  const next = () => { if (atLimit) { onRecord(domain.d, score, answeredCount); onNeedPay(); return; } setI((x) => x + 1); setPicked(null); };
-  const finish = () => { onRecord(domain.d, score, answeredCount); onExit(); };
+  const choose = (idx) => {
+    if (revealed) return; setPicked(idx); setAnsweredCount((c) => c + 1);
+    const ok = q.type === "spr" ? String(idx).trim() === String(q.answer) : idx === q.answer;
+    if (ok) setScore((s) => s + 1);
+    const cur = perDomainRef.current[q.domain] || { c: 0, t: 0 }; perDomainRef.current[q.domain] = { c: cur.c + (ok ? 1 : 0), t: cur.t + 1 };
+  };
+  const next = () => { if (atLimit) { flushStats(); onNeedPay(); return; } setI((x) => x + 1); setPicked(null); };
+  const finish = () => { flushStats(); onExit(); };
   const diffColor = q.difficulty === "Easy" ? B.green : q.difficulty === "Medium" ? B.gold : B.rose;
   return (
     <div>
@@ -1377,26 +1903,65 @@ function PracticeSession({ domain, limit, onExit, onRecord, onNeedPay }) {
   );
 }
 function QuestionBank({ tier, bankStats, onRecord, onNeedPay }) {
-  const [active, setActive] = useState(null);
+  const [section, setSection] = useState("rw");
+  const [picked, setPicked] = useState({});
+  const [session, setSession] = useState(null);
+  const [open, setOpen] = useState({});
   const limit = TIERS[tier].bankPerDomain;
-  if (active) return <PracticeSession domain={active} limit={limit} onExit={() => setActive(null)} onRecord={onRecord} onNeedPay={() => onNeedPay("premium")} />;
+  if (session) return <PracticeSession selection={session} limit={limit} onExit={() => setSession(null)} onRecord={onRecord} onNeedPay={() => onNeedPay("premium")} />;
+  const domains = BANK_DOMAINS.filter((d) => d.kind === section);
+  const keyOf = (d, sk) => `${d.d}||${sk}`;
+  const allOn = (d) => d.skills.every((sk) => picked[keyOf(d, sk)]);
+  const someOn = (d) => d.skills.some((sk) => picked[keyOf(d, sk)]);
+  const toggleDomain = (d) => { const on = !allOn(d); setPicked((p) => { const n = { ...p }; d.skills.forEach((sk) => { n[keyOf(d, sk)] = on; }); return n; }); };
+  const toggleSkill = (d, sk) => setPicked((p) => ({ ...p, [keyOf(d, sk)]: !p[keyOf(d, sk)] }));
+  const selection = domains.flatMap((d) => d.skills.filter((sk) => picked[keyOf(d, sk)]).map((sk) => ({ domain: d, skill: sk })));
+  const Box = ({ state }) => (
+    <span style={{ width: 20, height: 20, borderRadius: 6, flexShrink: 0, display: "inline-flex", alignItems: "center", justifyContent: "center", border: `2px solid ${state ? B.plum : "#B7BBC9"}`, background: state === true ? B.plum : "#fff", transition: "all .15s" }}>
+      {state === true && <Check size={13} color="#fff" />}
+      {state === "some" && <span style={{ width: 9, height: 2.5, borderRadius: 2, background: B.plum }} />}
+    </span>
+  );
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Savollar banki</h1>
-      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 22px" }}>Har domenda {POOL_TOTAL} ta savol havzasi mavjud · tarifingizda {limit} tasi ochiq.</p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 13 }}>
-        {BANK_DOMAINS.map((dm) => {
-          const st = bankStats[dm.d];
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 20px" }}>College Board'ning SAT Question Bank'idagidek: bo'lim, domen va savol turini (ko'nikmani) tanlang.</p>
+      <div style={{ display: "inline-flex", background: "#E9EBF3", borderRadius: 14, padding: 4, marginBottom: 20 }}>
+        {[["rw", "Reading and Writing"], ["math", "Math"]].map(([k, l]) => (
+          <button key={k} onClick={() => { setSection(k); setPicked({}); }} style={{ border: "none", cursor: "pointer", fontFamily: FONT, fontSize: 15, fontWeight: 700, padding: "9px 20px", borderRadius: 11, background: section === k ? "#fff" : "transparent", color: section === k ? B.text : B.muted, boxShadow: section === k ? "0 2px 8px rgba(22,32,77,0.12)" : "none" }}>{l}</button>
+        ))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 14, marginBottom: 90 }}>
+        {domains.map((d) => {
+          const st = bankStats[d.d]; const expanded = open[d.d] !== false;
           return (
-            <div key={dm.d} onClick={() => setActive(dm)} style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 18, display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}>
-              <div>
-                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 3 }}>{dm.d}</div>
-                <div style={{ fontSize: 14, color: st ? B.green : B.muted }}>{st ? `Oxirgi mashq: ${st.c}/${st.t} to'g'ri` : `${limit} ta savol ochiq`}</div>
+            <div key={d.d} style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 0, overflow: "hidden" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px 18px", cursor: "pointer" }} onClick={() => toggleDomain(d)}>
+                <Box state={allOn(d) ? true : someOn(d) ? "some" : false} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 16.5, fontWeight: 800 }}>{d.d}</div>
+                  <div style={{ fontSize: 13.5, color: st ? B.green : B.muted }}>{st ? `Oxirgi mashq: ${st.c}/${st.t} to'g'ri` : `${d.skills.length} ta savol turi`}</div>
+                </div>
+                <button onClick={(e) => { e.stopPropagation(); setOpen((o) => ({ ...o, [d.d]: !expanded })); }} style={{ background: "transparent", border: "none", cursor: "pointer", color: B.muted, display: "flex", padding: 4 }}><ChevronDown size={18} style={{ transform: expanded ? "rotate(180deg)" : "none", transition: "transform .2s" }} /></button>
               </div>
-              <ChevronRight size={18} color={B.muted} />
+              {expanded && (
+                <div style={{ borderTop: `1px solid ${B.border}`, padding: "8px 10px 10px" }}>
+                  {d.skills.map((sk) => (
+                    <div key={sk} onClick={() => toggleSkill(d, sk)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "9px 8px", borderRadius: 10, cursor: "pointer", fontSize: 15, background: picked[keyOf(d, sk)] ? "#F4EEFB" : "transparent" }}>
+                      <Box state={!!picked[keyOf(d, sk)]} /> <span style={{ lineHeight: 1.35 }}>{sk}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           );
         })}
+      </div>
+      <div style={{ position: "sticky", bottom: 100, display: "flex", justifyContent: "center", pointerEvents: "none", zIndex: 5 }}>
+        <div style={{ pointerEvents: "auto", display: "flex", alignItems: "center", gap: 16, background: "rgba(22,32,77,0.94)", backdropFilter: "blur(12px)", color: "#fff", borderRadius: 18, padding: "12px 14px 12px 22px", boxShadow: "0 18px 40px -16px rgba(22,32,77,0.6)", flexWrap: "wrap" }}>
+          <span style={{ fontSize: 15 }}>{selection.length ? <><b>{selection.length}</b> ta savol turi tanlandi</> : "Kamida bitta savol turini tanlang"}</span>
+          <button disabled={!selection.length} onClick={() => setSession(selection)} style={{ border: "none", borderRadius: 12, padding: "10px 22px", fontSize: 15, fontWeight: 800, fontFamily: FONT, cursor: selection.length ? "pointer" : "default", background: selection.length ? B.gold : "#5A6187", color: selection.length ? B.navy : "#C9CCDC" }}>Mashqni boshlash</button>
+        </div>
       </div>
     </div>
   );
@@ -2120,7 +2685,7 @@ function AppShell({ onHome }) {
             <span style={{ background: tier === "premium" ? B.gold : tier === "standard" ? B.plum : B.border, color: tier === "free" ? B.muted : (tier === "premium" ? B.navy : "#fff"), fontSize: 11, fontWeight: 800, padding: "2px 7px", borderRadius: 8 }}>{tierLabel(tier).toUpperCase()}</span>
           </div>
         </div>
-        <div key={page} className="sws-fade-in" style={{ padding: "32px 34px", maxWidth: 1000 }}>
+        <div key={page} className="sws-fade-in" style={{ padding: "32px 34px 120px", maxWidth: 1000 }}>
           {page === "home" && <DashHome history={history} onGoTests={() => setPage("tests")} todaySeconds={todaySeconds} goalMinutes={goalMinutes} streak={streak} onGoProfile={() => setPage("profile")} targetScore={targetScore} examDate={examDate} />}
           {page === "tests" && <MockTests tier={tier} history={history} onOpenTest={setActiveTest} onNeedPay={needPay} />}
           {page === "bank" && <QuestionBank tier={tier} bankStats={bankStats} onRecord={(d, c, t) => setBankStats((s) => ({ ...s, [d]: { c, t } }))} onNeedPay={needPay} />}
@@ -2133,6 +2698,11 @@ function AppShell({ onHome }) {
           {page === "profile" && <Profile name={name} setName={setName} goalMinutes={goalMinutes} setGoalMinutes={setGoalMinutes} streak={streak} todaySeconds={todaySeconds} allTimeMinutes={Math.round(allTimeMinutes)} targetScore={targetScore} examDate={examDate} />}
         </div>
       </main>
+      <div style={{ position: "fixed", bottom: 16, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 50, pointerEvents: "none" }}>
+        <div style={{ pointerEvents: "auto" }}>
+          <MacDock apps={nav} activeId={page} onAppClick={setPage} />
+        </div>
+      </div>
       {payOpen && <PaymentModal suggestedTier={suggestedTier} onClose={() => setPayOpen(false)} onPaid={(plan) => { setTier(plan); setPayOpen(false); }} />}
     </div>
   );
