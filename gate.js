@@ -16,6 +16,13 @@
     var qs = new URLSearchParams(location.search); var tgp = qs.get("tg");
     if (tgp) { localStorage.setItem(LKEY, tgp); qs.delete("tg"); var q = qs.toString(); history.replaceState(null, "", location.pathname + (q ? "?" + q : "") + location.hash); }
   } catch (e) {}
+  // Telegram Mini App ichida ochilgan bo'lsa — hozirgi akkaunt ma'lumoti (har akkaunt alohida tekshiriladi)
+  var webapp = null;
+  try {
+    var hp = new URLSearchParams(location.hash.replace(/^#/, "")).get("tgWebAppData");
+    if (hp) { webapp = hp; sessionStorage.setItem("sws_tg_webapp", hp); }
+    else webapp = sessionStorage.getItem("sws_tg_webapp");
+  } catch (e) {}
   function botUrl() { return "https://t.me/" + state.bot + "?start=site"; }
 
   var css = "" +
@@ -110,17 +117,18 @@
 
   function verify(showSpinner) {
     var auth = load(); var link = loadLink();
-    if (!auth && !link) { renderLogin(); return; }
+    if (!auth && !link && !webapp) { renderLogin(); return; }
     if (state.checking) return;
     state.checking = true;
     if (showSpinner && overlay) setMsg("Tekshirilmoqda…");
-    fetch("/api/tg-check", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(link ? { link: link } : { auth: auth }) })
+    fetch("/api/tg-check", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(webapp ? { webapp: webapp } : link ? { link: link } : { auth: auth }) })
       .then(function (r) { return r.json(); })
       .then(function (d) {
         state.checking = false;
         if (!d.configured) { hideOverlay(); return; }
         if (d.channelUrl) state.channelUrl = d.channelUrl;
         if (d.ok) { hideOverlay(); return; }
+        if (d.reason === "bad_auth" && webapp) { webapp = null; try { sessionStorage.removeItem("sws_tg_webapp"); } catch (e) {} verify(showSpinner); return; }
         if (d.reason === "bad_auth") { clear(); renderLogin(); setMsg("Qaytadan Telegram orqali kiring.", true); return; }
         if (d.reason === "check_failed") { ensureOverlay(); if (!document.getElementById("sws-gate-recheck")) renderNotMember(auth); setMsg("Tekshirib bo'lmadi (" + (d.detail || "xato") + "). Birozdan keyin qayta urinib ko'ring.", true); return; }
         renderNotMember(auth);
