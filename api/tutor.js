@@ -11,7 +11,9 @@ const MODELS = [process.env.GEMINI_MODEL, "gemini-flash-latest", "gemini-2.5-fla
 module.exports = async (req, res) => {
   if (req.method !== "POST") { res.status(405).json({ error: "method_not_allowed" }); return; }
   const key = process.env.GEMINI_API_KEY;
-  if (!key) { res.status(503).json({ error: "no_key" }); return; }
+  // Kalit bo'lmasa: Vercel AI Gateway (OIDC orqali, alohida kalit shart emas)
+  const oidc = req.headers["x-vercel-oidc-token"] || process.env.VERCEL_OIDC_TOKEN;
+  if (!key && !oidc) { res.status(503).json({ error: "no_key" }); return; }
 
   let body = req.body;
   if (typeof body === "string") { try { body = JSON.parse(body); } catch (e) { body = {}; } }
@@ -22,6 +24,26 @@ module.exports = async (req, res) => {
     .map((m) => ({ role: m.role === "user" ? "user" : "model", parts: [{ text: m.text.slice(0, 4000) }] }));
   while (contents.length && contents[0].role !== "user") contents.shift();
   if (!contents.length || contents[contents.length - 1].role !== "user") { res.status(400).json({ error: "bad_request" }); return; }
+
+  if (!key) {
+    try {
+      const r = await fetch("https://ai-gateway.vercel.sh/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + oidc },
+        body: JSON.stringify({
+          model: process.env.AI_MODEL || "google/gemini-2.5-flash",
+          messages: [{ role: "system", content: SYSTEM }, ...contents.map((c) => ({ role: c.role === "user" ? "user" : "assistant", content: c.parts[0].text }))],
+          max_tokens: 1024, temperature: 0.6,
+        }),
+      });
+      const data = await r.json().catch(() => ({}));
+      if (r.status === 429) { res.status(429).json({ error: "rate_limited" }); return; }
+      const text = (((data.choices || [])[0] || {}).message || {}).content;
+      if (r.ok && text) { res.status(200).json({ text: String(text).trim(), model: "gateway" }); return; }
+      res.status(502).json({ error: "upstream_failed", detail: (data.error && (data.error.message || data.error)) || "http_" + r.status });
+    } catch (e) { res.status(502).json({ error: "upstream_failed", detail: String(e && e.message || e) }); }
+    return;
+  }
 
   const payload = {
     systemInstruction: { parts: [{ text: SYSTEM }] },
