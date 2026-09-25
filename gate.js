@@ -6,9 +6,17 @@
   var state = { bot: null, channelUrl: "https://t.me/ShirinabonuBorixodjayeva", checking: false };
   var overlay, body;
 
+  var LKEY = "sws_tg_link";
   function load() { try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { return null; } }
+  function loadLink() { try { return localStorage.getItem(LKEY); } catch (e) { return null; } }
   function save(a) { try { localStorage.setItem(KEY, JSON.stringify(a)); } catch (e) {} }
-  function clear() { try { localStorage.removeItem(KEY); } catch (e) {} }
+  function clear() { try { localStorage.removeItem(KEY); localStorage.removeItem(LKEY); } catch (e) {} }
+  // Bot yuborgan shaxsiy havola: ?tg=... — saqlab qo'yamiz va manzildan olib tashlaymiz
+  try {
+    var qs = new URLSearchParams(location.search); var tgp = qs.get("tg");
+    if (tgp) { localStorage.setItem(LKEY, tgp); qs.delete("tg"); var q = qs.toString(); history.replaceState(null, "", location.pathname + (q ? "?" + q : "") + location.hash); }
+  } catch (e) {}
+  function botUrl() { return "https://t.me/" + state.bot + "?start=site"; }
 
   var css = "" +
     "#sws-gate{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:20px;" +
@@ -65,8 +73,10 @@
       '<h1>Saytdan foydalanish uchun Telegram kanalimizga obuna bo\'ling</h1>' +
       '<p>Platforma <b>@ShirinabonuBorixodjayeva</b> kanali obunachilari uchun bepul.</p>' +
       '<div class="steps"><div><span class="num">1</span><span>Kanalga obuna bo\'ling</span></div>' +
-      '<div><span class="num">2</span><span>Telegram orqali kiring — obunangizni avtomatik tekshiramiz</span></div></div>' +
-      '<a class="btn tg" href="' + state.channelUrl + '" target="_blank" rel="noopener">' + TG_ICON + ' Kanalga obuna bo\'lish</a>' +
+      '<div><span class="num">2</span><span>Botimizda <b>Start</b> ni bosing — u obunani tekshirib, saytga kirish tugmasini yuboradi</span></div></div>' +
+      '<a class="btn tg" href="' + state.channelUrl + '" target="_blank" rel="noopener">' + TG_ICON + ' 1. Kanalga obuna bo\'lish</a>' +
+      '<a class="btn tg" style="background:#16204D" href="' + botUrl() + '" target="_blank" rel="noopener">' + TG_ICON + ' 2. Telegram orqali kirish</a>' +
+      '<div style="font-size:12.5px;color:#8A90B0;margin:10px 0 8px">yoki kompyuterda:</div>' +
       '<div class="widget" id="sws-gate-widget"></div>' +
       '<div class="msg" id="sws-gate-msg"></div>';
     var s = document.createElement("script");
@@ -86,7 +96,8 @@
       '<h1>Kanalga obuna bo\'lmagansiz</h1>' +
       '<p>Saytdan foydalanish uchun <b>@ShirinabonuBorixodjayeva</b> kanaliga obuna bo\'ling. Obuna bo\'lib qaytsangiz, sayt o\'zi ochiladi.</p>' +
       '<a class="btn tg" id="sws-gate-join" href="' + state.channelUrl + '" target="_blank" rel="noopener">' + TG_ICON + ' Kanalga obuna bo\'lish</a>' +
-      '<button class="btn ghost" id="sws-gate-recheck">Obuna bo\'ldim — tekshirish</button>' +
+      '<a class="btn tg" style="background:#16204D" href="' + botUrl() + '" target="_blank" rel="noopener">' + TG_ICON + ' Obuna bo\'ldim — botdan kirish</a>' +
+      '<button class="btn ghost" id="sws-gate-recheck">Qayta tekshirish</button>' +
       '<div class="msg" id="sws-gate-msg"></div>' +
       (name ? '<div class="who">' + escapeHtml(name) + ' sifatida kirdingiz · <a id="sws-gate-out">boshqa akkaunt</a></div>' : "");
     document.getElementById("sws-gate-recheck").onclick = function () { verify(true); };
@@ -98,12 +109,12 @@
   window.swsGateOnAuth = function (user) { save(user); verify(true); };
 
   function verify(showSpinner) {
-    var auth = load();
-    if (!auth) { renderLogin(); return; }
+    var auth = load(); var link = loadLink();
+    if (!auth && !link) { renderLogin(); return; }
     if (state.checking) return;
     state.checking = true;
     if (showSpinner && overlay) setMsg("Tekshirilmoqda…");
-    fetch("/api/tg-check", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ auth: auth }) })
+    fetch("/api/tg-check", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(link ? { link: link } : { auth: auth }) })
       .then(function (r) { return r.json(); })
       .then(function (d) {
         state.checking = false;
@@ -111,7 +122,7 @@
         if (d.channelUrl) state.channelUrl = d.channelUrl;
         if (d.ok) { hideOverlay(); return; }
         if (d.reason === "bad_auth") { clear(); renderLogin(); setMsg("Qaytadan Telegram orqali kiring.", true); return; }
-        if (d.reason === "check_failed") { ensureOverlay(); if (!document.getElementById("sws-gate-recheck")) renderNotMember(auth); setMsg("Tekshirib bo'lmadi, birozdan keyin qayta urinib ko'ring.", true); return; }
+        if (d.reason === "check_failed") { ensureOverlay(); if (!document.getElementById("sws-gate-recheck")) renderNotMember(auth); setMsg("Tekshirib bo'lmadi (" + (d.detail || "xato") + "). Birozdan keyin qayta urinib ko'ring.", true); return; }
         renderNotMember(auth);
         if (showSpinner) setMsg("Hali obuna ko'rinmayapti. Obuna bo'lgach, qayta tekshiring.", true);
       })
