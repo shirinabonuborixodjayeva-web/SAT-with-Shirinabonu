@@ -20,7 +20,7 @@ async function setJSON(key, value) { return kv("SET", key, JSON.stringify(value)
 // Tarif va limitlar
 const PRICE_UZS = 49000;
 const PREMIUM_DAYS = 30;
-const FREE_MOCKS = 100;
+const FREE_MOCKS = 5;
 const FREE_DAILY = { bank: 30, drill: 3, ai: 10, vocab: 40 };
 const today = () => new Date(Date.now() + 5 * 3600 * 1000).toISOString().slice(0, 10); // Toshkent vaqti
 
