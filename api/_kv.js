@@ -19,9 +19,12 @@ async function setJSON(key, value) { return kv("SET", key, JSON.stringify(value)
 
 // Tarif va limitlar
 const PRICE_UZS = 49000;
+const PRICE3_UZS = 119000;
+const TRIAL_DAYS = 3;
+const REF_BONUS_DAYS = 7;
 const PREMIUM_DAYS = 30;
-const FREE_MOCKS = 5;
-const FREE_DAILY = { bank: 30, drill: 3, ai: 10, vocab: 40 };
+const FREE_MOCKS = 3;
+const FREE_DAILY = { bank: 15, drill: 2, ai: 5, vocab: 30 };
 const today = () => new Date(Date.now() + 5 * 3600 * 1000).toISOString().slice(0, 10); // Toshkent vaqti
 
 async function premiumUntil(uid) { try { return Number(await kv("GET", "prem:" + uid)) || 0; } catch (e) { return 0; } }
@@ -45,4 +48,4 @@ async function consume(uid, kind, amount) {
   return { ok: true, used: nv, limit };
 }
 
-module.exports = { kv, kvPipe, kvOn, getJSON, setJSON, PRICE_UZS, PREMIUM_DAYS, FREE_MOCKS, FREE_DAILY, today, premiumUntil, usageToday, consume };
+module.exports = { kv, kvPipe, kvOn, getJSON, setJSON, PRICE_UZS, PRICE3_UZS, TRIAL_DAYS, REF_BONUS_DAYS, PREMIUM_DAYS, FREE_MOCKS, FREE_DAILY, today, premiumUntil, usageToday, consume };
