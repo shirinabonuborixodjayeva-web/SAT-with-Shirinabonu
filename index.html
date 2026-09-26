@@ -2710,33 +2710,104 @@ function fmtMinutes(sec) {
 /* ============================================================
    PROFILE
 ============================================================ */
-function Profile({ name, setName, goalMinutes, setGoalMinutes, streak, todaySeconds, allTimeMinutes, targetScore, examDate }) {
+// Akkauntdan chiqish: shu qurilmadagi kirish ma'lumotlari o'chiriladi va obuna/kirish oynasi qayta chiqadi
+function swsLogout() {
+  try { flushSeen(); } catch (e) {}
+  try { ["sws_tg_auth", "sws_tg_link", "sws_session"].forEach((k) => localStorage.removeItem(k)); sessionStorage.removeItem("sws_tg_webapp"); } catch (e) {}
+  const inTelegram = /tgWebAppData/.test(location.hash) || !!(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData);
+  if (inTelegram && window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.close) { window.Telegram.WebApp.close(); return; }
+  location.href = location.pathname;
+}
+function ProfileEditor({ name, setName, targetScore, examDate, onSaveGoals, onClose }) {
+  const [n, setN] = useState(name || "");
+  const [t, setT] = useState(targetScore || 1400);
+  const [d, setD] = useState(examDate ? String(examDate).slice(0, 10) : "");
+  const save = () => { setName(n.trim() || name); onSaveGoals(Number(t) || null, d ? new Date(d + "T09:00:00").toISOString() : null); swsToast("Saqlandi ✓"); onClose(); };
+  const field = { width: "100%", boxSizing: "border-box", padding: "11px 14px", border: `1px solid ${B.border}`, borderRadius: 12, fontSize: 15.5, fontFamily: FONT };
+  return (
+    <div className="sws-app" onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(22,32,77,0.4)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 95, padding: 16, fontFamily: FONT }}>
+      <div className="sws-fade-in" onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 24, width: 440, maxWidth: "100%", padding: 26, boxShadow: "0 40px 80px -30px rgba(22,32,77,0.5)" }}>
+        <div style={{ fontSize: 21, fontWeight: 900, marginBottom: 16 }}>Profilni tahrirlash</div>
+        <label style={{ fontSize: 14, fontWeight: 800, display: "block", marginBottom: 6 }}>Ismingiz</label>
+        <input value={n} onChange={(e) => setN(e.target.value.slice(0, 40))} placeholder="Ism" style={{ ...field, marginBottom: 14 }} />
+        <label style={{ fontSize: 14, fontWeight: 800, display: "block", marginBottom: 6 }}>Maqsad ball</label>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 14 }}>
+          {[1200, 1300, 1400, 1450, 1500, 1550, 1580, 1600].map((v) => (
+            <button key={v} onClick={() => setT(v)} style={{ padding: "10px 0", borderRadius: 12, border: `2px solid ${Number(t) === v ? B.plum : B.border}`, background: Number(t) === v ? "#F4EEFB" : "#fff", color: Number(t) === v ? B.plum : B.text, fontWeight: 800, cursor: "pointer", fontFamily: FONT, fontSize: 15 }}>{v}</button>
+          ))}
+        </div>
+        <label style={{ fontSize: 14, fontWeight: 800, display: "block", marginBottom: 6 }}>Imtihon sanasi</label>
+        <input type="date" value={d} onChange={(e) => setD(e.target.value)} style={{ ...field, marginBottom: 20 }} />
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={onClose} style={{ flex: 1, background: B.bg, border: "none", borderRadius: 12, padding: 13, fontSize: 15, fontWeight: 800, cursor: "pointer", fontFamily: FONT, color: B.text }}>Bekor qilish</button>
+          <button onClick={save} style={{ flex: 2, background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: 13, fontSize: 15, fontWeight: 900, cursor: "pointer", fontFamily: FONT }}>Saqlash</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+function Profile({ name, setName, goalMinutes, setGoalMinutes, streak, todaySeconds, allTimeMinutes, targetScore, examDate, onSaveGoals, onOpenPremium }) {
   const [draft, setDraft] = useState(name);
+  const [editing, setEditing] = useState(false);
+  const [confirmOut, setConfirmOut] = useState(false);
+  useEffect(() => { setDraft(name); }, [name]);
+  const sws = useSws();
+  const me = sws.me || {}; const prof = me.profile || {};
+  const tgName = (sws.user && sws.user.first_name) || prof.tgName || "";
+  const username = (sws.user && sws.user.username) || prof.username || "";
   const pct = Math.min(100, Math.round((todaySeconds / 60 / Math.max(1, goalMinutes)) * 100));
   const daysLeft = examDate ? Math.max(0, Math.ceil((new Date(examDate) - new Date()) / 86400000)) : null;
   return (
     <div>
-      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Profil</h1>
-      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 22px" }}>Ism, kunlik maqsad va statistikangiz.</p>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 800, margin: 0 }}>Profil</h1>
+        <button onClick={() => setEditing(true)} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "9px 18px", fontSize: 14.5, fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>✏️ Tahrirlash</button>
+      </div>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "6px 0 18px" }}>Akkaunt, maqsad va statistikangiz.</p>
+
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 20, marginBottom: 18, display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+        <div style={{ width: 56, height: 56, borderRadius: "50%", background: `linear-gradient(135deg, ${B.plum}, #C2185B)`, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, fontWeight: 900, flexShrink: 0 }}>{(name || tgName || "?")[0].toUpperCase()}</div>
+        <div style={{ flex: 1, minWidth: 180 }}>
+          <div style={{ fontSize: 18, fontWeight: 900 }}>{name || tgName || "O'quvchi"}</div>
+          <div style={{ fontSize: 14, color: B.muted }}>Telegram: {tgName}{username ? ` · @${username}` : ""}{sws.uid ? ` · ID ${sws.uid}` : ""}</div>
+          <div style={{ marginTop: 6 }}>
+            {me.premium ? <span style={{ fontSize: 13, fontWeight: 900, color: "#9A6800", background: "#FFF3D9", padding: "4px 10px", borderRadius: 10 }}>{me.trial ? "🎁 Sinov Premium" : "💎 Premium"} · {new Date(me.premiumUntil).toLocaleDateString("uz-UZ")} gacha</span>
+              : <span onClick={onOpenPremium} style={{ cursor: "pointer", fontSize: 13, fontWeight: 900, color: B.muted, background: B.bg, padding: "4px 10px", borderRadius: 10 }}>Bepul tarif · 💎 Premium olish</span>}
+          </div>
+        </div>
+        <button onClick={() => setConfirmOut(true)} style={{ background: "#fff", color: B.rose, border: `1.5px solid ${B.rose}`, borderRadius: 12, padding: "9px 16px", fontSize: 14.5, fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>Chiqish</button>
+      </div>
+      {confirmOut && (
+        <div style={{ background: "#FFF3F6", border: `1px solid ${B.rose}55`, borderRadius: 16, padding: "14px 16px", marginBottom: 18, fontSize: 14.5 }}>
+          <div style={{ marginBottom: 10 }}>Akkauntdan chiqasizmi? Natijalaringiz akkauntda saqlanib qoladi — qayta Telegram orqali kirsangiz, hammasi joyida bo'ladi.</div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={swsLogout} style={{ background: B.rose, color: "#fff", border: "none", borderRadius: 10, padding: "9px 18px", fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>Ha, chiqish</button>
+            <button onClick={() => setConfirmOut(false)} style={{ background: "#fff", color: B.text, border: `1px solid ${B.border}`, borderRadius: 10, padding: "9px 18px", fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>Yo'q</button>
+          </div>
+        </div>
+      )}
+      {editing && <ProfileEditor name={name} setName={setName} targetScore={targetScore} examDate={examDate} onSaveGoals={onSaveGoals} onClose={() => setEditing(false)} />}
 
       {(targetScore || daysLeft !== null) && (
         <div style={{ background: B.navy, color: "#fff", borderRadius: 18, padding: "16px 20px", marginBottom: 18, display: "flex", gap: 24, flexWrap: "wrap" }}>
           {targetScore && <div><div style={{ fontSize: 12, opacity: 0.7 }}>MAQSAD BALL</div><div style={{ fontSize: 24, fontWeight: 800 }}>{targetScore}</div></div>}
           {daysLeft !== null && <div><div style={{ fontSize: 12, opacity: 0.7 }}>IMTIHONGACHA</div><div style={{ fontSize: 24, fontWeight: 800 }}>{daysLeft} kun</div></div>}
+          {examDate && <div><div style={{ fontSize: 12, opacity: 0.7 }}>IMTIHON SANASI</div><div style={{ fontSize: 24, fontWeight: 800 }}>{new Date(examDate).toLocaleDateString("uz-UZ")}</div></div>}
+          <button onClick={() => setEditing(true)} style={{ marginLeft: "auto", alignSelf: "center", background: "rgba(255,255,255,0.14)", color: "#fff", border: "none", borderRadius: 10, padding: "8px 14px", fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>O'zgartirish</button>
         </div>
       )}
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginBottom: 18 }}>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 20, textAlign: "center" }}>
-          <div style={{ fontSize: 33, fontWeight: 800, color: B.plum }}>🔥 {streak}</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))", gap: 12, marginBottom: 18 }}>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: "16px 10px", textAlign: "center" }}>
+          <div style={{ fontSize: 26, fontWeight: 800, color: B.plum }}>🔥 {streak}</div>
           <div style={{ fontSize: 14, color: B.muted, marginTop: 4 }}>kunlik streak</div>
         </div>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 20, textAlign: "center" }}>
-          <div style={{ fontSize: 33, fontWeight: 800, color: B.text }}>{fmtMinutes(todaySeconds)}</div>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: "16px 10px", textAlign: "center" }}>
+          <div style={{ fontSize: 26, fontWeight: 800, color: B.text }}>{fmtMinutes(todaySeconds)}</div>
           <div style={{ fontSize: 14, color: B.muted, marginTop: 4 }}>bugun ishlangan</div>
         </div>
-        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 20, textAlign: "center" }}>
-          <div style={{ fontSize: 33, fontWeight: 800, color: B.text }}>{allTimeMinutes} daq</div>
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: "16px 10px", textAlign: "center" }}>
+          <div style={{ fontSize: 26, fontWeight: 800, color: B.text }}>{allTimeMinutes} daq</div>
           <div style={{ fontSize: 14, color: B.muted, marginTop: 4 }}>jami (barcha vaqt)</div>
         </div>
       </div>
@@ -2781,7 +2852,7 @@ function Profile({ name, setName, goalMinutes, setGoalMinutes, streak, todaySeco
         <div style={{ fontSize: 15.5, fontWeight: 700, marginBottom: 12 }}>Ismingiz</div>
         <div style={{ display: "flex", gap: 8 }}>
           <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Ismingizni kiriting" style={{ flex: 1, padding: "10px 14px", border: `1px solid ${B.border}`, borderRadius: 12, fontSize: 15.5, fontFamily: FONT }} />
-          <button onClick={() => setName(draft)} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "10px 20px", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Saqlash</button>
+          <button onClick={() => { setName(draft); swsToast("Ism saqlandi ✓"); }} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "10px 20px", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Saqlash</button>
         </div>
         <div style={{ fontSize: 12.5, color: B.muted, marginTop: 8 }}>Ismingiz "Jamiyat" bo'limida boshqa o'quvchilarga ko'rinadi.</div>
       </div>
@@ -2792,39 +2863,102 @@ function Profile({ name, setName, goalMinutes, setGoalMinutes, streak, todaySeco
 /* ============================================================
    COMMUNITY — online presence (room) + shared study stats (db)
 ============================================================ */
-function Community({ clientId, name, peers, roster, roomReady, dbReady }) {
-  const onlineIds = new Set(peers.map((p) => p.clientId).filter(Boolean));
-  const merged = Object.values(roster || {})
-    .filter((r) => r.id !== clientId)
-    .map((r) => ({ ...r, online: onlineIds.has(r.id) }))
-    .sort((a, b) => (b.online - a.online) || (b.minutesToday || 0) - (a.minutesToday || 0));
-
+function timeAgo(ms) { const m = Math.round((Date.now() - ms) / 60000); if (m < 1) return "hozir"; if (m < 60) return m + " daq oldin"; const h = Math.round(m / 60); if (h < 24) return h + " soat oldin"; return Math.round(h / 24) + " kun oldin"; }
+function Community({ name }) {
+  const [data, setData] = useState(null);
+  const [text, setText] = useState("");
+  const [sending, setSending] = useState(false);
+  const [tab, setTab] = useState("chat");
+  const endRef = useRef(null);
+  const load = async (body) => { try { const d = SWS.session ? await swsApi("/api/community", body) : null; if (d && (d.members || d.error === "slow_down")) { if (d.members) setData(d); return d; } } catch (e) {} if (!data) setData({ storage: false, members: [], messages: [] }); return null; };
+  useEffect(() => { load(); const t = setInterval(() => load(), 12000); return () => clearInterval(t); }, []);
+  useEffect(() => { if (tab === "chat") endRef.current?.scrollIntoView({ block: "end" }); }, [data && data.messages && data.messages.length, tab]);
+  const send = async () => {
+    const t = text.trim(); if (!t || sending) return;
+    setSending(true);
+    const d = await load({ msg: t, name });
+    if (d && d.error === "slow_down") swsToast("Biroz sekinroq — 4 soniyada bitta xabar"); else setText("");
+    setSending(false);
+  };
+  const members = data ? [...data.members].sort((x, y) => (y.online - x.online) || (y.minutesToday - x.minutesToday)) : [];
+  const onlineCount = members.filter((m) => m.online).length;
+  const leaders = [...members].filter((m) => m.minutesToday > 0).sort((x, y) => y.minutesToday - x.minutesToday).slice(0, 10);
+  const me = data && data.me;
+  const Avatar = ({ n, on }) => (
+    <div style={{ position: "relative", width: 38, height: 38, borderRadius: "50%", background: "#F2EAFB", color: B.plum, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 15, flexShrink: 0 }}>
+      {(n || "?")[0].toUpperCase()}
+      {on && <span style={{ position: "absolute", right: 0, bottom: 0, width: 11, height: 11, borderRadius: "50%", background: B.green, border: "2px solid #fff" }} />}
+    </div>
+  );
   return (
     <div>
-      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Jamiyat</h1>
-      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 18px" }}>Boshqa o'quvchilar bilan bir vaqtda mashq qiling.</p>
-
-      {!roomReady && !dbReady && (
-        <div style={{ background: "#FFF7E8", borderRadius: 12, padding: "13px 16px", fontSize: 14.5, marginBottom: 16 }}>
-          Jamiyat funksiyasi bu ko'rinishda mavjud emas.
-        </div>
-      )}
-
-      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, overflow: "hidden" }}>
-        <div style={{ padding: "14px 20px", borderBottom: `1px solid ${B.border}`, fontSize: 15, fontWeight: 700 }}>
-          {merged.length > 0 ? `${merged.length} ta o'quvchi` : "Hozircha boshqa o'quvchi yo'q"}
-        </div>
-        {merged.map((r) => (
-          <div key={r.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "13px 20px", borderBottom: `1px solid ${B.bg}` }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ width: 9, height: 9, borderRadius: "50%", background: r.online ? B.green : B.border, flexShrink: 0 }} />
-              <span style={{ fontSize: 15.5, fontWeight: 600 }}>{r.name || "Mehmon"}</span>
-              {r.online && <span style={{ fontSize: 11.5, fontWeight: 800, color: B.green, background: "#E6F6EE", padding: "2px 8px", borderRadius: 8 }}>ONLAYN</span>}
-            </div>
-            <div style={{ fontSize: 14, color: B.muted }}>bugun {fmtMinutes((r.minutesToday || 0) * 60)} · 🔥{r.streak || 0}</div>
-          </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 800, margin: 0 }}>Jamiyat</h1>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 14, fontWeight: 800, color: B.green, background: "#E6F6EE", padding: "6px 12px", borderRadius: 20 }}><span className="sws-pulse" style={{ width: 8, height: 8, borderRadius: "50%", background: B.green }} /> {onlineCount} kishi onlayn</span>
+      </div>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "6px 0 18px" }}>Boshqa o'quvchilar bilan birga o'qing: kim onlayn, bugungi reyting va umumiy chat.</p>
+      {data && !data.storage && <div style={{ background: "#FFF7E8", borderRadius: 12, padding: "13px 16px", fontSize: 14.5, marginBottom: 16 }}>Jamiyat hozircha yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>}
+      <div style={{ display: "inline-flex", background: "#E9EBF3", borderRadius: 14, padding: 4, marginBottom: 16 }}>
+        {[["chat", "💬 Chat"], ["people", `👥 O'quvchilar (${members.length})`], ["top", "🏆 Bugungi reyting"]].map(([k, l]) => (
+          <button key={k} onClick={() => setTab(k)} style={{ border: "none", cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: 800, padding: "9px 16px", borderRadius: 11, background: tab === k ? "#fff" : "transparent", color: tab === k ? B.text : B.muted, boxShadow: tab === k ? "0 2px 8px rgba(22,32,77,0.12)" : "none" }}>{l}</button>
         ))}
       </div>
+      {!data && <div style={{ color: B.muted, padding: 30, textAlign: "center" }}>Yuklanmoqda…</div>}
+      {data && tab === "chat" && (
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, overflow: "hidden", display: "flex", flexDirection: "column", height: "max(300px, min(560px, calc(100vh - 430px)))" }}>
+          <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
+            {data.messages.length === 0 && <div style={{ textAlign: "center", color: B.muted, padding: 40, fontSize: 15 }}>Hali xabar yo'q — birinchi bo'lib salom yozing! 👋</div>}
+            {data.messages.map((m, i) => {
+              const mine = m.uid === me;
+              return (
+                <div key={i} style={{ display: "flex", gap: 9, justifyContent: mine ? "flex-end" : "flex-start", marginBottom: 10 }}>
+                  {!mine && <Avatar n={m.name} />}
+                  <div style={{ maxWidth: "75%" }}>
+                    {!mine && <div style={{ fontSize: 12.5, fontWeight: 800, color: B.plum, marginBottom: 2 }}>{m.name}</div>}
+                    <div style={{ background: mine ? B.plum : B.bg, color: mine ? "#fff" : B.text, padding: "9px 13px", borderRadius: 14, fontSize: 15, lineHeight: 1.5, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{m.text}</div>
+                    <div style={{ fontSize: 11.5, color: B.muted, marginTop: 2, textAlign: mine ? "right" : "left" }}>{timeAgo(m.at)}</div>
+                  </div>
+                </div>
+              );
+            })}
+            <div ref={endRef} />
+          </div>
+          <div style={{ display: "flex", gap: 8, padding: 12, borderTop: `1px solid ${B.bg}` }}>
+            <input value={text} onChange={(e) => setText(e.target.value.slice(0, 400))} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Xabar yozing… (savol, maslahat, motivatsiya)" style={{ flex: 1, padding: "12px 14px", border: `1px solid ${B.border}`, borderRadius: 14, fontSize: 15, fontFamily: FONT, outline: "none" }} />
+            <button onClick={send} disabled={sending || !text.trim()} style={{ background: B.plum, border: "none", borderRadius: 14, padding: "0 18px", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center" }}><Send size={17} /></button>
+          </div>
+        </div>
+      )}
+      {data && tab === "people" && (
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, overflow: "hidden" }}>
+          {members.length === 0 && <div style={{ padding: 30, textAlign: "center", color: B.muted }}>Hozircha boshqa o'quvchi yo'q</div>}
+          {members.map((r) => (
+            <div key={r.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 18px", borderBottom: `1px solid ${B.bg}`, gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 11, minWidth: 0 }}>
+                <Avatar n={r.name} on={r.online} />
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 15.5, fontWeight: 700 }}>{r.name}{r.id === me ? " (siz)" : ""}</div>
+                  <div style={{ fontSize: 13, color: r.online ? B.green : B.muted }}>{r.studying ? "📖 hozir o'qiyapti" : r.online ? "onlayn" : timeAgo(r.lastSeen)}</div>
+                </div>
+              </div>
+              <div style={{ fontSize: 14, color: B.muted, textAlign: "right", flexShrink: 0 }}>bugun {fmtMinutes(r.minutesToday * 60)}<br />🔥 {r.streak}</div>
+            </div>
+          ))}
+        </div>
+      )}
+      {data && tab === "top" && (
+        <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, overflow: "hidden" }}>
+          {leaders.length === 0 && <div style={{ padding: 30, textAlign: "center", color: B.muted }}>Bugun hali hech kim o'qimagan — birinchi bo'ling! 💪</div>}
+          {leaders.map((r, i) => (
+            <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 18px", borderBottom: `1px solid ${B.bg}`, background: r.id === me ? "#F8F4FD" : "#fff" }}>
+              <div style={{ width: 30, textAlign: "center", fontSize: i < 3 ? 22 : 16, fontWeight: 900, color: B.muted }}>{["🥇", "🥈", "🥉"][i] || i + 1}</div>
+              <Avatar n={r.name} on={r.online} />
+              <div style={{ flex: 1, fontSize: 15.5, fontWeight: 700 }}>{r.name}{r.id === me ? " (siz)" : ""}</div>
+              <div style={{ fontSize: 15, fontWeight: 900, color: B.plum }}>{fmtMinutes(r.minutesToday * 60)}</div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -3041,8 +3175,13 @@ function DrillsHome() {
   );
 }
 function AppShell({ onHome }) {
-  const [page, setPage] = useState("home");
+  const [page, setPageRaw] = useState("home");
   const sws = useSws();
+  const isMobile = useIsMobile();
+  const [navOpen, setNavOpen] = useState(() => (typeof window !== "undefined" && window.innerWidth <= 680) ? false : loadLocal("sws_nav_open", true));
+  const toggleNav = () => setNavOpen((v) => { const n = !v; if (!isMobile) saveLocal("sws_nav_open", n); return n; });
+  const setPage = (id) => { setPageRaw(id); if (isMobile) setNavOpen(false); try { window.scrollTo(0, 0); } catch (e) {} };
+  useEffect(() => { if (isMobile) setNavOpen(false); }, [isMobile]);
   const tier = isPremium() ? "premium" : "free";
   const [payOpen, setPayOpen] = useState(false);
   const [payReason, setPayReason] = useState(null);
@@ -3064,8 +3203,15 @@ function AppShell({ onHome }) {
     return rec.date === todayStr() ? rec.seconds : 0;
   });
   const allTimeMinutes = loadLocal("sws_alltime_min", 0);
-  const [targetScore] = useState(() => loadLocal("sws_target_score", null));
-  const [examDate] = useState(() => loadLocal("sws_exam_date", null));
+  const [targetScore, setTargetScore] = useState(() => loadLocal("sws_target_score", null));
+  const [examDate, setExamDate] = useState(() => loadLocal("sws_exam_date", null));
+  // Jamiyat: har daqiqada "men onlaynman" signali (ism, bugungi daqiqalar, streak)
+  const pingRef = useRef({});
+  pingRef.current = { name: name || (SWS.user && SWS.user.first_name) || "O'quvchi", minutesToday: Math.round(todaySeconds / 60), streak, studying: Boolean(activeTest) || ["bank", "vocab", "tutor", "drills"].includes(page) };
+  useEffect(() => {
+    const ping = () => { if (SWS.session) swsApi("/api/community", { ping: pingRef.current }).catch(() => {}); };
+    ping(); const t = setInterval(ping, 60000); return () => clearInterval(t);
+  }, []);
   const [peers, setPeers] = useState([]);
   const [roster, setRoster] = useState({});
   const [roomReady, setRoomReady] = useState(false);
@@ -3171,8 +3317,11 @@ function AppShell({ onHome }) {
   if (report) return <ScoreReport test={activeTest} report={report} onBack={() => { setReport(null); setActiveTest(null); setPage("analytics"); }} />;
 
   return (
-    <div className="sws-app" style={{ display: "flex", minHeight: "100vh", fontFamily: FONT, background: B.bg, color: B.text, flexWrap: "wrap" }}>
-      <aside style={{ width: 248, background: "rgba(255,255,255,0.78)", backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)", boxShadow: "1px 0 0 rgba(22,32,77,0.05)", padding: "20px 14px", flexShrink: 0 }}>
+    <div className="sws-app" style={{ display: "flex", minHeight: "100vh", fontFamily: FONT, background: B.bg, color: B.text }}>
+      {isMobile && navOpen && <div onClick={() => setNavOpen(false)} style={{ position: "fixed", inset: 0, background: "rgba(22,32,77,0.35)", zIndex: 190 }} />}
+      <aside style={isMobile
+        ? { position: "fixed", top: 0, left: 0, bottom: 0, width: 270, maxWidth: "84vw", zIndex: 200, overflowY: "auto", background: "#fff", boxShadow: "0 0 40px rgba(22,32,77,0.25)", padding: "20px 14px 110px", transform: navOpen ? "none" : "translateX(-105%)", transition: "transform .3s cubic-bezier(.22,1,.36,1)" }
+        : { width: 248, background: "rgba(255,255,255,0.78)", backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)", boxShadow: "1px 0 0 rgba(22,32,77,0.05)", padding: "20px 14px", flexShrink: 0, display: navOpen ? "block" : "none", position: "sticky", top: 0, height: "100vh", overflowY: "auto", boxSizing: "border-box" }}>
         <button onClick={onHome} style={{ display: "flex", alignItems: "center", gap: 9, background: "transparent", border: "none", cursor: "pointer", marginBottom: 24, padding: "0 6px" }}>
           <Mascot size={30} /><span style={{ fontSize: 16, fontWeight: 800, color: B.text, fontFamily: FONT, textAlign: "left", lineHeight: 1.2 }}>SAT with<br />Shirinabonu</span>
         </button>
@@ -3194,7 +3343,11 @@ function AppShell({ onHome }) {
         </div>
       </aside>
       <main style={{ flex: 1, overflowY: "auto", minWidth: 280 }}>
-        <div style={{ background: "rgba(255,255,255,0.78)", backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)", boxShadow: "0 1px 0 rgba(22,32,77,0.05)", position: "sticky", top: 0, zIndex: 10, padding: "12px 30px", display: "flex", justifyContent: "flex-end", gap: 10, flexWrap: "wrap" }}>
+        <div style={{ background: "rgba(255,255,255,0.78)", backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)", boxShadow: "0 1px 0 rgba(22,32,77,0.05)", position: "sticky", top: 0, zIndex: 10, padding: isMobile ? "10px 12px" : "12px 30px", display: "flex", justifyContent: "flex-end", alignItems: "center", gap: isMobile ? 6 : 10 }}>
+          <button onClick={toggleNav} title={navOpen ? "Menyuni yashirish" : "Menyuni ko'rsatish"} style={{ marginRight: "auto", display: "flex", alignItems: "center", gap: 8, background: B.bg, border: "none", borderRadius: 12, padding: "8px 12px", cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: 800, color: B.text }}>
+            <span style={{ display: "inline-flex", flexDirection: "column", gap: 3.5 }}>{[0, 1, 2].map((k) => <span key={k} style={{ width: 16, height: 2, borderRadius: 2, background: B.text }} />)}</span>
+            {!isMobile && (navOpen ? "Yashirish" : "Menyu")}
+          </button>
           <div style={{ display: "flex", alignItems: "center", gap: 6, background: B.bg, padding: "6px 13px", borderRadius: 24, fontSize: 14 }}>🔥 {streak}</div>
           <div style={{ display: "flex", alignItems: "center", gap: 6, background: B.bg, padding: "6px 13px", borderRadius: 24, fontSize: 14 }}><Clock size={13} /> {fmtMinutes(todaySeconds)}</div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, background: B.bg, padding: "6px 13px", borderRadius: 24, fontSize: 14.5 }}>
@@ -3203,11 +3356,11 @@ function AppShell({ onHome }) {
           </div>
         </div>
         {sws.me && sws.me.trial && sws.me.premium && (
-          <div onClick={() => needPay()} style={{ margin: "16px 34px 0", maxWidth: 1000, boxSizing: "border-box", background: "linear-gradient(90deg, #6B3FA0, #C2185B)", color: "#fff", borderRadius: 16, padding: "12px 18px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+          <div onClick={() => needPay()} style={{ margin: isMobile ? "12px 12px 0" : navOpen ? "16px 34px 0" : "16px auto 0", maxWidth: navOpen || isMobile ? 1000 : 1112, boxSizing: "border-box", background: "linear-gradient(90deg, #6B3FA0, #C2185B)", color: "#fff", borderRadius: 16, padding: "12px 18px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
             <span>🎁 Bepul sinov Premium: yana {Math.max(1, Math.ceil((sws.me.premiumUntil - Date.now()) / 86400000))} kun hammasi cheksiz!</span><span style={{ opacity: 0.9 }}>Davom ettirish → 💎</span>
           </div>
         )}
-        <div key={page} className="sws-fade-in" style={{ padding: "32px 34px 120px", maxWidth: 1000 }}>
+        <div key={page} className="sws-fade-in" style={{ padding: isMobile ? "18px 14px 120px" : "32px 34px 120px", maxWidth: navOpen || isMobile ? 1000 : 1180, margin: navOpen || isMobile ? 0 : "0 auto", boxSizing: "border-box" }}>
           {page === "home" && <DashHome history={history} onGoTests={() => setPage("tests")} todaySeconds={todaySeconds} goalMinutes={goalMinutes} streak={streak} onGoProfile={() => setPage("profile")} targetScore={targetScore} examDate={examDate} />}
           {page === "tests" && <MockTests tier={tier} history={history} onOpenTest={openTest} onNeedPay={() => needPay()} />}
           {page === "bank" && <QuestionBank tier={tier} bankStats={bankStats} onRecord={(d, c, t) => setBankStats((s) => ({ ...s, [d]: { c, t } }))} onNeedPay={needPay} />}
@@ -3216,15 +3369,27 @@ function AppShell({ onHome }) {
           {page === "saved" && <SavedPage />}
           {page === "tutor" && <AITutor tier={tier} />}
           {page === "analytics" && <Analytics history={history} />}
-          {page === "community" && <Community clientId={clientIdRef.current} name={name} peers={peers} roster={roster} roomReady={roomReady} dbReady={dbReady} />}
-          {page === "profile" && <Profile name={name} setName={setName} goalMinutes={goalMinutes} setGoalMinutes={setGoalMinutes} streak={streak} todaySeconds={todaySeconds} allTimeMinutes={Math.round(allTimeMinutes)} targetScore={targetScore} examDate={examDate} />}
+          {page === "community" && <Community name={name} />}
+          {page === "profile" && <Profile name={name} setName={setName} goalMinutes={goalMinutes} setGoalMinutes={setGoalMinutes} streak={streak} todaySeconds={todaySeconds} allTimeMinutes={Math.round(allTimeMinutes)} targetScore={targetScore} examDate={examDate}
+            onSaveGoals={(t, d) => { setTargetScore(t); setExamDate(d); saveLocal("sws_target_score", t); saveLocal("sws_exam_date", d); swsSaveProfile({ target: t, examDate: d }); }} onOpenPremium={() => needPay()} />}
         </div>
       </main>
-      <div style={{ position: "fixed", bottom: 16, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 50, pointerEvents: "none" }}>
-        <div style={{ pointerEvents: "auto" }}>
-          <MacDock apps={nav} activeId={page} onAppClick={setPage} />
+      {isMobile ? (
+        <nav style={{ position: "fixed", left: 10, right: 10, bottom: 10, zIndex: 150, display: "grid", gridTemplateColumns: "repeat(5, 1fr)", background: "rgba(22,32,77,0.94)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)", borderRadius: 20, padding: "6px 4px", boxShadow: "0 16px 36px -14px rgba(22,32,77,0.6)" }}>
+          {[["home", "Bosh", Home], ["tests", "Mock", FileText], ["bank", "Bank", ListChecks], ["drills", "Drill", Timer]].map(([id, l, Ic]) => (
+            <button key={id} onClick={() => setPage(id)} style={{ background: page === id ? "rgba(255,255,255,0.14)" : "transparent", border: "none", borderRadius: 14, padding: "7px 0 5px", color: page === id ? "#fff" : "rgba(255,255,255,0.7)", display: "flex", flexDirection: "column", alignItems: "center", gap: 3, fontFamily: FONT, fontSize: 11.5, fontWeight: 800, cursor: "pointer" }}><Ic size={19} /> {l}</button>
+          ))}
+          <button onClick={toggleNav} style={{ background: navOpen ? "rgba(255,255,255,0.14)" : "transparent", border: "none", borderRadius: 14, padding: "7px 0 5px", color: "rgba(255,255,255,0.85)", display: "flex", flexDirection: "column", alignItems: "center", gap: 3, fontFamily: FONT, fontSize: 11.5, fontWeight: 800, cursor: "pointer" }}>
+            <span style={{ display: "inline-flex", flexDirection: "column", gap: 3.5, padding: "3px 0" }}>{[0, 1, 2].map((k) => <span key={k} style={{ width: 17, height: 2, borderRadius: 2, background: "currentColor" }} />)}</span> Boshqa
+          </button>
+        </nav>
+      ) : (
+        <div style={{ position: "fixed", bottom: 16, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 50, pointerEvents: "none" }}>
+          <div style={{ pointerEvents: "auto" }}>
+            <MacDock apps={nav} activeId={page} onAppClick={setPage} />
+          </div>
         </div>
-      </div>
+      )}
       {payOpen && <PremiumModal reason={payReason} onClose={() => setPayOpen(false)} />}
       {preparing && (
         <div className="sws-app" style={{ position: "fixed", inset: 0, background: "rgba(246,247,252,0.85)", backdropFilter: "blur(6px)", zIndex: 120, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT }}>
