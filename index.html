@@ -113,6 +113,7 @@ function Icon({ glyph, size = 20, color = "currentColor", fill = "none", style }
     case "star": return <svg {...c}><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9" /></svg>;
     case "bookmark": return <svg {...c}><path d="M6 3h12v18l-6-4-6 4V3z" /></svg>;
     case "timer": return <svg {...c}><circle cx="12" cy="13" r="8" /><path d="M12 9v4l3 2" /><line x1="9" y1="2" x2="15" y2="2" /></svg>;
+    case "users": return <svg {...c}><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5" /><circle cx="17" cy="9" r="2.8" /><path d="M16 14.6c3 .2 5.5 2 5.5 5" /></svg>;
     case "trophy": return <svg {...c}><path d="M8 21h8" /><path d="M12 17v4" /><path d="M7 4h10v6a5 5 0 0 1-10 0V4z" /><path d="M7 5H4a3 3 0 0 0 3 3" /><path d="M17 5h3a3 3 0 0 1-3 3" /></svg>;
     default: return <svg {...c}><circle cx="12" cy="12" r="8" /></svg>;
   }
@@ -149,6 +150,7 @@ const Star = (p) => <Icon glyph="star" {...p} />;
 const Bookmark = (p) => <Icon glyph="bookmark" {...p} />;
 const Timer = (p) => <Icon glyph="timer" {...p} />;
 const Trophy = (p) => <Icon glyph="trophy" {...p} />;
+const Users = (p) => <Icon glyph="users" {...p} />;
 
 const B = {
   navy: "#16204D", plum: "#6B3FA0", rose: "#E8547C", gold: "#F5A623",
@@ -2864,6 +2866,134 @@ function Profile({ name, setName, goalMinutes, setGoalMinutes, streak, todaySeco
    COMMUNITY — online presence (room) + shared study stats (db)
 ============================================================ */
 function timeAgo(ms) { const m = Math.round((Date.now() - ms) / 60000); if (m < 1) return "hozir"; if (m < 60) return m + " daq oldin"; const h = Math.round(m / 60); if (h < 24) return h + " soat oldin"; return Math.round(h / 24) + " kun oldin"; }
+function AdminPanel() {
+  const [data, setData] = useState(null);
+  const [q, setQ] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [open, setOpen] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const load = async (body) => {
+    try { const d = await swsApi("/api/admin", body); setData(d); return d; } catch (e) { setData({ error: "network", users: [] }); return null; }
+  };
+  useEffect(() => { load(); const t = setInterval(() => load(), 30000); return () => clearInterval(t); }, []);
+  const act = async (body, msg) => { setBusy(true); const d = await load(body); setBusy(false); if (d && d.storage) swsToast(msg); };
+  const ago = (t) => {
+    if (!t) return "—"; const m = Math.floor((Date.now() - t) / 60000);
+    if (m < 3) return "hozir onlayn"; if (m < 60) return m + " daq oldin"; const h = Math.floor(m / 60); if (h < 24) return h + " soat oldin";
+    const d = Math.floor(h / 24); return d < 30 ? d + " kun oldin" : new Date(t).toLocaleDateString("uz-UZ");
+  };
+  const dt = (t) => (t ? new Date(t).toLocaleDateString("uz-UZ") : "—");
+  const dtt = (t) => (t ? new Date(t).toLocaleString("uz-UZ", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—");
+  if (!data) return <div style={{ padding: 30, color: B.muted, fontSize: 15 }}>Yuklanmoqda…</div>;
+  if (data.error === "not_admin") return <div style={{ padding: 30, fontSize: 15 }}>Bu bo'lim faqat admin uchun.</div>;
+  const users = data.users || []; const st = data.stats || {};
+  const now = Date.now();
+  const shown = users.filter((u) => {
+    const s = q.trim().toLowerCase();
+    if (s && ![u.name, u.tgName, u.username, String(u.id)].some((x) => String(x || "").toLowerCase().includes(s))) return false;
+    if (filter === "online") return u.online;
+    if (filter === "today") return u.lastSeen && now - u.lastSeen < 86400000;
+    if (filter === "paid") return u.premium && u.paid;
+    if (filter === "trial") return u.trial;
+    if (filter === "free") return !u.premium;
+    return true;
+  });
+  const badge = (u) => u.premium ? (u.paid ? ["💎 Premium", "#FFF4DE", "#9A6200"] : ["🎁 Sinov", "#F2EAFB", B.plum]) : ["Bepul", B.bg, B.muted];
+  const Card = ({ label, value, color }) => (
+    <div style={{ background: "#fff", borderRadius: 16, padding: "14px 16px", boxShadow: "0 1px 0 rgba(22,32,77,0.05), 0 8px 24px -18px rgba(22,32,77,0.35)" }}>
+      <div style={{ fontSize: 13, color: B.muted, fontWeight: 700 }}>{label}</div>
+      <div style={{ fontSize: 26, fontWeight: 900, color: color || B.text, marginTop: 2 }}>{value ?? 0}</div>
+    </div>
+  );
+  const chip = (id, label) => <button key={id} onClick={() => setFilter(id)} style={{ border: "none", cursor: "pointer", borderRadius: 20, padding: "7px 13px", fontFamily: FONT, fontSize: 13.5, fontWeight: 800, background: filter === id ? B.navy : "#fff", color: filter === id ? "#fff" : B.muted }}>{label}</button>;
+  const btn = { border: "none", cursor: "pointer", borderRadius: 10, padding: "8px 12px", fontFamily: FONT, fontSize: 13.5, fontWeight: 800 };
+  const names = data.users ? Object.fromEntries(users.map((u) => [u.id, u.name || u.tgName || (u.username ? "@" + u.username : u.id)])) : {};
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        <h1 style={{ fontSize: 24, fontWeight: 800, margin: 0 }}>🛡️ Admin: foydalanuvchilar</h1>
+        <button onClick={() => act(undefined, "Yangilandi")} disabled={busy} style={{ ...btn, background: "#fff", color: B.text }}><RotateCcw size={14} /> Yangilash</button>
+      </div>
+      <p style={{ fontSize: 15, color: B.muted, margin: "6px 0 16px" }}>Saytga Telegram orqali kirgan barcha akkauntlar. Bu sahifani faqat siz ko'rasiz.</p>
+      {!data.storage && <div style={{ background: "#FFF7E8", borderRadius: 12, padding: "13px 16px", fontSize: 14.5, marginBottom: 16 }}>Ma'lumotlar bazasi javob bermadi. Birozdan keyin "Yangilash" ni bosing.</div>}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(135px, 1fr))", gap: 10, marginBottom: 16 }}>
+        <Card label="Jami akkauntlar" value={st.total} />
+        <Card label="Hozir onlayn" value={st.online} color={B.green} />
+        <Card label="Bugun faol" value={st.activeToday} />
+        <Card label="7 kunda faol" value={st.active7} />
+        <Card label="Bugun yangi" value={st.newToday} color={B.plum} />
+        <Card label="Sinovda" value={st.trial} color={B.plum} />
+        <Card label="To'lagan (faol)" value={st.paid} color="#9A6200" />
+      </div>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
+        <div style={{ flex: "1 1 220px", display: "flex", alignItems: "center", gap: 8, background: "#fff", borderRadius: 12, padding: "9px 12px" }}>
+          <Search size={15} color={B.muted} />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ism, @username yoki ID bo'yicha qidirish" style={{ border: "none", outline: "none", flex: 1, fontSize: 14.5, fontFamily: FONT, background: "transparent", color: B.text, minWidth: 0 }} />
+        </div>
+        {[["all", "Hammasi"], ["online", "Onlayn"], ["today", "Bugun"], ["paid", "To'lagan"], ["trial", "Sinov"], ["free", "Bepul"]].map(([id, l]) => chip(id, l))}
+      </div>
+      <div style={{ fontSize: 13.5, color: B.muted, fontWeight: 700, margin: "0 0 8px 4px" }}>{shown.length} ta akkaunt</div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {shown.map((u) => {
+          const [bl, bbg, bc] = badge(u); const isOpen = open === u.id;
+          const title = u.name || u.tgName || (u.username ? "@" + u.username : "ID " + u.id);
+          return (
+            <div key={u.id} style={{ background: "#fff", borderRadius: 16, boxShadow: "0 1px 0 rgba(22,32,77,0.05)", overflow: "hidden" }}>
+              <div onClick={() => setOpen(isOpen ? null : u.id)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", cursor: "pointer" }}>
+                <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", background: "#F2EAFB", color: B.plum, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 16, flexShrink: 0 }}>
+                  {String(title)[0].toUpperCase()}
+                  {u.online && <span style={{ position: "absolute", right: 0, bottom: 0, width: 11, height: 11, borderRadius: "50%", background: B.green, border: "2px solid #fff" }} />}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 15.5, fontWeight: 800, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{title} {u.username && <span style={{ color: B.muted, fontWeight: 600, fontSize: 13.5 }}>@{u.username}</span>}</div>
+                  <div style={{ fontSize: 13, color: u.online ? B.green : B.muted, fontWeight: 600 }}>{ago(u.lastSeen || u.firstSeen)} · bugun {u.minutesToday} daq · 🔥 {u.streak}</div>
+                </div>
+                <span style={{ background: bbg, color: bc, fontSize: 12, fontWeight: 800, padding: "4px 9px", borderRadius: 10, whiteSpace: "nowrap" }}>{bl}</span>
+                <ChevronDown size={16} color={B.muted} style={{ transform: isOpen ? "rotate(180deg)" : "none" }} />
+              </div>
+              {isOpen && (
+                <div style={{ padding: "4px 16px 16px", borderTop: "1px solid " + B.border }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "8px 16px", fontSize: 14, margin: "12px 0" }}>
+                    {[
+                      ["Telegram ID", u.id], ["Telegram ismi", u.tgName || "—"], ["Birinchi kirgan", dtt(u.firstSeen)], ["Oxirgi faollik", dtt(u.lastSeen)],
+                      ["Premium", u.premium ? dt(u.premiumUntil) + " gacha" + (u.paid ? " (to'lagan)" : " (sinov)") : u.premiumUntil ? "tugagan: " + dt(u.premiumUntil) : "yo'q"],
+                      ["Maqsad ball", u.target || "—"], ["Imtihon sanasi", u.examDate || "—"], ["Kunlik maqsad", u.goal ? u.goal + " daq" : "—"],
+                      ["Jami o'qigan", u.totalMinutes + " daq"], ["Mock testlar", u.mocks], ["Ko'rgan savollar", u.questionsSeen],
+                      ["Bugun: bank / drill / AI / lug'at", [u.usage.bank, u.usage.drill, u.usage.ai, u.usage.vocab].map((x) => x || 0).join(" / ")],
+                      ["Taklif qilgan", u.refBy ? (names[u.refBy] || u.refBy) : "—"],
+                    ].map(([k, v]) => <div key={k}><div style={{ fontSize: 12, color: B.muted, fontWeight: 700 }}>{k}</div><div style={{ fontWeight: 700 }}>{v}</div></div>)}
+                  </div>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    <button disabled={busy} onClick={() => act({ grant: { uid: u.id, days: 30 } }, "Premium +1 oy berildi")} style={{ ...btn, background: B.gold, color: B.navy }}>💎 +1 oy</button>
+                    <button disabled={busy} onClick={() => act({ grant: { uid: u.id, days: 90 } }, "Premium +3 oy berildi")} style={{ ...btn, background: "#FFF4DE", color: "#9A6200" }}>+3 oy</button>
+                    <button disabled={busy} onClick={() => act({ grant: { uid: u.id, days: 7 } }, "+7 kun berildi")} style={{ ...btn, background: "#F2EAFB", color: B.plum }}>+7 kun</button>
+                    {u.premium && <button disabled={busy} onClick={() => { if (window.confirm(title + " — Premium o'chirilsinmi?")) act({ revoke: u.id }, "Premium o'chirildi"); }} style={{ ...btn, background: "#FDECEF", color: "#C2185B" }}>Premiumni o'chirish</button>}
+                    {u.username && <a href={"https://t.me/" + u.username} target="_blank" rel="noreferrer" style={{ ...btn, background: B.bg, color: B.text, textDecoration: "none" }}>Telegramda yozish</a>}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+        {!shown.length && <div style={{ padding: 24, textAlign: "center", color: B.muted, fontSize: 15 }}>Hech kim topilmadi.</div>}
+      </div>
+      {(data.payments || []).length > 0 && (
+        <div style={{ marginTop: 24 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 800, margin: "0 0 10px" }}>So'nggi to'lovlar / Premium berishlar</h2>
+          <div style={{ background: "#fff", borderRadius: 16, padding: "6px 14px" }}>
+            {data.payments.map((p, i) => (
+              <div key={i} style={{ display: "flex", justifyContent: "space-between", gap: 10, padding: "9px 0", borderBottom: i < data.payments.length - 1 ? "1px solid " + B.border : "none", fontSize: 14 }}>
+                <span style={{ fontWeight: 700 }}>{names[p.uid] || p.uid} <span style={{ color: B.muted, fontWeight: 600 }}>· {p.days} kun{p.by === "admin" ? " (qo'lda)" : ""}</span></span>
+                <span style={{ color: B.muted }}>{dtt(p.at)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Community({ name }) {
   const [data, setData] = useState(null);
   const [text, setText] = useState("");
@@ -3207,7 +3337,7 @@ function AppShell({ onHome }) {
   const [examDate, setExamDate] = useState(() => loadLocal("sws_exam_date", null));
   // Jamiyat: har daqiqada "men onlaynman" signali (ism, bugungi daqiqalar, streak)
   const pingRef = useRef({});
-  pingRef.current = { name: name || (SWS.user && SWS.user.first_name) || "O'quvchi", minutesToday: Math.round(todaySeconds / 60), streak, studying: Boolean(activeTest) || ["bank", "vocab", "tutor", "drills"].includes(page) };
+  pingRef.current = { name: name || (SWS.user && SWS.user.first_name) || "O'quvchi", minutesToday: Math.round(todaySeconds / 60), streak, totalMinutes: Math.round(allTimeMinutes), mocks: history.length, studying: Boolean(activeTest) || ["bank", "vocab", "tutor", "drills"].includes(page) };
   useEffect(() => {
     const ping = () => { if (SWS.session) swsApi("/api/community", { ping: pingRef.current }).catch(() => {}); };
     ping(); const t = setInterval(ping, 60000); return () => clearInterval(t);
@@ -3306,6 +3436,7 @@ function AppShell({ onHome }) {
     { id: "vocab", label: "Lug'at", icon: Layers }, { id: "saved", label: "Xatolar/Saqlangan", icon: Bookmark },
     { id: "tutor", label: "AI repetitor", icon: MessageCircle }, { id: "analytics", label: "Tahlil", icon: BarChart3 },
     { id: "community", label: "Jamiyat", icon: MessageCircle }, { id: "profile", label: "Profil", icon: User },
+    ...(sws.me && sws.me.isAdmin ? [{ id: "admin", label: "Admin: foydalanuvchilar", icon: Users }] : []),
   ];
   const finishTest = (responses, diffPath) => {
     const r = gradeTest(activeTest.id, responses, diffPath);
@@ -3370,6 +3501,7 @@ function AppShell({ onHome }) {
           {page === "tutor" && <AITutor tier={tier} />}
           {page === "analytics" && <Analytics history={history} />}
           {page === "community" && <Community name={name} />}
+          {page === "admin" && sws.me && sws.me.isAdmin && <AdminPanel />}
           {page === "profile" && <Profile name={name} setName={setName} goalMinutes={goalMinutes} setGoalMinutes={setGoalMinutes} streak={streak} todaySeconds={todaySeconds} allTimeMinutes={Math.round(allTimeMinutes)} targetScore={targetScore} examDate={examDate}
             onSaveGoals={(t, d) => { setTargetScore(t); setExamDate(d); saveLocal("sws_target_score", t); saveLocal("sws_exam_date", d); swsSaveProfile({ target: t, examDate: d }); }} onOpenPremium={() => needPay()} />}
         </div>
