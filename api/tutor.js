@@ -8,6 +8,8 @@ const SYSTEM =
   "Write in plain text only: no Markdown symbols such as ** or #, and no LaTeX; write math simply, like 2x + 3 = 11 or x^2. " +
   "Double-check every answer choice and calculation before replying so each quiz question has exactly one correct option.";
 
+const T = require("./_tg");
+const K = require("./_kv");
 const MODELS = [process.env.GEMINI_MODEL, "gemini-flash-latest", "gemini-2.5-flash", "gemini-2.0-flash"].filter(Boolean);
 
 module.exports = async (req, res) => {
@@ -24,6 +26,13 @@ module.exports = async (req, res) => {
     .map((m) => ({ role: m.role === "user" ? "user" : "model", parts: [{ text: m.text.slice(0, 4000) }] }));
   while (contents.length && contents[0].role !== "user") contents.shift();
   if (!contents.length || contents[contents.length - 1].role !== "user") { res.status(400).json({ error: "bad_request" }); return; }
+
+  // Bepul tarifda kunlik AI limiti (Premium — cheksiz)
+  if (K.kvOn() && T.token()) {
+    const uid = T.sessionUser(req);
+    if (!uid) { res.status(401).json({ error: "no_session" }); return; }
+    try { const u = await K.consume(uid, "ai"); if (!u.ok) { res.status(402).json({ error: "limit", used: u.used, limit: u.limit }); return; } } catch (e) {}
+  }
 
   if (!key) {
     try {
@@ -53,7 +62,7 @@ module.exports = async (req, res) => {
   let lastErr = "unknown";
   for (const model of MODELS) {
     try {
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-goog-api-key": key },
         body: JSON.stringify(payload),

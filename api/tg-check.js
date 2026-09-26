@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
   if (!T.token()) { res.status(200).json({ configured: false }); return; }
   if (!botCache) { const me = await T.tg("getMe"); if (me.ok) botCache = { username: me.result.username, id: me.result.id }; }
   const channelUrl = "https://t.me/" + T.CHANNEL.replace(/^@/, "");
-  const base = { configured: !!botCache, bot: botCache && botCache.username, channel: T.CHANNEL, channelUrl };
+  const base = { configured: !!botCache, bot: botCache && botCache.username, channel: T.CHANNEL, channelUrl, storage: require("./_kv").kvOn() };
 
   if (req.method === "GET") {
     const q = req.query || {};
@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
     if (q.setup && botCache) {
       const r = await T.tg("setWebhook", { url: T.SITE + "/api/tg-webhook", secret_token: T.webhookSecret(), allowed_updates: ["message", "callback_query"] });
       await T.tg("setChatMenuButton", { menu_button: { type: "web_app", text: "Sayt", web_app: { url: T.SITE + "/" } } });
-      await T.tg("setMyCommands", { commands: [{ command: "start", description: "Saytga kirish havolasini olish" }] });
+      await T.tg("setMyCommands", { commands: [{ command: "start", description: "Saytga kirish havolasini olish" }, { command: "premium", description: "Premium olish (49 000 so'm / oy)" }] });
       res.status(200).json({ ...base, webhookSet: r.ok, description: r.description }); return;
     }
     res.status(200).json(base); return;
@@ -29,5 +29,9 @@ module.exports = async (req, res) => {
   if (!userId) { res.status(200).json({ ...base, ok: false, reason: "bad_auth" }); return; }
   const m = await T.memberStatus(userId);
   if (!m.ok) { res.status(200).json({ ...base, ok: false, reason: "check_failed", detail: m.error }); return; }
-  res.status(200).json({ ...base, ok: m.member, reason: m.member ? "member" : "not_member" });
+  let user = null;
+  if (body && body.webapp) { try { user = JSON.parse(new URLSearchParams(body.webapp).get("user") || "null"); } catch (e) {} }
+  else if (body && body.auth) user = body.auth;
+  const info = user ? { id: userId, first_name: user.first_name || "", username: user.username || "" } : { id: userId };
+  res.status(200).json({ ...base, ok: m.member, reason: m.member ? "member" : "not_member", session: m.member ? T.signLink(userId, 90) : undefined, user: m.member ? info : undefined });
 };

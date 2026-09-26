@@ -57,6 +57,22 @@ async function memberStatus(userId) {
   const st = m.result.status;
   return { ok: true, member: st === "creator" || st === "administrator" || st === "member" || (st === "restricted" && m.result.is_member), status: st };
 }
+// Sayt sessiyasi: Authorization: Bearer <userId.exp.sig>
+function sessionUser(req) {
+  const h = (req.headers && (req.headers.authorization || req.headers.Authorization)) || "";
+  const t = String(h).replace(/^Bearer\s+/i, "");
+  return t ? verifyLink(t) : null;
+}
+// Admin: TELEGRAM_ADMIN_ID yoki kanal egasi (creator)
+let adminCache = null;
+async function adminId() {
+  if (process.env.TELEGRAM_ADMIN_ID) return Number(process.env.TELEGRAM_ADMIN_ID);
+  if (adminCache) return adminCache;
+  const r = await tg("getChatAdministrators", { chat_id: CHANNEL });
+  const c = r.ok && (r.result || []).find((m) => m.status === "creator");
+  if (c) adminCache = c.user.id;
+  return adminCache;
+}
 function webhookSecret() { return crypto.createHash("sha256").update("sws-hook:" + token()).digest("hex").slice(0, 40); }
 
-module.exports = { CHANNEL, SITE, token, tg, signLink, verifyLink, verifyAuth, verifyWebApp, memberStatus, webhookSecret };
+module.exports = { CHANNEL, SITE, token, tg, signLink, verifyLink, verifyAuth, verifyWebApp, memberStatus, webhookSecret, sessionUser, adminId };
