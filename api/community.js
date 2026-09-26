@@ -15,8 +15,8 @@ module.exports = async (req, res) => {
     const b = req.method === "POST" ? body(req) : {};
     if (b.ping && typeof b.ping === "object") {
       const p = b.ping;
-      const rec = { id: uid, name: clean(p.name, 40) || "O'quvchi", minutesToday: Math.max(0, Math.min(1440, Number(p.minutesToday) || 0)), streak: Math.max(0, Math.min(3650, Number(p.streak) || 0)), studying: !!p.studying, day: K.today(), at: now };
-      await K.kvPipe([["ZADD", "online", String(now), String(uid)], ["HSET", "roster", String(uid), JSON.stringify(rec)]]);
+      const rec = { id: uid, name: clean(p.name, 40) || "O'quvchi", minutesToday: Math.max(0, Math.min(1440, Number(p.minutesToday) || 0)), streak: Math.max(0, Math.min(3650, Number(p.streak) || 0)), studying: !!p.studying, totalMinutes: Math.max(0, Math.min(1e6, Number(p.totalMinutes) || 0)), mocks: Math.max(0, Math.min(10000, Number(p.mocks) || 0)), day: K.today(), at: now };
+      await K.kvPipe([["ZADD", "online", String(now), String(uid)], ["ZADD", "lastseen", String(now), String(uid)], ["ZADD", "users", "NX", String(now), String(uid)], ["HSET", "roster", String(uid), JSON.stringify(rec)]]);
     }
     if (b.msg) {
       const text = clean(b.msg, 400);

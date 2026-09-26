@@ -35,6 +35,8 @@ module.exports = async (req, res) => {
       const tUntil = Date.now() + K.TRIAL_DAYS * 86400000;
       if (cur < tUntil) await K.kv("SET", "prem:" + uid, String(tUntil));
     }
+    // Admin paneli uchun: foydalanuvchilar ro'yxati va oxirgi faollik
+    await K.kvPipe([["ZADD", "users", "NX", String(Date.now()), String(uid)], ["ZADD", "lastseen", String(Date.now()), String(uid)]]);
     const [profile, until, usage] = await Promise.all([K.getJSON("prof:" + uid, null), K.premiumUntil(uid), K.usageToday(uid)]);
     let prof = profile;
     if (!prof || !prof.tgName) {
@@ -43,6 +45,8 @@ module.exports = async (req, res) => {
     }
     const paid = await K.kv("GET", "paid:" + uid);
     const out = { id: uid, storage: true, profile: prof, premium: until > Date.now(), premiumUntil: until || null, trial: until > Date.now() && !paid, usage, plans };
+    const adm = await T.adminId().catch(() => null);
+    if (adm && Number(adm) === Number(uid)) out.isAdmin = true;
     if (q.seen) out.seen = (await K.kv("SMEMBERS", "seen:" + uid)) || [];
     if (q.cursors) { const h = (await K.kv("HGETALL", "cur:" + uid)) || []; const c = {}; for (let i = 0; i < h.length; i += 2) c[h[i]] = Number(h[i + 1]); out.cursors = c; }
     res.status(200).json(out);
