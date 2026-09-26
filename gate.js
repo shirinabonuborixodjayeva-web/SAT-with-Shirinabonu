@@ -23,6 +23,11 @@
     if (hp) { webapp = hp; sessionStorage.setItem("sws_tg_webapp", hp); }
     else webapp = sessionStorage.getItem("sws_tg_webapp");
   } catch (e) {}
+  // Saytga (index.html) akkaunt ma'lumotini beramiz
+  function announce(detail) {
+    window.SWS_AUTH = detail || {};
+    try { window.dispatchEvent(new CustomEvent("sws-auth", { detail: window.SWS_AUTH })); } catch (e) {}
+  }
   function botUrl() { return "https://t.me/" + state.bot + "?start=site"; }
 
   var css = "" +
@@ -125,9 +130,9 @@
       .then(function (r) { return r.json(); })
       .then(function (d) {
         state.checking = false;
-        if (!d.configured) { hideOverlay(); return; }
+        if (!d.configured) { hideOverlay(); announce({}); return; }
         if (d.channelUrl) state.channelUrl = d.channelUrl;
-        if (d.ok) { hideOverlay(); return; }
+        if (d.ok) { hideOverlay(); announce({ session: d.session, user: d.user }); return; }
         if (d.reason === "bad_auth" && webapp) { webapp = null; try { sessionStorage.removeItem("sws_tg_webapp"); } catch (e) {} verify(showSpinner); return; }
         if (d.reason === "bad_auth") { clear(); renderLogin(); setMsg("Qaytadan Telegram orqali kiring.", true); return; }
         if (d.reason === "check_failed") { ensureOverlay(); if (!document.getElementById("sws-gate-recheck")) renderNotMember(auth); setMsg("Tekshirib bo'lmadi (" + (d.detail || "xato") + "). Birozdan keyin qayta urinib ko'ring.", true); return; }
@@ -142,13 +147,13 @@
     fetch("/api/tg-check", { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : { configured: false }; })
       .then(function (d) {
-        if (!d.configured || !d.bot) { hideOverlay(); return; }
-        state.bot = d.bot; if (d.channelUrl) state.channelUrl = d.channelUrl;
+        if (!d.configured || !d.bot) { hideOverlay(); announce({}); return; }
+        state.bot = d.bot; window.SWS_BOT = d.bot; if (d.channelUrl) state.channelUrl = d.channelUrl;
         verify(false);
         setInterval(function () { verify(false); }, 5 * 60 * 1000);
         document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") verify(!!overlay); });
       })
-      .catch(function () { hideOverlay(); });
+      .catch(function () { hideOverlay(); announce({}); });
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
