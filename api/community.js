@@ -1,6 +1,7 @@
 // Jamiyat: kim onlayn, bugungi o'qish vaqti reytingi va umumiy chat.
 const T = require("./_tg");
 const K = require("./_kv");
+const L = require("./_lb");
 
 function body(req) { let b = req.body; if (typeof b === "string") { try { b = JSON.parse(b); } catch (e) { b = {}; } } return b || {}; }
 const clean = (s, n) => String(s || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, n);
@@ -17,6 +18,7 @@ module.exports = async (req, res) => {
       const p = b.ping;
       const rec = { id: uid, name: clean(p.name, 40) || "O'quvchi", minutesToday: Math.max(0, Math.min(1440, Number(p.minutesToday) || 0)), streak: Math.max(0, Math.min(3650, Number(p.streak) || 0)), studying: !!p.studying, totalMinutes: Math.max(0, Math.min(1e6, Number(p.totalMinutes) || 0)), mocks: Math.max(0, Math.min(10000, Number(p.mocks) || 0)), day: K.today(), at: now };
       await K.kvPipe([["ZADD", "online", String(now), String(uid)], ["ZADD", "lastseen", String(now), String(uid)], ["ZADD", "users", "NX", String(now), String(uid)], ["HSET", "roster", String(uid), JSON.stringify(rec)]]);
+      try { await L.update(uid, L.fromPing(p), rec.name); } catch (e) {}
     }
     if (b.msg) {
       const text = clean(b.msg, 400);
