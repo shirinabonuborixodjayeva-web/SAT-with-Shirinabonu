@@ -114,6 +114,7 @@ function Icon({ glyph, size = 20, color = "currentColor", fill = "none", style }
     case "bookmark": return <svg {...c}><path d="M6 3h12v18l-6-4-6 4V3z" /></svg>;
     case "timer": return <svg {...c}><circle cx="12" cy="13" r="8" /><path d="M12 9v4l3 2" /><line x1="9" y1="2" x2="15" y2="2" /></svg>;
     case "users": return <svg {...c}><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5" /><circle cx="17" cy="9" r="2.8" /><path d="M16 14.6c3 .2 5.5 2 5.5 5" /></svg>;
+    case "book-open": return <svg {...c}><path d="M2 5h6a4 4 0 0 1 4 4v11a3 3 0 0 0-3-3H2z" /><path d="M22 5h-6a4 4 0 0 0-4 4v11a3 3 0 0 1 3-3h7z" /></svg>;
     case "trophy": return <svg {...c}><path d="M8 21h8" /><path d="M12 17v4" /><path d="M7 4h10v6a5 5 0 0 1-10 0V4z" /><path d="M7 5H4a3 3 0 0 0 3 3" /><path d="M17 5h3a3 3 0 0 1-3 3" /></svg>;
     default: return <svg {...c}><circle cx="12" cy="12" r="8" /></svg>;
   }
@@ -151,6 +152,7 @@ const Bookmark = (p) => <Icon glyph="bookmark" {...p} />;
 const Timer = (p) => <Icon glyph="timer" {...p} />;
 const Trophy = (p) => <Icon glyph="trophy" {...p} />;
 const Users = (p) => <Icon glyph="users" {...p} />;
+const BookOpen = (p) => <Icon glyph="book-open" {...p} />;
 
 const B = {
   navy: "#001F3F", plum: "#00356B", rose: "#E8547C", gold: "#F5A623",
@@ -4291,6 +4293,154 @@ function ResumeCard({ onResume }) {
   );
 }
 
+// ---- Kurslar: SAT Math va SAT English — har mavzuda qisqa dars, misol va mashq ----
+let __coursesPromise = null;
+function loadCourses() {
+  if (!__coursesPromise) __coursesPromise = fetch("/courses.json").then((r) => { if (!r.ok) throw new Error("courses"); return r.json(); }).catch((e) => { __coursesPromise = null; throw e; });
+  return __coursesPromise;
+}
+function Courses() {
+  const [data, setData] = useState(null);
+  const [err, setErr] = useState(false);
+  const [courseId, setCourseId] = useState(null);
+  const [topicId, setTopicId] = useState(null);
+  const [prog, setProg] = useState(() => loadLocal("sws_courses", {}));
+  useEffect(() => { loadCourses().then(setData).catch(() => setErr(true)); }, []);
+  const saveProg = (id, v) => setProg((p) => { const n = { ...p, [id]: { ...(p[id] || {}), ...v } }; saveLocal("sws_courses", n); return n; });
+  const go = (c, t) => { setCourseId(c); setTopicId(t); try { window.scrollTo(0, 0); } catch (e) {} };
+  const card = { background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 22 };
+  if (err) return <div style={{ ...card, color: B.muted }}>Kurslarni yuklab bo'lmadi. Internetni tekshirib, sahifani yangilang.</div>;
+  if (!data) return <div style={{ padding: 30, color: B.muted }}>Yuklanmoqda…</div>;
+  const course = data.courses.find((c) => c.id === courseId);
+  const doneIn = (c) => c.topics.filter((t) => prog[t.id] && prog[t.id].done).length;
+
+  // 1) Kurslar ro'yxati
+  if (!course) return (
+    <div>
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Kurslar</h1>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 18px" }}>Har bir mavzu: o'zbekcha qisqa dars → yechilgan misol → 3 ta mashq. Mavzularni ketma-ket o'ting.</p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
+        {data.courses.map((c) => { const d = doneIn(c), n = c.topics.length; const isM = c.id === "math";
+          return (
+            <button key={c.id} onClick={() => go(c.id, null)} style={{ ...card, textAlign: "left", cursor: "pointer", fontFamily: FONT, display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: isM ? "#E8EFF8" : "#FDECF1", color: isM ? B.plum : B.rose, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{isM ? <Calculator size={24} /> : <BookOpen size={24} />}</div>
+                <div><div style={{ fontSize: 19, fontWeight: 800, color: B.text }}>{c.title}</div><div style={{ fontSize: 13.5, color: B.muted, fontWeight: 600 }}>{n} ta mavzu · {n * 3} ta mashq</div></div>
+              </div>
+              <div style={{ fontSize: 14.5, color: B.muted, lineHeight: 1.5 }}>{c.desc}</div>
+              <div style={{ height: 7, background: B.border, borderRadius: 7 }}><div style={{ height: 7, width: `${(d / n) * 100}%`, background: isM ? B.plum : B.rose, borderRadius: 7, transition: "width .3s" }} /></div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13.5, fontWeight: 700 }}><span style={{ color: B.muted }}>{d}/{n} mavzu tugatildi</span><span style={{ color: B.plum }}>{d ? "Davom etish →" : "Boshlash →"}</span></div>
+            </button>
+          ); })}
+      </div>
+    </div>
+  );
+
+  const topic = course.topics.find((t) => t.id === topicId);
+  // 2) Mavzular ro'yxati (domenlar bo'yicha)
+  if (!topic) {
+    const domains = [...new Set(course.topics.map((t) => t.domain))];
+    const d = doneIn(course), n = course.topics.length;
+    const nextT = course.topics.find((t) => !(prog[t.id] && prog[t.id].done));
+    return (
+      <div>
+        <button onClick={() => go(null, null)} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: 700, padding: 0, marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}><ChevronLeft size={16} /> Kurslar</button>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, marginBottom: 14 }}>
+          <div><h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 2px" }}>{course.title}</h1><div style={{ fontSize: 14.5, color: B.muted }}>{d}/{n} mavzu tugatildi</div></div>
+          {nextT && <button onClick={() => go(course.id, nextT.id)} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "11px 18px", fontWeight: 800, fontSize: 14.5, cursor: "pointer", fontFamily: FONT }}>{d ? "Keyingi mavzu" : "Birinchi darsni boshlash"} →</button>}
+        </div>
+        {domains.map((dm) => (
+          <div key={dm} style={{ marginBottom: 18 }}>
+            <div style={{ fontSize: 13, fontWeight: 800, color: B.muted, textTransform: "uppercase", letterSpacing: 0.4, margin: "0 0 8px 4px" }}>{dm}</div>
+            <div style={{ ...card, padding: 6 }}>
+              {course.topics.filter((t) => t.domain === dm).map((t) => { const i = course.topics.indexOf(t); const p = prog[t.id] || {};
+                return (
+                  <button key={t.id} onClick={() => go(course.id, t.id)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "12px 12px", border: "none", borderRadius: 14, background: "transparent", cursor: "pointer", fontFamily: FONT, textAlign: "left" }}>
+                    <span style={{ width: 30, height: 30, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13.5, fontWeight: 800, background: p.done ? B.green : "#E8EFF8", color: p.done ? "#fff" : B.plum }}>{p.done ? <Check size={15} /> : i + 1}</span>
+                    <span style={{ flex: 1, fontSize: 15.5, fontWeight: 700, color: B.text }}>{t.title}</span>
+                    {p.done && <span style={{ fontSize: 13, fontWeight: 700, color: B.green }}>{p.score}/{t.practice.length}</span>}
+                    <ChevronRight size={16} color={B.muted} />
+                  </button>
+                ); })}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  const idx = course.topics.indexOf(topic);
+  return <CourseLesson key={topic.id} course={course} topic={topic} idx={idx} saved={prog[topic.id] || {}} onBack={() => go(course.id, null)}
+    onDone={(score) => saveProg(topic.id, { done: true, score: Math.max(score, (prog[topic.id] || {}).score || 0) })}
+    onNext={idx + 1 < course.topics.length ? () => go(course.id, course.topics[idx + 1].id) : null} />;
+}
+function CourseLesson({ course, topic, idx, saved, onBack, onDone, onNext }) {
+  const [picked, setPicked] = useState(() => topic.practice.map(() => null));
+  const [showSol, setShowSol] = useState(false);
+  const answered = picked.filter((p) => p !== null).length;
+  const score = picked.filter((p, k) => p === topic.practice[k].answer).length;
+  const allDone = answered === topic.practice.length;
+  useEffect(() => { if (allDone) onDone(score); }, [allDone]);
+  const card = { background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 22, marginBottom: 16 };
+  const h2 = { fontSize: 17, fontWeight: 800, margin: "0 0 12px", display: "flex", alignItems: "center", gap: 8 };
+  const tag = (bg, fg) => ({ fontSize: 12, fontWeight: 800, padding: "3px 9px", borderRadius: 20, background: bg, color: fg });
+  const isEng = course.id === "english";
+  const choose = (k, c) => { if (picked[k] !== null) return; setPicked((p) => p.map((x, j) => (j === k ? c : x))); const q = topic.practice[k]; if (c !== q.answer) addSaved({ domain: topic.domain, skill: topic.title, prompt: q.q, passage: q.passage, choices: q.choices, answer: q.answer, expl: q.expl, mistake: true }); };
+  return (
+    <div style={{ maxWidth: 820 }}>
+      <button onClick={onBack} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: 700, padding: 0, marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}><ChevronLeft size={16} /> {course.title}</button>
+      <div style={{ fontSize: 13, fontWeight: 800, color: B.muted, textTransform: "uppercase", letterSpacing: 0.4 }}>{idx + 1}-mavzu · {topic.domain}</div>
+      <h1 style={{ fontSize: 25, fontWeight: 800, margin: "4px 0 16px" }}>{topic.title}{saved.done && <span style={{ ...tag("#E7F6EC", B.green), marginLeft: 10, verticalAlign: "middle" }}>✓ Tugatilgan</span>}</h1>
+
+      <div style={card}>
+        <div style={h2}><span style={tag("#E8EFF8", B.plum)}>1</span> Dars</div>
+        {topic.lesson.map((p, k) => <p key={k} style={{ fontSize: 16, lineHeight: 1.7, margin: "0 0 10px" }}>{mt(p)}</p>)}
+        <div style={{ background: "#F3F6FB", borderLeft: `4px solid ${B.plum}`, borderRadius: 10, padding: "12px 16px", marginTop: 6 }}>
+          <div style={{ fontSize: 13, fontWeight: 800, color: B.plum, marginBottom: 6 }}>{isEng ? "ESLAB QOLING" : "FORMULALAR VA QOIDALAR"}</div>
+          {topic.keys.map((k2, k) => <div key={k} style={{ fontSize: 15, lineHeight: 1.6, fontWeight: 600 }}>• {mt(k2)}</div>)}
+        </div>
+      </div>
+
+      <div style={card}>
+        <div style={h2}><span style={tag("#FFF4E0", "#B7791F")}>2</span> Misol</div>
+        <p style={{ fontSize: 16, lineHeight: 1.7, margin: "0 0 12px", whiteSpace: "pre-line", fontWeight: 600, fontFamily: isEng ? BB.serif : FONT }}>{mt(topic.example.q)}</p>
+        {!showSol ? <button onClick={() => setShowSol(true)} style={{ background: "#fff", color: B.plum, border: `1.5px solid ${B.plum}`, borderRadius: 12, padding: "9px 16px", fontWeight: 800, fontSize: 14.5, cursor: "pointer", fontFamily: FONT }}>Yechimni ko'rish</button> : (
+          <ol style={{ margin: 0, paddingLeft: 22 }}>
+            {topic.example.steps.map((s, k) => <li key={k} style={{ fontSize: 15.5, lineHeight: 1.65, marginBottom: 4, fontWeight: k === topic.example.steps.length - 1 ? 800 : 500, color: k === topic.example.steps.length - 1 ? B.green : B.text }}>{mt(s)}</li>)}
+          </ol>
+        )}
+      </div>
+
+      <div style={card}>
+        <div style={{ ...h2, justifyContent: "space-between" }}><span style={{ display: "flex", alignItems: "center", gap: 8 }}><span style={tag("#FDECF1", B.rose)}>3</span> Mashq</span><span style={{ fontSize: 13.5, color: B.muted, fontWeight: 700 }}>{answered}/{topic.practice.length}</span></div>
+        {topic.practice.map((q, k) => { const pk = picked[k], rev = pk !== null;
+          return (
+            <div key={k} style={{ paddingBottom: 16, marginBottom: 16, borderBottom: k < topic.practice.length - 1 ? `1px solid ${B.border}` : "none" }}>
+              {q.passage && <div style={{ fontSize: 15.5, lineHeight: 1.75, marginBottom: 10, whiteSpace: "pre-line", fontFamily: BB.serif, background: B.bg, borderRadius: 10, padding: "12px 14px" }}>{q.passage}</div>}
+              <p style={{ fontSize: 16, fontWeight: 700, lineHeight: 1.6, margin: "0 0 10px" }}>{k + 1}. {mt(q.q)}</p>
+              {q.choices.map((ch, c) => { const isC = c === q.answer, isP = c === pk;
+                return <button key={c} onClick={() => choose(k, c)} style={{ display: "flex", gap: 10, alignItems: "center", width: "100%", textAlign: "left", marginBottom: 7, padding: "10px 13px", borderRadius: 12, cursor: rev ? "default" : "pointer", fontFamily: FONT, fontSize: 15, color: B.text, border: `1.5px solid ${rev && isC ? B.green : rev && isP ? B.rose : B.border}`, background: rev && isC ? "#E7F6EC" : rev && isP ? "#FDECF1" : "#fff" }}>
+                  <span style={{ width: 26, height: 26, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, border: `1.5px solid ${rev && isC ? B.green : B.border}`, color: rev && isC ? B.green : B.muted }}>{"ABCD"[c]}</span>{mt(ch)}
+                </button>; })}
+              {rev && <div style={{ marginTop: 6, background: B.bg, borderRadius: 12, padding: "10px 13px", fontSize: 14.5, lineHeight: 1.6 }}><b style={{ color: pk === q.answer ? B.green : B.rose }}>{pk === q.answer ? "To'g'ri! " : "Noto'g'ri. "}</b>{mt(q.expl)}</div>}
+            </div>
+          ); })}
+        {allDone && (
+          <div style={{ textAlign: "center", padding: "6px 0 2px" }}>
+            <div style={{ fontSize: 38 }}>{score === topic.practice.length ? "🏆" : score >= 2 ? "💪" : "📚"}</div>
+            <div style={{ fontSize: 18, fontWeight: 800 }}>Natija: {score}/{topic.practice.length}</div>
+            <div style={{ fontSize: 14.5, color: B.muted, margin: "4px 0 14px" }}>{score === topic.practice.length ? "Ajoyib! Mavzuni to'liq o'zlashtirdingiz." : "Xato qilingan savollar \"Xatolar/Saqlangan\" bo'limiga qo'shildi."}</div>
+            <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+              <button onClick={() => setPicked(topic.practice.map(() => null))} style={{ background: "#fff", color: B.plum, border: `1.5px solid ${B.plum}`, borderRadius: 12, padding: "11px 18px", fontWeight: 800, fontSize: 14.5, cursor: "pointer", fontFamily: FONT }}>Qayta yechish</button>
+              {onNext ? <button onClick={onNext} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "11px 20px", fontWeight: 800, fontSize: 14.5, cursor: "pointer", fontFamily: FONT }}>Keyingi mavzu →</button>
+                : <button onClick={onBack} style={{ background: B.green, color: "#fff", border: "none", borderRadius: 12, padding: "11px 20px", fontWeight: 800, fontSize: 14.5, cursor: "pointer", fontFamily: FONT }}>Kurs tugadi 🎉</button>}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function AppShell({ onHome }) {
   const [page, setPageRaw] = useState("home");
   const sws = useSws();
@@ -4420,7 +4570,7 @@ function AppShell({ onHome }) {
     setPreparing(false); setActiveTest(t);
   };
   const nav = [
-    { id: "home", label: "Bosh sahifa", icon: Home }, { id: "tests", label: "Mock testlar", icon: FileText },
+    { id: "home", label: "Bosh sahifa", icon: Home }, { id: "tests", label: "Mock testlar", icon: FileText }, { id: "courses", label: "Kurslar", icon: BookOpen },
     { id: "daily", label: "Kunlik test", icon: Star }, { id: "top", label: "Reyting", icon: Trophy }, { id: "plan", label: "O'quv reja", icon: Target },
     { id: "bank", label: "Savollar banki", icon: ListChecks },
     { id: "vocab", label: "Lug'at", icon: Layers }, { id: "saved", label: "Xatolar/Saqlangan", icon: Bookmark },
@@ -4432,7 +4582,7 @@ function AppShell({ onHome }) {
   const [vw, setVw] = useState(() => window.innerWidth);
   useEffect(() => { const f = () => setVw(window.innerWidth); window.addEventListener("resize", f); return () => window.removeEventListener("resize", f); }, []);
   // Ekran kengligiga qarab menyudagi bo'limlar soni — hech narsa bir-birining ustiga chiqmasligi uchun
-  const primaryIds = vw >= 1500 ? ["home", "tests", "daily", "top", "bank", "vocab", "plan"] : vw >= 1360 ? ["home", "tests", "daily", "top", "bank", "vocab"] : vw >= 1180 ? ["home", "tests", "daily", "top", "bank"] : vw >= 1100 ? ["home", "tests", "daily", "top"] : vw >= 960 ? ["home", "tests", "top", "bank"] : vw >= 820 ? ["home", "tests", "top"] : ["home", "tests"];
+  const primaryIds = vw >= 1500 ? ["home", "tests", "courses", "daily", "top", "bank", "vocab"] : vw >= 1360 ? ["home", "tests", "courses", "daily", "top", "bank"] : vw >= 1180 ? ["home", "tests", "courses", "daily", "top"] : vw >= 1100 ? ["home", "tests", "courses", "top"] : vw >= 960 ? ["home", "tests", "courses", "bank"] : vw >= 820 ? ["home", "tests", "top"] : ["home", "tests"];
   const showChips = vw >= 1100, showBrand = vw >= 860;
   const moreRef = useRef(null);
   useEffect(() => {
@@ -4548,6 +4698,7 @@ function AppShell({ onHome }) {
           {page === "home" && <DashHome onGo={setPage} history={history} onGoTests={() => setPage("tests")} todaySeconds={todaySeconds} goalMinutes={goalMinutes} streak={streak} onGoProfile={() => setPage("profile")} targetScore={targetScore} examDate={examDate} name={name} onResume={(t) => openTest({ ...t, resume: true })} />}
           {page === "tests" && <MockTests tier={tier} history={history} onOpenTest={openTest} onNeedPay={() => needPay()} />}
           {page === "bank" && <QuestionBank tier={tier} bankStats={bankStats} onRecord={(d, c, t) => setBankStats((s) => ({ ...s, [d]: { c, t } }))} onNeedPay={needPay} />}
+          {page === "courses" && <Courses />}
           {page === "drills" && <DrillsHome />}
           {page === "vocab" && <Vocabulary onGo={setPage} />}
           {page === "saved" && <SavedPage />}
