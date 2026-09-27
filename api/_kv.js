@@ -23,8 +23,8 @@ const PRICE3_UZS = 119000;
 const TRIAL_DAYS = 3;
 const REF_BONUS_DAYS = 7;
 const PREMIUM_DAYS = 30;
-const FREE_MOCKS = 3;
-const FREE_DAILY = { bank: 15, drill: 2, ai: 5, vocab: 30 };
+const FREE_MOCKS = 1;
+const FREE_DAILY = { bank: 5, drill: 1, ai: 2, vocab: 10 };
 const today = () => new Date(Date.now() + 5 * 3600 * 1000).toISOString().slice(0, 10); // Toshkent vaqti
 
 async function premiumUntil(uid) { try { return Number(await kv("GET", "prem:" + uid)) || 0; } catch (e) { return 0; } }
