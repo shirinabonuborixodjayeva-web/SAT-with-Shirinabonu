@@ -1,0 +1,552 @@
+{
+ "Words in Context": [
+  {
+   "passage": "Although the architect's early drawings were celebrated for their exuberant ornament, her later designs were notably ______: facades stripped of decoration, windows reduced to plain rectangles, and interiors defined almost entirely by the play of light on bare concrete.",
+   "prompt": "Which choice completes the text with the most logical and precise word or phrase?",
+   "choices": [
+    "austere",
+    "derivative",
+    "provisional",
+    "ostentatious"
+   ],
+   "answer": 0,
+   "expl": "Bezaksiz fasad, oddiy derazalar va yalang'och beton — bu 'austere' (sodda, bezaksiz). 'Ostentatious' aksincha ko'z-ko'z qiluvchi degani."
+  },
+  {
+   "passage": "Critics who dismiss the novelist's dialogue as merely ______ overlook its precision: characters who seem to ramble are in fact circling, with each digression, the one subject none of them is willing to name.",
+   "prompt": "Which choice completes the text with the most logical and precise word or phrase?",
+   "choices": [
+    "meandering",
+    "incisive",
+    "laconic",
+    "ornate"
+   ],
+   "answer": 0,
+   "expl": "Tanqidchilar dialogni 'ramble' qiluvchi deb bilishadi — ya'ni chalkash, aylanib yuruvchi ('meandering'). 'Laconic' qisqa degani, bu 'ramble'ga zid."
+  },
+  {
+   "passage": "The historian's account of the trade dispute is scrupulously ______; rather than casting either merchant guild as the villain, she presents each side's grievances in its own terms and lets the documentary record speak for itself.",
+   "prompt": "Which choice completes the text with the most logical and precise word or phrase?",
+   "choices": [
+    "evenhanded",
+    "exhaustive",
+    "polemical",
+    "speculative"
+   ],
+   "answer": 0,
+   "expl": "Hech bir tomonni aybdor qilmay, ikkalasini ham o'z so'zi bilan ko'rsatadi — bu xolislik ('evenhanded'). 'Exhaustive' (to'liq) ham yaxshi eshitiladi, lekin matn xolislik haqida."
+  },
+  {
+   "passage": "In the early twentieth century, many linguists regarded the region's creole languages as corrupted forms of European tongues. Later researchers, documenting the creoles' consistent grammatical systems, showed that this view was not merely mistaken but ______, having reflected the social prejudices of its proponents more than any linguistic evidence.",
+   "prompt": "Which choice completes the text with the most logical and precise word or phrase?",
+   "choices": [
+    "tendentious",
+    "obsolete",
+    "tentative",
+    "counterintuitive"
+   ],
+   "answer": 0,
+   "expl": "Qarash dalilga emas, tarafdorlarining xurofotiga asoslangan — ya'ni g'arazli, bir tomonlama ('tendentious'). 'Obsolete' faqat eskirganini bildiradi, xurofotni emas."
+  }
+ ],
+ "Text Structure and Purpose": [
+  {
+   "passage": "For decades, textbooks described the Maya city of Tikal as having collapsed suddenly around 900 CE. Recent sediment cores from nearby reservoirs complicate that picture: pollen records indicate that farmers had been abandoning surrounding fields for nearly a century before the city's monuments fell silent. The cores do not reveal why residents left, but they suggest that the \"collapse\" was less a single catastrophe than a gradual unraveling.",
+   "prompt": "Which choice best describes the overall structure of the text?",
+   "choices": [
+    "It presents a long-held view, introduces evidence that challenges that view, and then offers a qualified revision of it.",
+    "It describes a historical event, explains the cause of that event, and then predicts the results of future research.",
+    "It introduces a scientific method, evaluates its limitations, and then recommends an alternative method.",
+    "It summarizes two competing explanations for an event and then argues that neither is supported by evidence."
+   ],
+   "answer": 0,
+   "expl": "Avval eski qarash (to'satdan qulash), keyin yangi dalil (pollen), oxirida ehtiyotkor yangi talqin (asta-sekin). Matn sababini aytmaydi, shuning uchun ikkinchi variant noto'g'ri."
+  },
+  {
+   "passage": "The following text is adapted from a 1911 short story. Mrs. Aldine has just received a letter.\nShe read it twice, folded it along its old creases, and set it on the mantel beside the clock. Then she took up her sewing again. The needle went in and out, in and out, with a steadiness that anyone watching would have admired; only the thread, pulled a little too tight at every stitch, puckered the hem beyond all mending.",
+   "prompt": "Which choice best states the main purpose of the text?",
+   "choices": [
+    "To suggest that Mrs. Aldine's outward composure conceals a strong reaction to the letter",
+    "To show that Mrs. Aldine is more interested in her sewing than in the letter she received",
+    "To illustrate Mrs. Aldine's skill as a seamstress despite a distraction",
+    "To explain why Mrs. Aldine decides not to respond to the letter"
+   ],
+   "answer": 0,
+   "expl": "Tashqaridan xotirjam ko'rinadi, lekin ipni juda qattiq tortib, etakni buzib qo'yadi — bu ichki hayajonni bildiradi. 'Skill' varianti aynan 'puckered beyond all mending' ga zid."
+  },
+  {
+   "passage": "Economists often assume that people who receive an unexpected cash windfall will spend it on large purchases. A study of lottery winners in Sweden found something different: most winners kept working, and the typical winner saved or invested the majority of the prize. The researchers note, however, that Swedish lottery prizes are usually modest, so the findings may not apply to recipients of very large sums.",
+   "prompt": "Which choice best describes the function of the last sentence in the overall structure of the text?",
+   "choices": [
+    "It acknowledges a limitation on how broadly the study's findings can be applied.",
+    "It offers an explanation for why lottery winners in Sweden kept working.",
+    "It presents evidence that contradicts the economists' assumption.",
+    "It suggests that the researchers' methods were flawed."
+   ],
+   "answer": 0,
+   "expl": "Oxirgi gap natijalar katta summalarga tatbiq etilmasligi mumkinligini aytadi — ya'ni cheklovni tan oladi. U usulni noto'g'ri demaydi."
+  },
+  {
+   "passage": "Some ecologists argue that urban coyotes pose a growing threat to pets and should be removed. Wildlife biologist Tamsin Reyes counters that removal programs rarely work: when coyotes are culled, the remaining animals tend to produce larger litters, and new coyotes quickly move into the vacated territory. Reyes instead recommends educating residents to secure garbage and keep small pets indoors at night.",
+   "prompt": "Which choice best states the main purpose of the text?",
+   "choices": [
+    "To present a researcher's objection to a proposed solution and her alternative to it",
+    "To explain why coyotes have become common in urban areas",
+    "To argue that urban coyotes pose no threat to pets",
+    "To compare the effectiveness of several programs for removing coyotes"
+   ],
+   "answer": 0,
+   "expl": "Matn olib tashlash taklifini, Reyesning e'tirozini va uning muqobil yechimini ko'rsatadi. Reyes xavf yo'q demaydi — faqat olib tashlash samarasiz deydi."
+  }
+ ],
+ "Cross-Text Connections": [
+  {
+   "passage": "Text 1\nPaleontologists have long interpreted the tall bony plates along the back of Stegosaurus as defensive armor. Positioned along the spine, the plates would have made the animal difficult for a predator to bite from above, and their size would have made Stegosaurus appear larger and more formidable.\n\nText 2\nThin sections of Stegosaurus plates reveal that they were riddled with channels for blood vessels and were too fragile to withstand a serious bite. Researcher Ines Carvalho concludes that the plates more likely served for display, allowing individuals to recognize members of their own species, though she allows that looking larger may have deterred some predators.",
+   "prompt": "Based on the texts, how would Carvalho (Text 2) most likely respond to the interpretation presented in Text 1?",
+   "choices": [
+    "She would reject the idea that the plates protected Stegosaurus physically but accept that their size may have discouraged some predators.",
+    "She would agree that the plates were primarily defensive but argue that they also regulated body temperature.",
+    "She would argue that the plates were too small to make Stegosaurus appear larger to predators.",
+    "She would reject the interpretation entirely, since there is no evidence that Stegosaurus had predators."
+   ],
+   "answer": 0,
+   "expl": "Carvalho plastinkalar tishlashga chidamsiz deydi (jismoniy himoyani rad etadi), lekin 'kattaroq ko'rinish' ba'zi yirtqichlarni qo'rqitgan bo'lishi mumkinligini tan oladi."
+  },
+  {
+   "passage": "Text 1\nThe rise of remote work has led some urban economists to predict a long decline for downtown business districts. If companies no longer need large central offices, they argue, the restaurants, shops, and transit systems that depend on office workers will shrink as well.\n\nText 2\nEconomist Farida Nazarova studied downtown districts in twelve cities after the shift to remote work. Districts that consisted almost entirely of office towers did lose foot traffic, but districts with a mix of housing, cultural venues, and offices recovered within two years, as residents and visitors replaced some commuters.",
+   "prompt": "Based on the texts, how would Nazarova (Text 2) most likely respond to the prediction in Text 1?",
+   "choices": [
+    "She would say that it may hold for districts dominated by offices but overlooks districts with more varied uses.",
+    "She would say that remote work has had no measurable effect on downtown districts.",
+    "She would agree with it and add that mixed-use districts suffered the greatest losses.",
+    "She would argue that the prediction is based on an inaccurate count of remote workers."
+   ],
+   "answer": 0,
+   "expl": "Nazarova faqat ofis tumanlari yo'qotganini, aralash tumanlar esa tiklanganini topdi — ya'ni bashorat qisman to'g'ri, lekin hamma tumanga tegishli emas."
+  },
+  {
+   "passage": "Text 1\nMany literary scholars read the poet Selim Arun's late sonnets as a retreat from politics: after years of writing about labor strikes and elections, Arun turned to gardens, seasons, and the domestic life of his village.\n\nText 2\nScholar Leyla Kasimova argues that Arun's late sonnets remain political in a subtler register. The gardens in these poems are frequently described as \"borrowed\" or \"leased,\" and the seasons are measured by rent days—details that, in Kasimova's reading, keep questions of land ownership and economic power at the center of the work.",
+   "prompt": "Based on the texts, how would Kasimova (Text 2) most likely respond to the scholars' reading in Text 1?",
+   "choices": [
+    "She would argue that the scholars mistake a change in subject matter for an abandonment of political concerns.",
+    "She would agree that Arun abandoned politics but argue that his late sonnets are nevertheless his finest work.",
+    "She would argue that Arun never wrote directly about labor strikes or elections.",
+    "She would contend that the late sonnets are primarily concerned with the natural world rather than with village life."
+   ],
+   "answer": 0,
+   "expl": "Kasimova mavzu (bog'lar, fasllar) o'zgarganini inkor qilmaydi, lekin siyosiy mazmun saqlanganini aytadi — ya'ni olimlar mavzu o'zgarishini siyosatdan voz kechish deb adashadi."
+  },
+  {
+   "passage": "Text 1\nIn laboratory tests, honeybees exposed to low doses of a common pesticide made more errors when navigating back to their hives. Some researchers have concluded that the pesticide is a major cause of recent declines in wild bee colonies.\n\nText 2\nEntomologist Dario Vance notes that laboratory doses, though described as low, often exceed what bees encounter in actual fields, and that colony declines have also been linked to parasites and habitat loss. Vance does not dismiss the laboratory findings but calls for field studies that measure realistic exposure alongside these other factors.",
+   "prompt": "Based on the texts, how would Vance (Text 2) most likely characterize the conclusion described in Text 1?",
+   "choices": [
+    "As premature, because it rests on conditions that may not reflect bees' real exposure and does not account for other possible causes",
+    "As correct, because laboratory studies are more reliable than field studies",
+    "As irrelevant, because pesticides have no effect on bee navigation",
+    "As plausible only for honeybees kept in hives rather than for wild bees"
+   ],
+   "answer": 0,
+   "expl": "Vance laboratoriya natijalarini rad etmaydi, lekin doza real emas va boshqa sabablar hisobga olinmagan deydi — ya'ni xulosa shoshilinch."
+  }
+ ],
+ "Central Ideas and Details": [
+  {
+   "passage": "The following text is adapted from a 1905 novel. Hester has recently moved from the countryside to work in a city shop.\nThe city did not frighten her, as her mother had predicted it would. What unsettled Hester was something smaller: that no one on the crowded pavements ever looked at anyone else. At home a stranger on the road was an event, to be greeted and discussed for days. Here a thousand strangers passed her every morning, and she began to feel that she, too, was becoming invisible.",
+   "prompt": "Which choice best states the main idea of the text?",
+   "choices": [
+    "Hester is troubled less by the size of the city than by the way its residents ignore one another.",
+    "Hester regrets leaving the countryside because she misses her mother.",
+    "Hester is frightened by the crowds she encounters on her way to work.",
+    "Hester enjoys the anonymity of city life after the constant attention of her village."
+   ],
+   "answer": 0,
+   "expl": "Matn aniq aytadi: shahar uni qo'rqitmadi, uni odamlarning bir-biriga qaramasligi bezovta qildi. 'Enjoys' varianti 'unsettled' ga zid."
+  },
+  {
+   "passage": "Geologist Anvar Tursunov studies caves in the Baysun Mountains, where layered mineral deposits called flowstones record changes in rainfall. Because each layer's chemistry reflects the water that formed it, Tursunov can reconstruct wet and dry periods going back 40,000 years. His records show that the region's climate shifted abruptly several times, with some transitions from wet to dry conditions taking less than a century—far faster than earlier models had assumed.",
+   "prompt": "According to the text, what did Tursunov's research reveal?",
+   "choices": [
+    "Some major climate shifts in the region occurred more rapidly than had been previously thought.",
+    "The chemistry of flowstones varies little from one layer to the next.",
+    "The region's climate has been dry for most of the past 40,000 years.",
+    "Earlier climate models of the region relied on data from flowstones."
+   ],
+   "answer": 0,
+   "expl": "Oxirgi gap: ba'zi o'zgarishlar 100 yildan kam vaqtda bo'lgan — avvalgi modellar taxmin qilganidan tezroq."
+  },
+  {
+   "passage": "When the city of Bogotá closed more than 100 kilometers of streets to cars every Sunday, officials expected the program to encourage exercise. Surveys found that it did, but they also revealed an effect planners had not anticipated: residents of wealthy and poor neighborhoods, who rarely shared public spaces during the week, mingled on the car-free routes. Researchers now cite the program as an example of how transportation policy can shape social life as well as health.",
+   "prompt": "Which choice best states the main idea of the text?",
+   "choices": [
+    "A program intended mainly to promote exercise also had a significant social effect.",
+    "Closing streets to cars is the most effective way for cities to improve residents' health.",
+    "Residents of wealthy neighborhoods in Bogotá exercise more than residents of poor neighborhoods.",
+    "Officials in Bogotá designed the car-free program to reduce divisions between neighborhoods."
+   ],
+   "answer": 0,
+   "expl": "Dastur jismoniy mashq uchun edi, lekin kutilmagan ijtimoiy natija berdi. Oxirgi variant xato: rasmiylar buni rejalashtirmagan ('had not anticipated')."
+  },
+  {
+   "passage": "The following text is adapted from a 1920 essay. The writer is describing an old bookshop.\nThe proprietor knew the location of every volume, though no catalogue existed and the shelves obeyed no system a customer could discern. Ask him for a book on beekeeping and he would disappear between two leaning stacks, returning minutes later with exactly the volume you wanted—and, more often than not, a second one you had not known you needed.",
+   "prompt": "Based on the text, what is true about the proprietor?",
+   "choices": [
+    "He has a detailed knowledge of his shop's disorganized collection.",
+    "He has recently created a catalogue of the books in his shop.",
+    "He specializes in selling books about beekeeping.",
+    "He is reluctant to help customers who ask for particular books."
+   ],
+   "answer": 0,
+   "expl": "Katalog yo'q, tizim ko'rinmaydi, lekin u har bir kitob joyini biladi — tartibsiz to'plamni juda yaxshi biladi."
+  }
+ ],
+ "Command of Evidence (Textual)": [
+  {
+   "passage": "Marine ecologist Ruth Okafor hypothesizes that parrotfish, which scrape algae off coral, help reefs recover after bleaching events by clearing space where new coral larvae can settle. To test the idea, Okafor compared bleached reef sections from which parrotfish had been excluded by cages with nearby bleached sections left open to parrotfish.",
+   "prompt": "Which finding, if true, would most directly support Okafor's hypothesis?",
+   "choices": [
+    "Three years after bleaching, the open sections had significantly more young coral colonies than the caged sections did.",
+    "The caged sections contained more species of fish than the open sections did.",
+    "Parrotfish were observed feeding more often on healthy coral than on bleached coral.",
+    "Algae covered a similar proportion of the caged and open sections three years after bleaching."
+   ],
+   "answer": 0,
+   "expl": "Gipoteza: parrotfish joy ochib, yangi korallar o'sishiga yordam beradi. Ochiq qismda yosh korallar ko'proq bo'lsa — to'g'ridan-to'g'ri tasdiq. Suv o'tlari bir xil bo'lsa, aksincha gipotezani zaiflashtiradi."
+  },
+  {
+   "passage": "Some historians have argued that the spread of clocks in eighteenth-century England changed how workers experienced time, making them more conscious of hours and minutes. Historian Priya Nair suggests that this shift happened more gradually than those historians claim, and that many rural workers continued to organize their days by tasks and daylight well into the nineteenth century.",
+   "prompt": "Which finding, if true, would most directly support Nair's claim?",
+   "choices": [
+    "Diaries kept by agricultural laborers in the 1820s describe their workdays mainly in terms of completed chores and sunrise and sunset, rarely mentioning clock times.",
+    "Clockmakers in eighteenth-century London sold more clocks each decade than they had in the previous decade.",
+    "Factory owners in the eighteenth century frequently fined workers for arriving late.",
+    "Eighteenth-century clocks were often inaccurate by as much as fifteen minutes a day."
+   ],
+   "answer": 0,
+   "expl": "Nair: qishloq ishchilari XIX asrgacha vazifa va kun yorug'ligi bo'yicha yashagan. 1820-yillardagi kundaliklar aynan shuni ko'rsatadi. Zavod jarimalari esa aksincha soatga e'tiborni ko'rsatadi."
+  },
+  {
+   "passage": "Psychologist Mei Lin hypothesized that people remember information better when they explain it aloud to someone else than when they simply reread it, even if the listener asks no questions. In her study, participants studied a passage and then either reread it or explained it to a silent listener; a week later, all participants took the same recall test.",
+   "prompt": "Which finding from Lin's study, if true, would most strongly support her hypothesis?",
+   "choices": [
+    "Participants who explained the passage to a silent listener recalled substantially more of it than did participants who reread it.",
+    "Participants who reread the passage spent more total time studying than did participants who explained it.",
+    "Participants in both groups rated the passage as equally difficult.",
+    "Participants who explained the passage said they enjoyed the task more than did those who reread it."
+   ],
+   "answer": 0,
+   "expl": "Gipoteza eslab qolish haqida — tushuntirgan guruh ko'proq eslab qolgani bevosita tasdiqlaydi. Yoqtirish yoki vaqt esa eslab qolishni o'lchamaydi."
+  },
+  {
+   "passage": "The following text is from a 1913 poem by an American poet. The speaker addresses a city at night.\nThe poem conveys the speaker's sense that the city's brightness hides the loneliness of the people who live there.",
+   "prompt": "Which quotation from the poem most effectively illustrates this claim?",
+   "choices": [
+    "\"A million windows blaze along your towers, / And behind each, a single face alone.\"",
+    "\"Your streets run down like rivers to the sea, / And ships lean in to hear your ringing bells.\"",
+    "\"I walked your avenues when I was young / And thought your lamps were stars come down to stay.\"",
+    "\"The morning finds you gray and hushed and cold, / Your lanterns guttered out along the quays.\""
+   ],
+   "answer": 0,
+   "expl": "Da'vo ikki qismli: yorqinlik + yolg'izlik. Faqat birinchi iqtibosda ikkalasi bor: minglab yonayotgan derazalar va har birining ortida yolg'iz yuz."
+  }
+ ],
+ "Command of Evidence (Quantitative)": [
+  {
+   "passage": "Percentage of Surveyed Farms Using Drip Irrigation, by Region\nRegion      2010   2020\nNorth        12%    31%\nSouth        25%    29%\nEast          8%    34%\nWest         19%    22%\n\nAn agricultural economist examined how drip irrigation spread among farms in four regions. She found that although every region increased its use of drip irrigation between 2010 and 2020, the change was far from uniform; for example, ______",
+   "prompt": "Which choice most effectively uses data from the table to complete the example?",
+   "choices": [
+    "the percentage of farms using drip irrigation rose by 26 percentage points in the East but by only 3 percentage points in the West.",
+    "the South had the highest percentage of farms using drip irrigation in 2010.",
+    "the North and the East both had fewer than 15% of farms using drip irrigation in 2010.",
+    "in 2020, more than 20% of farms in every region used drip irrigation."
+   ],
+   "answer": 0,
+   "expl": "'Change was far from uniform' uchun o'zgarishlarni solishtirish kerak: Sharq +26, G'arb +3. Boshqa variantlar to'g'ri ma'lumot, lekin o'zgarish farqini ko'rsatmaydi."
+  },
+  {
+   "passage": "Average Nightly Sleep and Test Performance of Students in a Study\nGroup    Average sleep (hours)   Average test score\nA            5.8                     71\nB            6.9                     78\nC            8.1                     84\nD            9.2                     83\n\nResearchers studying sleep and academic performance reported that test scores rose with sleep up to a point but did not continue to improve with the greatest amounts of sleep. ______",
+   "prompt": "Which choice most effectively uses data from the table to support the researchers' conclusion?",
+   "choices": [
+    "Students in group C averaged 8.1 hours of sleep and a score of 84, while students in group D averaged more sleep, 9.2 hours, but scored slightly lower, 83.",
+    "Students in group A averaged the least sleep, 5.8 hours, and the lowest score, 71.",
+    "Students in group B averaged 6.9 hours of sleep and a score of 78.",
+    "Students in groups A and B averaged fewer than 7 hours of sleep."
+   ],
+   "answer": 0,
+   "expl": "Xulosaning muhim qismi: ko'p uyqu natijani yaxshilamadi. C va D ni solishtirish aynan shuni ko'rsatadi (9.2 soat, lekin 83 < 84)."
+  },
+  {
+   "passage": "Share of Electricity Generated from Wind, Selected Countries\nCountry   2012   2022\nP          4%     11%\nQ         18%     19%\nR          2%     15%\nS          9%     24%\n\nA student claims that, among the four countries, the one that relied most on wind in 2012 was not the one that relied most on wind in 2022.",
+   "prompt": "Which choice best describes data from the table that support the student's claim?",
+   "choices": [
+    "Country Q had the highest share of electricity from wind in 2012, but country S had the highest share in 2022.",
+    "Country R's share of electricity from wind increased more than country P's did.",
+    "Country S's share of electricity from wind more than doubled between 2012 and 2022.",
+    "Every country's share of electricity from wind was higher in 2022 than in 2012."
+   ],
+   "answer": 0,
+   "expl": "Da'vo: 2012-yilda eng ko'p (Q, 18%) va 2022-yilda eng ko'p (S, 24%) har xil davlatlar. Faqat birinchi variant ikkala yilni solishtiradi."
+  },
+  {
+   "passage": "Nesting Success of a Shorebird Species\nNest location           Nests observed   Nests producing chicks\nOpen beach                  120                 42\nBeach with fencing           80                 52\nDune grass                   60                 33\n\nConservationists installed fencing on some beaches to keep people and dogs away from shorebird nests. Their data suggest the fencing was effective: ______",
+   "prompt": "Which choice most effectively uses data from the table to complete the statement?",
+   "choices": [
+    "65% of nests on fenced beaches produced chicks, compared with 35% of nests on open beaches.",
+    "more nests were observed on open beaches than on beaches with fencing.",
+    "52 nests on fenced beaches produced chicks, compared with 33 nests in dune grass.",
+    "42 nests on open beaches produced chicks."
+   ],
+   "answer": 0,
+   "expl": "Samaradorlikni ulush bilan solishtirish kerak: 52/80 = 65%, 42/120 = 35%. Uchinchi variant son solishtiradi va dune grass qo'riqlash bilan bog'liq emas."
+  }
+ ],
+ "Inferences": [
+  {
+   "passage": "Archaeologists excavating a Bronze Age settlement found hundreds of loom weights, the clay objects used to hold threads taut during weaving. Yet the settlement's soil contained almost no traces of the flax or wool fibers that weavers would have used, and no remains of sheep were found among the animal bones at the site. Because loom weights are heavy and were rarely transported far, the archaeologists concluded that ______",
+   "prompt": "Which choice most logically completes the text?",
+   "choices": [
+    "the settlement's weavers likely obtained their fibers from somewhere other than the settlement itself.",
+    "the loom weights were probably used for a purpose other than weaving.",
+    "the settlement's residents probably did not wear woven clothing.",
+    "sheep must have been raised at the settlement but their bones were not preserved."
+   ],
+   "answer": 0,
+   "expl": "To'quvchilik joyida bo'lgan (og'ir toshlar uzoqqa tashilmagan), lekin tola va qo'y yo'q — demak tolani boshqa joydan olishgan. 'Bones not preserved' matn dalillariga zid taxmin."
+  },
+  {
+   "passage": "In many bird species, females prefer males with elaborate songs. Researchers studying a species of warbler found that males raised in noisy urban areas sang simpler songs than rural males did, but urban females did not show a weaker preference for complex songs when tested in quiet conditions. If complex songs continue to signal male quality to females, ______",
+   "prompt": "Which choice most logically completes the text?",
+   "choices": [
+    "urban males may be at a disadvantage in attracting mates compared with rural males.",
+    "urban females will likely begin to prefer simpler songs within a few generations.",
+    "rural males will likely begin singing simpler songs to compete with urban males.",
+    "noise has no effect on which males are chosen as mates."
+   ],
+   "answer": 0,
+   "expl": "Shahar erkaklari soddaroq kuylaydi, urg'ochilar esa baribir murakkab kuyni afzal ko'radi — demak shahar erkaklari juft topishda noqulay holatda bo'lishi mumkin."
+  },
+  {
+   "passage": "A company tested two versions of its website. Version A displayed prices including tax, while version B displayed prices before tax and added tax at checkout. Visitors to version B added more items to their carts, but a larger share of them abandoned their carts at checkout. The company's analysts noted that total sales were nearly identical for the two versions, suggesting that ______",
+   "prompt": "Which choice most logically completes the text?",
+   "choices": [
+    "the additional items placed in carts on version B were largely offset by the higher rate at which those carts were abandoned.",
+    "visitors to version A added more items to their carts than visitors to version B did.",
+    "displaying prices before tax has no effect on how shoppers behave.",
+    "most shoppers do not notice whether displayed prices include tax."
+   ],
+   "answer": 0,
+   "expl": "B da savat ko'proq to'ldi, lekin ko'proq tashlab ketildi, umumiy savdo esa bir xil — demak biri ikkinchisini qoplagan. 'No effect' xato, chunki xatti-harakat o'zgargan."
+  },
+  {
+   "passage": "Glaciologists drilling into an Antarctic ice sheet found a layer of volcanic ash about 1,000 meters below the surface. The ash's chemistry matches that of a known eruption in New Zealand, which other evidence dates to roughly 25,000 years ago. Because ice layers accumulate from the surface downward over time, the ice directly above the ash layer ______",
+   "prompt": "Which choice most logically completes the text?",
+   "choices": [
+    "must have formed less than roughly 25,000 years ago.",
+    "must have formed more than roughly 25,000 years ago.",
+    "was likely formed from ash deposited by the same eruption.",
+    "is probably thicker than the ice directly below the ash layer."
+   ],
+   "answer": 0,
+   "expl": "Muz yuqoridan pastga to'planadi, demak kul ustidagi muz kuldan keyin, ya'ni 25 000 yildan kamroq vaqt oldin hosil bo'lgan."
+  }
+ ],
+ "Boundaries": [
+  {
+   "passage": "The Aral Sea, once the fourth-largest lake in the world, began shrinking in the 1960s when the rivers that fed it were diverted for ______ by 2007, it had lost roughly 90 percent of its volume.",
+   "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+   "choices": [
+    "irrigation;",
+    "irrigation,",
+    "irrigation",
+    "irrigation, and,"
+   ],
+   "answer": 0,
+   "expl": "Ikki mustaqil gap ('The Aral Sea ... began shrinking' va 'it had lost...') bog'lovchisiz birlashtirilganda nuqtali vergul kerak. Vergul bilan — comma splice."
+  },
+  {
+   "passage": "Among the materials the sculptor collected for her installation were driftwood from the Maine coast, rusted hinges salvaged from a demolished ______ and several hundred glass bottles, each tinted a slightly different shade of green.",
+   "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+   "choices": [
+    "barn,",
+    "barn;",
+    "barn",
+    "barn:"
+   ],
+   "answer": 0,
+   "expl": "Bu uch elementli ro'yxat (driftwood, hinges, bottles), elementlar oddiy vergul bilan ajratiladi. Nuqtali vergul faqat elementlar ichida vergul bo'lsa ishlatiladi."
+  },
+  {
+   "passage": "The mathematician's proof, which ran to more than two hundred pages and relied on computer calculations that no human could check by ______ was accepted only after independent teams had verified it using different software.",
+   "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+   "choices": [
+    "hand,",
+    "hand",
+    "hand;",
+    "hand—"
+   ],
+   "answer": 0,
+   "expl": "'which ran ... by hand' — bu qo'shimcha izoh qismi; u vergul bilan boshlangan, shuning uchun vergul bilan yopilishi kerak."
+  },
+  {
+   "passage": "Botanist Lena Petrova's experiments revealed something unexpected about the desert ______ its seeds can remain dormant in the soil for more than a decade, germinating only after a rainfall of at least 25 millimeters.",
+   "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+   "choices": [
+    "marigold:",
+    "marigold, and",
+    "marigold",
+    "marigold, that"
+   ],
+   "answer": 0,
+   "expl": "Birinchi qism 'something unexpected' deb e'lon qiladi, ikkinchi qism uni tushuntiradi — bu holatda ikki nuqta ishlatiladi."
+  }
+ ],
+ "Form, Structure, and Sense": [
+  {
+   "passage": "The collection of letters, diaries, and photographs that the historian discovered in a family attic ______ a rare glimpse into daily life in a nineteenth-century mining town.",
+   "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+   "choices": [
+    "offers",
+    "offer",
+    "are offering",
+    "have offered"
+   ],
+   "answer": 0,
+   "expl": "Ega — 'The collection' (birlik). 'letters, diaries, and photographs' faqat uning tarkibi, shuning uchun fe'l birlikda: 'offers'."
+  },
+  {
+   "passage": "Neither the museum's director nor its board members ______ willing to comment on reports that the painting had been misattributed for more than a century.",
+   "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+   "choices": [
+    "were",
+    "was",
+    "is",
+    "has been"
+   ],
+   "answer": 0,
+   "expl": "'Neither ... nor' da fe'l yaqinroq egaga moslashadi: 'board members' (ko'plik) → 'were'. O'tgan zamon matndagi 'had been' bilan mos."
+  },
+  {
+   "passage": "Having spent a decade photographing glaciers in Patagonia, ______ the dramatic retreat of the ice to a wide audience.",
+   "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+   "choices": [
+    "Eleni Vasquez published a book that documented",
+    "a book was published by Eleni Vasquez that documented",
+    "the book that Eleni Vasquez published documented",
+    "Eleni Vasquez's book documented"
+   ],
+   "answer": 0,
+   "expl": "'Having spent a decade photographing' ni bajargan shaxs darhol vergul ortidan kelishi kerak — Eleni Vasquez. Kitob o'n yil suratga olmagan (dangling modifier)."
+  },
+  {
+   "passage": "When the ancient city of Merv was at its height in the twelfth century, travelers who arrived at ______ gates described markets filled with silk, spices, and manuscripts from across Asia.",
+   "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+   "choices": [
+    "its",
+    "it's",
+    "their",
+    "they're"
+   ],
+   "answer": 0,
+   "expl": "Olmosh 'the ancient city of Merv' (birlik) ga qaytadi va egalikni bildiradi: 'its'. 'It's' = 'it is'."
+  }
+ ],
+ "Transitions": [
+  {
+   "passage": "The composer insisted that her symphony be performed without an intermission, arguing that a break would destroy its carefully built tension. Many orchestras, worried that audiences would grow restless during the ninety-minute work, ignored her instructions. ______ the few performances that honored her wishes were, by most accounts, the most powerful.",
+   "prompt": "Which choice completes the text with the most logical transition?",
+   "choices": [
+    "Tellingly,",
+    "Similarly,",
+    "For instance,",
+    "As a result,"
+   ],
+   "answer": 0,
+   "expl": "Uning talabini bajargan ijrolar eng kuchli bo'lgani — bastakorning fikrini tasdiqlaydigan muhim dalil. 'As a result' xato, chunki orkestrlarning e'tiborsizligi bunga sabab emas."
+  },
+  {
+   "passage": "For much of the twentieth century, scientists believed that adult human brains could not grow new neurons. Studies in the 1990s found evidence of new neurons forming in the hippocampus, a region involved in memory. ______ some researchers now question those findings, arguing that the techniques used to identify young neurons may have produced false positives.",
+   "prompt": "Which choice completes the text with the most logical transition?",
+   "choices": [
+    "Even so,",
+    "Consequently,",
+    "In other words,",
+    "Likewise,"
+   ],
+   "answer": 0,
+   "expl": "Yangi topilmalar bor, ammo ba'zi olimlar ularni shubha ostiga oladi — bu qarama-qarshilik, 'Even so'. 'Consequently' sabab-natijani bildiradi, bu yerda yo'q."
+  },
+  {
+   "passage": "The Silk Road is often imagined as a single highway linking China and the Mediterranean. In reality, it was a shifting web of routes, and few merchants traveled its full length. ______ goods typically passed through many hands, changing owners at oasis towns such as Samarkand and Bukhara before reaching distant markets.",
+   "prompt": "Which choice completes the text with the most logical transition?",
+   "choices": [
+    "Instead,",
+    "Nevertheless,",
+    "Moreover,",
+    "Meanwhile,"
+   ],
+   "answer": 0,
+   "expl": "Savdogarlar to'liq yo'lni bosib o'tmagan; uning o'rniga mollar ko'p qo'llardan o'tgan — 'Instead'. 'Moreover' shunchaki qo'shimcha fikr, bu yerda almashtirish ma'nosi kerak."
+  },
+  {
+   "passage": "Early critics dismissed the photographer's blurred, grainy street scenes as technically incompetent. The photographer, for her part, had deliberately used slow shutter speeds and cheap film to capture the motion and confusion of city life. ______ what critics saw as mistakes were, in fact, her central artistic choices.",
+   "prompt": "Which choice completes the text with the most logical transition?",
+   "choices": [
+    "In other words,",
+    "Nonetheless,",
+    "Additionally,",
+    "By contrast,"
+   ],
+   "answer": 0,
+   "expl": "Oxirgi gap oldingi fikrni boshqacha so'z bilan xulosalaydi (xato deb ko'rilgan narsa — ataylab tanlov) — 'In other words'."
+  }
+ ],
+ "Rhetorical Synthesis": [
+  {
+   "passage": "While researching a topic, a student has taken the following notes:\n  • The Great Green Wall is an initiative to restore land across Africa's Sahel region.\n  • It was launched in 2007 by the African Union.\n  • Its original goal was to plant a continuous belt of trees 8,000 kilometers long.\n  • Planners later shifted to a mosaic of land-restoration projects, such as water-harvesting and farmer-managed tree regrowth.\n  • The shift was made because many planted seedlings died in dry conditions.",
+   "prompt": "The student wants to explain why the initiative's approach changed. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+   "choices": [
+    "Because many seedlings planted for the Great Green Wall died in dry conditions, planners moved away from a continuous belt of trees toward a mosaic of land-restoration projects.",
+    "The Great Green Wall, launched by the African Union in 2007, originally aimed to plant a belt of trees 8,000 kilometers long across the Sahel.",
+    "The Great Green Wall now includes projects such as water-harvesting and farmer-managed tree regrowth.",
+    "Launched in 2007, the Great Green Wall is an African Union initiative to restore land across the Sahel region."
+   ],
+   "answer": 0,
+   "expl": "Maqsad — nima uchun yondashuv o'zgarganini tushuntirish: sabab (ko'chatlar nobud bo'ldi) va o'zgarish (belbog'dan mozaikaga) birga bo'lishi kerak."
+  },
+  {
+   "passage": "While researching a topic, a student has taken the following notes:\n  • Octavia Butler (1947-2006) was an American science fiction writer.\n  • Her novel Kindred (1979) follows a Black woman who travels from 1970s California to a plantation in pre-Civil War Maryland.\n  • Her novel Parable of the Sower (1993) is set in a near-future United States damaged by climate change.\n  • Both novels explore how people survive under oppressive conditions.",
+   "prompt": "The student wants to emphasize a similarity between the two novels. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+   "choices": [
+    "Though one is set in the past and the other in the future, Octavia Butler's Kindred and Parable of the Sower both explore how people survive under oppressive conditions.",
+    "Octavia Butler's Kindred (1979) is set partly on a plantation in pre-Civil War Maryland, while her Parable of the Sower (1993) is set in a near-future United States.",
+    "Octavia Butler, an American science fiction writer, published Kindred in 1979 and Parable of the Sower in 1993.",
+    "Parable of the Sower (1993) by Octavia Butler is set in a United States damaged by climate change."
+   ],
+   "answer": 0,
+   "expl": "Vazifa — o'xshashlikni ta'kidlash. Birinchi variant ikkala romanning umumiy mavzusini aytadi. Ikkinchi variant farqni ta'kidlaydi."
+  },
+  {
+   "passage": "While researching a topic, a student has taken the following notes:\n  • In 2019, a team of astronomers used the Event Horizon Telescope to image a black hole.\n  • The Event Horizon Telescope is not a single instrument.\n  • It links radio observatories on several continents.\n  • Combining their data creates a virtual telescope about the size of Earth.\n  • This size was needed to resolve the black hole's shadow.",
+   "prompt": "The student wants to explain to an audience unfamiliar with the Event Horizon Telescope how it was able to capture the image. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+   "choices": [
+    "By linking radio observatories on several continents, the Event Horizon Telescope combined their data into a virtual telescope about the size of Earth—large enough to resolve a black hole's shadow.",
+    "In 2019, astronomers used the Event Horizon Telescope to capture the first image of a black hole.",
+    "The Event Horizon Telescope is not a single instrument but rather a network of observatories.",
+    "Astronomers needed a telescope the size of Earth to resolve the shadow of a black hole, which they imaged in 2019."
+   ],
+   "answer": 0,
+   "expl": "Tanish bo'lmagan auditoriyaga 'qanday' ni tushuntirish kerak: observatoriyalarni bog'lash → Yer kattaligidagi virtual teleskop → soyani ajrata olish. Faqat birinchi variantda mexanizm to'liq."
+  },
+  {
+   "passage": "While researching a topic, a student has taken the following notes:\n  • Ulugh Beg (1394-1449) ruled Samarkand and was also an astronomer.\n  • In the 1420s he built an observatory with a huge meridian arc about 40 meters in radius.\n  • His star catalogue listed the positions of 994 stars.\n  • Its measurements were more precise than those of any earlier catalogue.\n  • It remained a standard reference for about two centuries.",
+   "prompt": "The student wants to emphasize the lasting significance of Ulugh Beg's star catalogue. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+   "choices": [
+    "More precise than any earlier catalogue, Ulugh Beg's listing of 994 stars remained a standard reference for about two centuries.",
+    "Ulugh Beg, who ruled Samarkand, built an observatory in the 1420s with a meridian arc about 40 meters in radius.",
+    "Ulugh Beg's star catalogue listed the positions of 994 stars.",
+    "Ulugh Beg (1394-1449) was both a ruler of Samarkand and an astronomer."
+   ],
+   "answer": 0,
+   "expl": "'Lasting significance' — uzoq muddatli ahamiyat: ikki asr davomida standart manba bo'lib qolgani. Faqat birinchi variant buni aytadi."
+  }
+ ]
+}
