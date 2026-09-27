@@ -503,17 +503,17 @@ function genMath(skill, rng, isSPR, forceT) {
   }
   const difficulty = TIER_NAME[tierOfTemplate(skill, forceT)];
   // SPR (javobni o'zi yozadi) faqat son/kasr javobli savollarda
-  if (isSPR && Number.isFinite(sprNum(q.correct))) return { type: "spr", prompt: q.prompt, answer: String(q.correct), expl: q.expl, difficulty };
+  if (isSPR && Number.isFinite(sprNum(q.correct))) return { type: "spr", prompt: q.prompt, answer: String(q.correct), expl: q.expl, difficulty, ...(q.chart ? { chart: q.chart } : {}) };
   const uniq = []; q.dist.forEach((d) => { if (String(d) !== String(q.correct) && !uniq.includes(String(d))) uniq.push(String(d)); });
   let pad = 1; while (uniq.length < 3) { const alt = Number.isFinite(Number(q.correct)) ? String(Number(q.correct) + pad * (pad % 2 ? 1 : -1) * 2) : String(q.correct) + " + " + pad; if (!uniq.includes(alt) && alt !== String(q.correct)) uniq.push(alt); pad++; }
   const { choices, answer } = buildChoices(rng, q.correct, uniq.slice(0, 3));
-  return { type: "mc", prompt: q.prompt, choices, answer, expl: q.expl, difficulty };
+  return { type: "mc", prompt: q.prompt, choices, answer, expl: q.expl, difficulty, ...(q.chart ? { chart: q.chart } : {}) };
 }
 // Qiyinlik darajalari: har bir math shabloni Easy / Medium / Hard guruhiga ajratilgan
 const MATH_TIERS = {
-  "Linear equations & systems": { E: [0, 2, 7], M: [1, 3, 4, 6, 10, 11], H: [5, 8, 9, 12, 13, 14, 15] },
-  "Nonlinear functions": { E: [2, 3, 7], M: [0, 1, 5, 10, 12, 13], H: [4, 6, 8, 9, 11, 14, 15, 16, 17, 18] },
-  "Ratios, rates, data": { E: [0, 1, 3], M: [2, 4, 5, 7, 9, 10, 11, 15], H: [6, 8, 12, 13, 14] },
+  "Linear equations & systems": { E: [0, 2, 7, 17], M: [1, 3, 4, 6, 10, 11, 16], H: [5, 8, 9, 12, 13, 14, 15] },
+  "Nonlinear functions": { E: [2, 3, 7], M: [0, 1, 5, 10, 12, 13, 20], H: [4, 6, 8, 9, 11, 14, 15, 16, 17, 18, 19] },
+  "Ratios, rates, data": { E: [0, 1, 3], M: [2, 4, 5, 7, 9, 10, 11, 15, 16, 17], H: [6, 8, 12, 13, 14] },
   "Lines, angles, circles": { E: [0, 1, 6], M: [2, 3, 4, 9, 11, 12, 16], H: [5, 7, 8, 10, 13, 14, 15] },
 };
 const TIER_NAME = { E: "Easy", M: "Medium", H: "Hard" };
@@ -532,6 +532,29 @@ function sprOk(val, ans) {
   return Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) < 0.0015 + Math.abs(a) * 0.0002;
 }
 function genMathExtra(skill, rng, t) {
+  // ---- Grafikli savollar (rasmiy testlardagidek) ----
+  if (skill === "Linear equations & systems" && t >= 16) {
+    if (t === 16) { const q = pickOne(rng, [1, 2, 3]), p = pickOne(rng, [-3, -2, -1, 1, 2, 3].filter((v) => gcd(v, q) === 1)), b = pickOne(rng, [-4, -3, -2, -1, 1, 2, 3, 4]); const m = p / q; let x1 = q * 2 * (b > 1 ? -1 : 1); if (Math.abs(m * x1 + b) > 7) x1 = x1 / 2;
+      const S = (n, d) => { if (d < 0) { n = -n; d = -d; } const g = gcd(n, d); n /= g; d /= g; if (d === 1) return n === 1 ? "" : n === -1 ? "−" : n < 0 ? `−${-n}` : `${n}`; return `${n < 0 ? "−" : ""}(${Math.abs(n)}/${d})`; };
+      const eq = (sl, bb) => `y = ${sl}x${lin(bb)}`; const lim = 8;
+      return { chart: { xMin: -lim, xMax: lim, yMin: -lim, yMax: lim, axesAtZero: true, xLabelStep: 2, yLabelStep: 2, polys: [sampleFn((x) => m * x + b, -lim, lim, 2)], marks: [[0, b], [x1, m * x1 + b]] }, prompt: `The graph of the linear function f is shown, where y = f(x). Which equation defines f?`, correct: eq(S(p, q), b), dist: [eq(S(p, q), -b), eq(S(-q, p), b), eq(S(-p, q), b)], expl: `The line crosses the y-axis at (0, ${b}), so the y-intercept is ${b}. It also passes through (${x1}, ${m * x1 + b}), so the slope is (${m * x1 + b} − (${b}))/${x1} = ${S(p, q) === "" ? "1" : S(p, q) === "−" ? "−1" : S(p, q)}.` }; }
+    { let x0, y0, m1, m2, b1, b2, g = 0; do { x0 = ri(rng, -5, 5); y0 = ri(rng, -5, 5); m1 = pickOne(rng, [-3, -2, -1, 1, 2, 3]); m2 = pickOne(rng, [-2, -1, 1, 2]); b1 = y0 - m1 * x0; b2 = y0 - m2 * x0; g++; } while ((m1 === m2 || Math.abs(b1) > 9 || Math.abs(b2) > 9) && g < 200);
+      return { chart: { xMin: -8, xMax: 8, yMin: -8, yMax: 8, axesAtZero: true, xLabelStep: 2, yLabelStep: 2, polys: [sampleFn((x) => m1 * x + b1, -8, 8, 2), sampleFn((x) => m2 * x + b2, -8, 8, 2)] }, prompt: `The graph of a system of two linear equations is shown. What is the solution (x, y) to the system?`, correct: `(${x0}, ${y0})`, dist: [`(${y0}, ${x0})`, `(0, ${b1})`, `(0, ${b2})`], expl: `The solution is the point where the two lines intersect, which is (${x0}, ${y0}).` }; }
+  }
+  if (skill === "Nonlinear functions" && t >= 19) {
+    if (t === 19) { const a = pickOne(rng, [-2, -1, 1, 2]), h = ri(rng, -4, 4), k = a > 0 ? ri(rng, -7, 1) : ri(rng, -1, 7);
+      const f = (x) => a * (x - h) ** 2 + k; const E = (aa, hh, kk) => `y = ${aa === 1 ? "" : aa === -1 ? "−" : aa < 0 ? "−" + -aa : aa}(x${lin(-hh)})²${lin(kk)}`;
+      return { chart: { xMin: -9, xMax: 9, yMin: -9, yMax: 9, axesAtZero: true, xLabelStep: 3, yLabelStep: 3, polys: [sampleFn(f, -9, 9)], marks: [[h, k]] }, prompt: `The graph of the quadratic function f is shown, where y = f(x). Which equation could define f?`, correct: E(a, h, k), dist: [E(a, -h === h ? h + 1 : -h, k), E(a, h, k === 0 ? 2 : -k), E(-a, h, k)], expl: `The vertex of the parabola is (${h}, ${k}), so f(x) = a(x${lin(-h)})²${lin(k)}. The parabola opens ${a > 0 ? "upward, so a > 0" : "downward, so a < 0"}; the point one unit from the vertex is ${Math.abs(a)} unit(s) ${a > 0 ? "above" : "below"} it, so a = ${a}.` }; }
+    { const a0 = pickOne(rng, [1, 2, 3, 4]), b0 = pickOne(rng, [2, 3]); const f = (x) => a0 * b0 ** x; const yMax = a0 * b0 ** 3 + 2;
+      return { chart: { xMin: -2, xMax: 4, yMin: 0, yMax: Math.ceil(yMax / 5) * 5, axesAtZero: false, xStep: 1, yStep: Math.max(1, Math.ceil(yMax / 10)), polys: [sampleFn(f, -2, 4)], marks: [[0, a0], [1, a0 * b0], [2, a0 * b0 * b0]] }, prompt: `The graph of the exponential function f is shown, where y = f(x). Which equation defines f?`, correct: `f(x) = ${a0 === 1 ? "" : a0}(${b0})^x`, dist: [`f(x) = ${a0 * b0}(${b0})^x`, `f(x) = ${a0 === 1 ? "" : a0}(${b0 + 1})^x`, `f(x) = ${a0 * b0 - a0}x + ${a0}`], expl: `f(0) = ${a0}, so the initial value is ${a0}. Each time x increases by 1, y is multiplied by ${a0 * b0}/${a0} = ${b0}. So f(x) = ${a0}(${b0})^x.` }; }
+  }
+  if (skill === "Ratios, rates, data" && t >= 16) {
+    if (t === 16) { const m = pickOne(rng, [0.5, 1.5, 2, 2.5, 3]), b = ri(rng, 2, 12); const pts = Array.from({ length: 11 }, (_, i) => { const x = i + 1 + (rng() - 0.5) * 0.6; return [Math.round(x * 10) / 10, Math.round((m * x + b + (rng() - 0.5) * 4) * 10) / 10]; }); const k = 2 * ri(rng, 3, 7); const pred = m * k + b; const yM = Math.ceil((m * 13 + b + 4) / 5) * 5;
+      return { chart: { xMin: 0, xMax: 13, yMin: 0, yMax: yM, xStep: 1, yStep: yM > 30 ? 5 : 2, xLabelStep: 2, yLabelStep: yM > 30 ? 10 : 4, pts, polys: [sampleFn((x) => m * x + b, 0, 13, 2)], xLabel: "x", yLabel: "y" }, prompt: `The scatterplot shows the relationship between two variables, x and y. A line of best fit for the data is also shown. Based on the line of best fit, which of the following is closest to the predicted value of y when x = ${k}?`, correct: pred, dist: [pred + 2 * m + 2, Math.max(0, pred - 2 * m - 2), b], expl: `The line of best fit passes through (0, ${b}) and has slope ${m}, so y ≈ ${m}(${k}) + ${b} = ${pred}.` }; }
+    { const labs = ["Jan", "Feb", "Mar", "Apr", "May"]; let vals, tot, i0, g = 0; do { vals = labs.map(() => 5 * ri(rng, 4, 24)); tot = vals.reduce((a, b) => a + b, 0); i0 = ri(rng, 0, 4); g++; } while (((vals[i0] * 100) % tot !== 0) && g < 500);
+      const pct = Number(((vals[i0] * 100) / tot).toFixed(1));
+      return { chart: { type: "bar", labels: labs, values: vals, yStep: 20, yMax: Math.ceil((Math.max(...vals) + 10) / 20) * 20, xLabel: "Month", yLabel: "Number of tickets sold", title: "Tickets Sold" }, prompt: `The bar graph shows the number of tickets a theater sold in each of five months. The tickets sold in ${labs[i0]} are what percent of the total number of tickets sold in the five months shown?`, correct: pct, dist: [Math.round(pct / 2), Math.min(100, Math.round(pct * 1.5)), Math.round(vals[i0] / 5)], expl: `Total = ${vals.join(" + ")} = ${tot}. ${labs[i0]}: ${vals[i0]}/${tot} = ${pct}%.` }; }
+  }
   // ---- Qo'shimcha qiyin shablonlar (rasmiy 2-modul darajasi) ----
   if (skill === "Linear equations & systems" && t >= 13) {
     if (t === 13) { let V, lo, hi, x, c, g = 0; do { V = pickOne(rng, [6, 8, 10, 12, 15, 20]); lo = pickOne(rng, [5, 10, 15, 20]); hi = pickOne(rng, [30, 40, 50, 60]); x = ri(rng, 2, 30); c = (V * lo + x * hi) / (V + x); g++; } while ((!Number.isInteger(c) || c <= lo || c >= hi) && g < 200);
@@ -858,7 +881,7 @@ function buildModule(mod, testId, diffPath) {
   }
   return balanceAnswers(RW_BLUEPRINT.map(([domain, skill], i) => {
     const v = pickUnseenRW(skill, tiers[i]);
-    return { n: i + 1, domain, skill, type: "mc", difficulty: v.difficulty || TIER_NAME[tiers[i]], passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl };
+    return { n: i + 1, domain, skill, type: "mc", difficulty: v.difficulty || TIER_NAME[tiers[i]], passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl, ...(v.chart ? { chart: v.chart } : {}) };
   }));
 }
 // Bir xil harfdagi to'g'ri javob ketma-ket 3 martadan ko'p kelmasin (haqiqiy SAT'dagidek aralash)
@@ -2034,6 +2057,7 @@ function TestRunner({ test, onExit, onFinish }) {
           <button onClick={() => setStrikeMode((v) => !v)} title="Variantlarni chiqarib tashlash" style={{ marginLeft: "auto", marginRight: 6, height: 28, padding: "0 8px", borderRadius: 4, cursor: "pointer", fontFamily: BB.ui, fontSize: 13, fontWeight: 700, textDecoration: "line-through", border: `1.5px solid ${strikeMode ? BB.blue : BB.ink}`, background: strikeMode ? BB.blue : "#fff", color: strikeMode ? "#fff" : BB.ink }}>ABC</button>
         )}
       </div>
+      {q.chart && <QChart c={q.chart} />}
       <p style={{ fontSize: 16.5, fontFamily: BB.serif, lineHeight: 1.65, color: BB.ink, margin: "0 0 22px", whiteSpace: "pre-line" }}>{q.prompt}</p>
       {choiceList}
     </div>
@@ -2209,14 +2233,14 @@ const BANK_DOMAINS = [
 // College Board ko'nikmasi -> savol generatoridagi shablonlar
 const MATH_SKILL_TEMPLATES = {
   "Linear equations in one variable": ["Linear equations & systems", [0, 3, 7]],
-  "Linear functions": ["Linear equations & systems", [2, 9, 11, 12, 15]],
+  "Linear functions": ["Linear equations & systems", [2, 9, 11, 12, 15, 16]],
   "Linear inequalities in one or two variables": ["Linear equations & systems", [10]],
-  "Systems of two linear equations in two variables": ["Linear equations & systems", [1, 4, 5, 6, 8, 13, 14]],
+  "Systems of two linear equations in two variables": ["Linear equations & systems", [1, 4, 5, 6, 8, 13, 14, 17]],
   "Equivalent expressions": ["Nonlinear functions", [7, 12, 13, 17]],
   "Nonlinear equations in one variable and systems of equations in two variables": ["Nonlinear functions", [1, 6, 10, 11, 14]],
-  "Nonlinear functions": ["Nonlinear functions", [0, 2, 3, 4, 5, 8, 9, 15, 16, 18]],
-  "Ratios, rates, proportional relationships, and units": ["Ratios, rates, data", [0, 3, 6, 11]],
-  "Percentages": ["Ratios, rates, data", [1, 7, 8, 13]],
+  "Nonlinear functions": ["Nonlinear functions", [0, 2, 3, 4, 5, 8, 9, 15, 16, 18, 19, 20]],
+  "Ratios, rates, proportional relationships, and units": ["Ratios, rates, data", [0, 3, 6, 11, 16]],
+  "Percentages": ["Ratios, rates, data", [1, 7, 8, 13, 17]],
   "One-variable data: Distributions and measures of center and spread": ["Ratios, rates, data", [2, 5, 9, 14]],
   "Inference from sample statistics and margin of error": ["Ratios, rates, data", [10, 15]],
   "Probability and conditional probability": ["Ratios, rates, data", [4, 12]],
@@ -2235,7 +2259,7 @@ function genSkillQuestion(domain, skill, index) {
     return { domain: domain.d, skill, passage: null, ...g, difficulty: g.difficulty || difficulty };
   }
   const v = pickUnseenRW(skill);
-  return { domain: domain.d, skill, difficulty: v.difficulty || difficulty, type: "mc", passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl };
+  return { domain: domain.d, skill, difficulty: v.difficulty || difficulty, type: "mc", passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl, ...(v.chart ? { chart: v.chart } : {}) };
 }
 function genBankQuestion(domain, index) {
   const difficulty = diffForIndex(index, POOL_TOTAL);
@@ -2244,8 +2268,64 @@ function genBankQuestion(domain, index) {
   }
   const skill = domain.skills[Math.floor(Math.random() * domain.skills.length)];
   const v = pickUnseenRW(skill);
-  return { domain: domain.d, skill, difficulty: v.difficulty || difficulty, type: "mc", passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl };
+  return { domain: domain.d, skill, difficulty: v.difficulty || difficulty, type: "mc", passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl, ...(v.chart ? { chart: v.chart } : {}) };
 }
+// Savollardagi grafiklar (chiziqli grafik, scatterplot, parabola, ustunli diagramma) — SVG
+function QChart({ c }) {
+  if (!c) return null;
+  const W = 380, H = 270, L = 48, R = 14, T = 14, Bm = 40;
+  const pw = W - L - R, ph = H - T - Bm;
+  if (c.type === "bar") {
+    const series = c.series || [{ name: "", values: c.values }];
+    const maxV = c.yMax || Math.max(...series.flatMap((s) => s.values)) * 1.15;
+    const step = c.yStep || Math.max(1, Math.round(maxV / 5));
+    const n = c.labels.length, gw = pw / n, bw = Math.min(34, (gw * 0.7) / series.length);
+    const Y = (v) => T + ph - (v / maxV) * ph;
+    const cols = ["#3B5BDB", "#E8547C", "#1C9A5B"];
+    return (
+      <svg viewBox={`0 0 ${W} ${H + (series.length > 1 ? 18 : 0)}`} style={{ width: "100%", maxWidth: 440, display: "block", margin: "0 auto 16px", fontFamily: "Arial, sans-serif" }}>
+        {c.title && <text x={W / 2} y={11} textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#222">{c.title}</text>}
+        {Array.from({ length: Math.floor(maxV / step) + 1 }, (_, i) => i * step).map((v) => (
+          <g key={v}><line x1={L} x2={W - R} y1={Y(v)} y2={Y(v)} stroke="#E3E3E3" /><text x={L - 6} y={Y(v) + 4} fontSize="10" textAnchor="end" fill="#444">{v}</text></g>
+        ))}
+        <line x1={L} x2={L} y1={T} y2={T + ph} stroke="#333" /><line x1={L} x2={W - R} y1={T + ph} y2={T + ph} stroke="#333" />
+        {c.labels.map((lab, i) => (
+          <g key={lab}>
+            {series.map((s, k) => { const x = L + gw * i + (gw - bw * series.length) / 2 + k * bw; return <rect key={k} x={x} y={Y(s.values[i])} width={bw - 2} height={T + ph - Y(s.values[i])} fill={cols[k]} />; })}
+            <text x={L + gw * i + gw / 2} y={T + ph + 14} fontSize="10" textAnchor="middle" fill="#333">{lab}</text>
+          </g>
+        ))}
+        {c.xLabel && <text x={L + pw / 2} y={H - 6} fontSize="10.5" textAnchor="middle" fill="#222">{c.xLabel}</text>}
+        {c.yLabel && <text transform={`translate(12 ${T + ph / 2}) rotate(-90)`} fontSize="10.5" textAnchor="middle" fill="#222">{c.yLabel}</text>}
+        {series.length > 1 && series.map((s, k) => <g key={k}><rect x={L + k * 130} y={H + 4} width="10" height="10" fill={cols[k]} /><text x={L + 14 + k * 130} y={H + 13} fontSize="10.5" fill="#222">{s.name}</text></g>)}
+      </svg>
+    );
+  }
+  const { xMin, xMax, yMin, yMax } = c; const xs = c.xStep || 1, ys = c.yStep || 1;
+  const X = (x) => L + ((x - xMin) / (xMax - xMin)) * pw, Y = (y) => T + ph - ((y - yMin) / (yMax - yMin)) * ph;
+  const ticks = (a, b, s) => { const out = []; for (let v = Math.ceil(a / s) * s; v <= b + 1e-9; v += s) out.push(Math.round(v * 1000) / 1000); return out; };
+  const clip = "qc" + Math.round(Math.random() * 1e9);
+  const ax = yMin <= 0 && yMax >= 0 ? Y(0) : T + ph, ay = xMin <= 0 && xMax >= 0 ? X(0) : L;
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", maxWidth: 440, display: "block", margin: "0 auto 16px", fontFamily: "Arial, sans-serif" }}>
+      <defs><clipPath id={clip}><rect x={L} y={T} width={pw} height={ph} /></clipPath></defs>
+      {c.title && <text x={W / 2} y={11} textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#222">{c.title}</text>}
+      {ticks(xMin, xMax, xs).map((v) => <line key={"gx" + v} x1={X(v)} x2={X(v)} y1={T} y2={T + ph} stroke="#E6E6E6" />)}
+      {ticks(yMin, yMax, ys).map((v) => <line key={"gy" + v} x1={L} x2={W - R} y1={Y(v)} y2={Y(v)} stroke="#E6E6E6" />)}
+      <line x1={L} x2={W - R} y1={ax} y2={ax} stroke="#333" /><line x1={ay} x2={ay} y1={T} y2={T + ph} stroke="#333" />
+      {ticks(xMin, xMax, c.xLabelStep || xs).map((v) => <text key={"tx" + v} x={X(v)} y={Math.min(T + ph, ax) + 13} fontSize="9.5" textAnchor="middle" fill="#444">{v === 0 && c.axesAtZero ? "" : v}</text>)}
+      {ticks(yMin, yMax, c.yLabelStep || ys).map((v) => <text key={"ty" + v} x={Math.max(L, ay) - 5} y={Y(v) + 3.5} fontSize="9.5" textAnchor="end" fill="#444">{v === 0 && c.axesAtZero ? "O" : v}</text>)}
+      <g clipPath={`url(#${clip})`}>
+        {(c.polys || []).map((p, i) => <polyline key={i} points={p.map(([x, y]) => `${X(x)},${Y(y)}`).join(" ")} fill="none" stroke={i === 0 ? "#1F3FB8" : "#C2185B"} strokeWidth="2" />)}
+        {(c.pts || []).map(([x, y], i) => <circle key={i} cx={X(x)} cy={Y(y)} r="3.2" fill="#222" />)}
+      </g>
+      {(c.marks || []).map(([x, y], i) => <circle key={"m" + i} cx={X(x)} cy={Y(y)} r="3.6" fill="#fff" stroke="#1F3FB8" strokeWidth="2" />)}
+      {c.xLabel && <text x={L + pw / 2} y={H - 6} fontSize="10.5" textAnchor="middle" fill="#222">{c.xLabel}</text>}
+      {c.yLabel && <text transform={`translate(12 ${T + ph / 2}) rotate(-90)`} fontSize="10.5" textAnchor="middle" fill="#222">{c.yLabel}</text>}
+    </svg>
+  );
+}
+const sampleFn = (f, a, b, n = 120) => Array.from({ length: n + 1 }, (_, i) => { const x = a + ((b - a) * i) / n; return [x, f(x)]; });
 const PACE = { rw: 71, math: 95 }; // soniya/savol — haqiqiy SAT tezligi
 function PracticeSession({ selection, count, timed, onExit, onRecord }) {
   const perDomainRef = useRef({});
@@ -2303,6 +2383,7 @@ function PracticeSession({ selection, count, timed, onExit, onRecord }) {
             </summary>
             <div style={{ marginTop: 10, fontSize: 14.5, lineHeight: 1.6 }}>
               {x.q.passage && <div style={{ whiteSpace: "pre-line", color: B.muted, marginBottom: 8 }}>{x.q.passage}</div>}
+              {x.q.chart && <QChart c={x.q.chart} />}
               <div style={{ whiteSpace: "pre-line", marginBottom: 6 }}>{x.q.prompt}</div>
               <div>To'g'ri javob: <b>{x.q.type === "spr" ? x.q.answer : `${String.fromCharCode(65 + x.q.answer)}) ${x.q.choices[x.q.answer]}`}</b>{!x.ok && <span style={{ color: B.rose }}> · Sizning javobingiz: {x.q.type === "spr" ? String(x.picked) : String.fromCharCode(65 + x.picked)}</span>}</div>
               {x.q.expl && <div style={{ marginTop: 6, background: B.bg, borderRadius: 10, padding: "9px 12px" }}>{x.q.expl}</div>}
@@ -2336,6 +2417,7 @@ function PracticeSession({ selection, count, timed, onExit, onRecord }) {
           <span style={{ fontSize: 11.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.4, background: diffColor + "22", color: diffColor, padding: "4px 9px", borderRadius: 7 }}>{q.difficulty}</span>
         </div>
         {q.passage && <div style={{ fontSize: 16, lineHeight: 1.75, marginBottom: 18, whiteSpace: "pre-line", paddingBottom: 16, borderBottom: `1px solid ${B.bg}`, fontFamily: BB.serif }}>{q.passage}</div>}
+        {q.chart && <QChart c={q.chart} />}
         <p style={{ fontSize: 16.5, marginBottom: 18, lineHeight: 1.6, whiteSpace: "pre-line", fontWeight: 600 }}>{q.prompt}</p>
         {q.type === "spr" ? (
           <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
@@ -3331,6 +3413,7 @@ function SavedPage() {
         <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 24 }}>
           <div style={{ fontSize: 11.5, color: B.muted, marginBottom: 12, textTransform: "uppercase" }}>{active.domain} {active.skill ? `· ${active.skill}` : ""}</div>
           {active.passage && <div style={{ fontSize: 16, lineHeight: 1.7, marginBottom: 18, whiteSpace: "pre-line", paddingBottom: 16, borderBottom: `1px solid ${B.bg}` }}>{active.passage}</div>}
+          {active.chart && <QChart c={active.chart} />}
           <p style={{ fontSize: 16.5, marginBottom: 18, whiteSpace: "pre-line" }}>{active.prompt}</p>
           {active.choices ? active.choices.map((c, idx) => (
             <div key={idx} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, border: `1.5px solid ${idx === active.answer ? B.green : B.border}`, background: idx === active.answer ? "#E6F6EE" : "#fff", marginBottom: 9 }}>
@@ -3422,6 +3505,7 @@ function Drill({ mode, onExit }) {
               <span style={{ flex: 1 }}>{k + 1}. {qq.skill}</span>{L && <span style={{ fontSize: 13, color: B.muted }}>{L.sec}s</span>}
             </summary>
             <div style={{ marginTop: 8, fontSize: 14.5, lineHeight: 1.6 }}>
+              {qq.chart && <QChart c={qq.chart} />}
               <div style={{ whiteSpace: "pre-line", marginBottom: 6 }}>{qq.prompt}</div>
               <div>To'g'ri javob: <b>{qq.type === "spr" ? qq.answer : `${String.fromCharCode(65 + qq.answer)}) ${qq.choices[qq.answer]}`}</b></div>
               {qq.expl && <div style={{ marginTop: 6, background: B.bg, borderRadius: 10, padding: "8px 12px" }}>{qq.expl}</div>}
@@ -3457,6 +3541,7 @@ function Drill({ mode, onExit }) {
           <span style={{ fontSize: 14, fontWeight: 800, color: B.muted }}>{i + 1} / {questions.length}</span>
         </div>
         {q.passage && <div style={{ fontSize: 16, lineHeight: 1.75, marginBottom: 16, whiteSpace: "pre-line", fontFamily: BB.serif, color: "#232842" }}>{q.passage}</div>}
+        {q.chart && <QChart c={q.chart} />}
         <p style={{ fontSize: 17, marginBottom: 18, whiteSpace: "pre-line", fontWeight: 700, lineHeight: 1.5 }}>{q.prompt}</p>
         {q.choices ? q.choices.map((c, idx) => {
           const rev = picked !== null; const isC = rev && idx === q.answer; const isW = rev && idx === picked && !isC;

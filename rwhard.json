@@ -441,6 +441,90 @@
    ],
    "answer": 0,
    "expl": "Da'vo: har xil yosh guruhida eng keng tarqalgan manba har xil. Birinchi variant uch guruhdagi uch xil 'eng ko'p' manbani ko'rsatadi."
+  },
+  {
+   "chart": {
+    "type": "bar",
+    "title": "Municipal Responses to Firm's Inquiry",
+    "labels": [
+     "No response",
+     "Replied, no offer",
+     "Offered incentives"
+    ],
+    "series": [
+     {
+      "name": "Announcement before election",
+      "values": [
+       1080,
+       130,
+       90
+      ]
+     },
+     {
+      "name": "Announcement after election",
+      "values": [
+       1095,
+       120,
+       85
+      ]
+     }
+    ],
+    "yMax": 1200,
+    "yStep": 200,
+    "yLabel": "Number of municipalities"
+   },
+   "passage": "Political scientists hypothesized that local governments are far more likely to offer incentives to a company when the company's expansion would be announced shortly before an election, when officials could take credit for it. The researchers sent inquiries to about 1,300 municipalities in each of two conditions: the company said it would announce its expansion either just before or just after the next local election.",
+   "prompt": "Which choice best describes data from the graph that weaken the researchers' hypothesis?",
+   "choices": [
+    "The numbers of municipalities that offered incentives were nearly the same whether the announcement was planned for before or after the election.",
+    "Most municipalities in both conditions did not respond to the inquiry at all.",
+    "More municipalities replied without an offer when the announcement was planned for before the election than when it was planned for after.",
+    "Fewer than 100 municipalities offered incentives when the announcement was planned for after the election."
+   ],
+   "answer": 0,
+   "expl": "Gipotezaga ko'ra 'saylovdan oldin' shartida takliflar ancha ko'p bo'lishi kerak edi. Ikkala shartda deyarli bir xil (90 va 85) — bu gipotezani zaiflashtiradi. B variant to'g'ri ma'lumot, lekin gipotezaga aloqasi yo'q."
+  },
+  {
+   "chart": {
+    "type": "bar",
+    "title": "Average Nectar Volume per Flower (microliters)",
+    "labels": [
+     "Morning",
+     "Midday",
+     "Evening"
+    ],
+    "series": [
+     {
+      "name": "Shaded plants",
+      "values": [
+       2.4,
+       2.6,
+       2.5
+      ]
+     },
+     {
+      "name": "Sun-exposed plants",
+      "values": [
+       2.3,
+       1.1,
+       0.9
+      ]
+     }
+    ],
+    "yMax": 3,
+    "yStep": 0.5,
+    "yLabel": "Nectar (µL)"
+   },
+   "passage": "Botanist Leila Ahmadi suspected that heat, rather than visits from pollinators, is the main reason nectar in a desert wildflower declines over the course of a day. She covered some plants with shade cloth and left others exposed to the sun, preventing pollinators from reaching all of the flowers, and measured nectar volume at three times of day. Ahmadi concluded that her data supported her suspicion.",
+   "prompt": "Which choice best describes data from the graph that support Ahmadi's conclusion?",
+   "choices": [
+    "Even though pollinators could not reach any of the flowers, nectar volume in sun-exposed plants fell from 2.3 to 0.9 microliters over the day, while it stayed near 2.5 microliters in shaded plants.",
+    "In the morning, shaded plants and sun-exposed plants had similar nectar volumes.",
+    "Shaded plants had slightly more nectar at midday than they did in the morning.",
+    "Sun-exposed plants had less nectar in the evening than shaded plants did in the morning."
+   ],
+   "answer": 0,
+   "expl": "Changlatuvchilar hech bir gulga yeta olmagan, demak kamayish issiqlikdan. Faqat quyoshdagi o'simliklarda kamayish va soyadagilarda barqarorlik — xulosani to'liq qo'llab-quvvatlaydi."
   }
  ],
  "Inferences": [
