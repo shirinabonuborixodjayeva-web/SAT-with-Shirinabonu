@@ -48,6 +48,9 @@ async function generate(skill, n) {
   const pick = Array.from({ length: n }, () => topics[Math.floor(Math.random() * topics.length)]).join(", ");
   const prompt = "Write " + n + " ORIGINAL Digital SAT Reading and Writing questions for the skill \"" + skill + "\". Format: " + SKILLS[skill] +
     " Topics (one per question): " + pick + ". Exactly one choice must be clearly correct; distractors plausible. Vary which index is correct. " +
+    "Match the real College Board Digital SAT difficulty (Bluebook practice tests), and make at least half of the questions Hard. Hard questions use dense academic prose or literary excerpts ('The following text is adapted from a 1908 novel...'), " +
+    "and every wrong choice must be tempting: true but irrelevant to the question, too broad or too narrow in scope, overstated, reversing a relationship, or supported by only part of the text. " +
+    "The correct choice must NOT be the longest or the only nuanced one; avoid giveaway words like 'always', 'never', 'no effect' appearing only in wrong choices. " +
     "Return JSON: {\"questions\":[{\"passage\":\"...\",\"prompt\":\"...\",\"choices\":[\"...\",\"...\",\"...\",\"...\"],\"answer\":0,\"expl\":\"1-2 sentence explanation in Uzbek (Latin script)\",\"difficulty\":\"Easy|Medium|Hard\"}]}";
   const text = await llm(prompt);
   let parsed = null;
