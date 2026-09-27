@@ -20,7 +20,7 @@
   button:not(:disabled):hover { filter: brightness(1.06); }
   button:not(:disabled):active { transform: scale(0.96); }
   input, textarea { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
-  input:focus, textarea:focus { outline: none; border-color: #6B3FA0 !important; box-shadow: 0 0 0 3px rgba(107,63,160,0.12); }
+  input:focus, textarea:focus { outline: none; border-color: #00356B !important; box-shadow: 0 0 0 3px rgba(107,63,160,0.12); }
   @keyframes swsFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   .sws-fade-in { animation: swsFadeIn 0.35s ease both; }
   /* ===== Apple uslubidagi animatsiyalar ===== */
@@ -39,7 +39,7 @@
   @keyframes swsFloat { 0%,100% { transform: translate3d(0,0,0) rotate(0deg); } 50% { transform: translate3d(0,-12px,0) rotate(4deg); } }
   .sws-float { animation: swsFloat 4.5s ease-in-out infinite; }
   @keyframes swsShine { to { background-position: 200% center; } }
-  .sws-gradient-text { background: linear-gradient(90deg, #6B3FA0, #C2185B, #F5A623, #6B3FA0); background-size: 200% auto;
+  .sws-gradient-text { background: linear-gradient(90deg, #00356B, #1E5AA8, #F5A623, #00356B); background-size: 200% auto;
     -webkit-background-clip: text; background-clip: text; color: transparent; animation: swsShine 6s linear infinite; }
   @keyframes swsBlob { 0%,100% { transform: translate3d(0,0,0) scale(1); } 33% { transform: translate3d(40px,-30px,0) scale(1.12); } 66% { transform: translate3d(-30px,24px,0) scale(0.92); } }
   .sws-blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.45; pointer-events: none; animation: swsBlob 16s ease-in-out infinite; z-index: 0; }
@@ -153,11 +153,11 @@ const Trophy = (p) => <Icon glyph="trophy" {...p} />;
 const Users = (p) => <Icon glyph="users" {...p} />;
 
 const B = {
-  navy: "#16204D", plum: "#6B3FA0", rose: "#E8547C", gold: "#F5A623",
-  bg: "#F6F7FC", card: "#FFFFFF", border: "#E4E7F5",
-  text: "#16204D", muted: "#5B618C", green: "#1C9A5B",
+  navy: "#001F3F", plum: "#00356B", rose: "#E8547C", gold: "#F5A623",
+  bg: "#F6F7F9", card: "#FFFFFF", border: "#E2E8F0",
+  text: "#0F1729", muted: "#64748B", green: "#16A34A",
 };
-const FONT = "'Nunito Sans', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif";
+const FONT = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif";
 const BRAND_NAME = "SAT with Shirinabonu";
 
 function Mascot({ size = 96 }) {
@@ -1064,7 +1064,7 @@ function PhoneLivePreview({ isMobile }) {
         <div style={{ fontSize: 9.5, color: B.muted, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 10 }}>Advanced Math · Medium</div>
         <div style={{ fontSize: 11.5, lineHeight: 1.5, marginBottom: 14, color: B.text }}>Agar f(x) = x² − 6x + 5 bo'lsa, f ning eng kichik qiymati qanday x da bo'ladi?</div>
         {["1", "3", "5", "6"].map((c, i) => (
-          <div key={c} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 8, border: `1.5px solid ${i === 1 ? B.plum : B.border}`, background: i === 1 ? "#F2EAFB" : "#fff", marginBottom: 7 }}>
+          <div key={c} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 8, border: `1.5px solid ${i === 1 ? B.plum : B.border}`, background: i === 1 ? "#E8EFF8" : "#fff", marginBottom: 7 }}>
             <div style={{ width: 18, height: 18, borderRadius: "50%", border: `1.5px solid ${i === 1 ? B.plum : B.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: i === 1 ? B.plum : B.muted, flexShrink: 0 }}>{String.fromCharCode(65 + i)}</div>
             <span style={{ fontSize: 11.5 }}>{c}</span>
           </div>
@@ -1303,17 +1303,30 @@ function Landing({ onStart }) {
         <button onClick={onStart} style={{ background: "#fff", color: B.navy, border: "none", borderRadius: 20, padding: "4px 12px", fontWeight: 800, fontSize: 12.5, cursor: "pointer", fontFamily: FONT }}>Boshlash</button>
       </div>
       <header data-glass style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 32px", background: "rgba(255,255,255,0.72)", backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)", borderBottom: `1px solid ${B.border}`, position: "sticky", top: 0, zIndex: 20, transition: "box-shadow 0.4s ease" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}><Mascot size={34} /><span style={{ fontSize: 17, fontWeight: 800 }}>{BRAND_NAME}</span></div>
-        <button onClick={onStart} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 10, padding: "10px 20px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Bepul boshlash</button>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}><Mascot size={34} /><span style={{ fontSize: 17, fontWeight: 800, color: B.navy }}>{BRAND_NAME}</span></div>
+        {!isMobile && (
+          <nav style={{ display: "flex", gap: 4 }}>
+            {[["Sinov testi", "l-mocks"], ["Imkoniyatlar", "l-features"], ["Ball kalkulyatori", "l-calc"], ["Tariflar", "l-pricing"], ["FAQ", "l-faq"]].map(([l, id]) => (
+              <button key={id} onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })} style={{ background: "transparent", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: 500, color: B.muted, padding: "8px 12px", borderRadius: 8 }}>{l}</button>
+            ))}
+          </nav>
+        )}
+        <div style={{ display: "flex", gap: 8 }}>
+          {!isMobile && <button onClick={onStart} style={{ background: "#fff", color: B.muted, border: `1px solid ${B.border}`, borderRadius: 10, padding: "10px 18px", fontSize: 14, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>Kirish</button>}
+          <button onClick={onStart} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 10, padding: "10px 20px", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>Bepul boshlash</button>
+        </div>
       </header>
       <section style={{ position: "relative", maxWidth: 1060, margin: "0 auto", padding: "58px 32px 36px", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr 0.9fr", gap: 40, alignItems: "center" }}>
-        <div className="sws-blob" style={{ width: 340, height: 340, background: "#B28BE0", top: -60, left: -120 }} />
+        <div className="sws-blob" style={{ width: 340, height: 340, background: "#9DB9DD", top: -60, left: -120, opacity: 0.35 }} />
         <div className="sws-blob" style={{ width: 300, height: 300, background: "#F5A623", bottom: -80, right: -60, animationDelay: "-6s", opacity: 0.3 }} />
         <div style={{ position: "relative", zIndex: 1 }}>
-          <div className="sws-hero-up" style={{ "--d": "0ms", display: "inline-flex", alignItems: "center", gap: 6, background: "#F2EAFB", color: B.plum, padding: "6px 14px", borderRadius: 20, fontSize: 12.5, fontWeight: 700, marginBottom: 18 }}><Sparkles size={13} /> 3 kun Premium bepul — sinab ko'ring</div>
-          <h1 className="sws-hero-up" style={{ "--d": "120ms", fontSize: isMobile ? 30 : 48, lineHeight: 1.1, fontWeight: 800, margin: "0 0 16px", letterSpacing: -1 }}>SAT'ga <span className="sws-gradient-text">haqiqiy imtihon sharoitida</span> tayyorlaning</h1>
+          <div className="sws-hero-up" style={{ "--d": "0ms", display: "inline-flex", alignItems: "center", gap: 6, background: "#E8EFF8", color: B.plum, padding: "6px 14px", borderRadius: 20, fontSize: 12.5, fontWeight: 700, marginBottom: 18 }}><Sparkles size={13} /> 3 kun Premium bepul — sinab ko'ring</div>
+          <h1 className="sws-hero-up" style={{ "--d": "120ms", fontSize: isMobile ? 32 : 52, lineHeight: 1.08, fontWeight: 800, margin: "0 0 16px", letterSpacing: -1.2, color: B.navy }}>SAT'ga haqiqiy imtihon sharoitida tayyorlaning.</h1>
           <p className="sws-hero-up" style={{ "--d": "260ms",  fontSize: 16, color: B.muted, lineHeight: 1.6, margin: "0 0 26px", maxWidth: 470 }}>200 ta mock test, adaptiv ikkinchi modul va javoblaringizdan hisoblanadigan haqiqiy ball hisoboti.</p>
-          <button className="sws-hero-up" onClick={onStart} style={{ "--d": "400ms", background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "14px 26px", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, fontFamily: FONT }}>Bepul boshlash <ChevronRight size={17} /></button>
+          <div className="sws-hero-up" style={{ "--d": "400ms", display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <button onClick={onStart} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "14px 26px", fontSize: 15, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, fontFamily: FONT }}>Bepul boshlash <ChevronRight size={17} /></button>
+            <button onClick={() => document.getElementById("l-mocks")?.scrollIntoView({ behavior: "smooth" })} style={{ background: "#fff", color: B.navy, border: `1px solid ${B.border}`, borderRadius: 12, padding: "14px 22px", fontSize: 15, fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>Sinov testini ko'rish</button>
+          </div>
         </div>
         <div data-parallax="0.08" style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "center" }}>
           <div className="sws-tilt-in" style={{ position: "relative" }}>
@@ -1339,7 +1352,7 @@ function Landing({ onStart }) {
       </section>
       <section style={{ background: B.navy, color: "#fff", padding: 30 }}>
         <div style={{ maxWidth: 1060, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(4,1fr)", gap: 20, textAlign: "center" }}>
-          {[["200", "mock test"], ["500", "savol / domen (Premium)"], [`${VOCAB_CORE.length + VOCAB_EXTRA.length}`, "lug'at so'zi"], ["9", "o'quv vositasi"]].map(([n, l], i) => (
+          {[["200", "mock test"], ["500", "savol / domen (Premium)"], ["980+", "lug'at so'zi"], ["9", "o'quv vositasi"]].map(([n, l], i) => (
             <div key={l} data-reveal style={{ "--d": `${i * 90}ms` }}><div style={{ fontSize: 30, fontWeight: 800, letterSpacing: -0.5 }}><CountUp to={n} />{/\+/.test(n) ? "+" : ""}</div><div style={{ fontSize: 12.5, opacity: 0.75 }}>{l}</div></div>
           ))}
         </div>
@@ -1359,24 +1372,41 @@ function Landing({ onStart }) {
           </div>
         </div>
       </section>
-      <section style={{ maxWidth: 1060, margin: "0 auto", padding: "58px 32px" }}>
+      <section id="l-mocks" style={{ maxWidth: 1060, margin: "0 auto", padding: "56px 32px 8px" }}>
+        <div style={{ textAlign: "center", marginBottom: 26 }}>
+          <div style={{ fontSize: 12.5, fontWeight: 800, color: B.plum, letterSpacing: 1.2, marginBottom: 8 }}>BEPUL SINOV TESTI</div>
+          <h2 data-reveal style={{ fontSize: isMobile ? 24 : 32, fontWeight: 800, margin: "0 0 10px", color: B.navy, letterSpacing: -0.6 }}>Haqiqiy SAT formatidagi mockni bepul sinab ko'ring</h2>
+          <p style={{ fontSize: 15.5, color: B.muted, margin: 0 }}>Telegram orqali 10 soniyada kiring va birinchi 3 ta testni hoziroq boshlang.</p>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 14 }}>
+          {[1, 2, 3].map((n) => (
+            <div key={n} data-reveal style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 16, padding: 22, display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}><span style={{ fontSize: 12, fontWeight: 800, color: B.muted, letterSpacing: 1 }}>MOCK {n}</span><span style={{ fontSize: 11, fontWeight: 800, background: "#E7F6EC", color: B.green, padding: "3px 8px", borderRadius: 8 }}>BEPUL</span></div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: B.navy }}>Practice Test {n}</div>
+              <div style={{ fontSize: 14, color: B.muted }}>98 savol · 134 daqiqa · 4 modul</div>
+              <button onClick={onStart} style={{ marginTop: 4, background: B.plum, color: "#fff", border: "none", borderRadius: 10, padding: "11px", fontSize: 14.5, fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>Boshlash</button>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section id="l-features" style={{ maxWidth: 1060, margin: "0 auto", padding: "58px 32px" }}>
         <h2 data-reveal style={{ fontSize: 28, fontWeight: 800, textAlign: "center", margin: "0 0 36px" }}>Platformada nima bor</h2>
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 18 }}>
           {features.map((f, i) => (
             <div key={f.t} data-reveal className="sws-lift" style={{ "--d": `${(i % 3) * 110 + Math.floor(i / 3) * 60}ms`, background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, padding: 22 }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: "#F2EAFB", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}><f.icon size={19} color={B.plum} /></div>
+              <div style={{ width: 40, height: 40, borderRadius: 10, background: "#E8EFF8", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}><f.icon size={19} color={B.plum} /></div>
               <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>{f.t}</div>
               <div style={{ fontSize: 13.5, color: B.muted, lineHeight: 1.55 }}>{f.d}</div>
             </div>
           ))}
         </div>
       </section>
-      <section style={{ background: "#fff", borderTop: `1px solid ${B.border}`, borderBottom: `1px solid ${B.border}`, padding: "52px 32px" }}>
+      <section id="l-calc" style={{ background: "#fff", borderTop: `1px solid ${B.border}`, borderBottom: `1px solid ${B.border}`, padding: "52px 32px" }}>
         <h2 data-reveal style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 8px" }}>SAT ball kalkulyatori</h2>
         <p data-reveal style={{ "--d": "100ms", textAlign: "center", color: B.muted, fontSize: 13.5, margin: "0 0 26px" }}>Ro'yxatdan o'tmasdan sinab ko'ring</p>
         <div data-reveal="zoom"><ScoreCalculator /></div>
       </section>
-      <section style={{ maxWidth: 1060, margin: "0 auto", padding: "20px 32px 58px" }}>
+      <section id="l-pricing" style={{ maxWidth: 1060, margin: "0 auto", padding: "20px 32px 58px" }}>
         <h2 data-reveal style={{ fontSize: 26, fontWeight: 800, textAlign: "center", margin: "0 0 30px" }}>Tarif rejalari</h2>
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 18, maxWidth: 820, margin: "0 auto" }}>
           <div data-reveal className="sws-lift" style={{ "--d": "0ms", background: "#fff", border: `1px solid ${B.border}`, borderRadius: 22, padding: 28 }}>
@@ -1413,7 +1443,7 @@ function Landing({ onStart }) {
             ["Nodira", "Grammatika bo'limida boundaries mavzusi hali qiyin, kimda maslahat bor?"],
           ].map(([n, t], i) => (
             <div key={n} data-reveal={i % 2 ? "right" : "left"} style={{ "--d": `${250 + i * 180}ms`, display: "flex", gap: 10, marginBottom: 14, alignItems: "flex-start" }}>
-              <div style={{ width: 30, height: 30, borderRadius: "50%", background: "#F2EAFB", color: B.plum, fontSize: 12.5, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{n[0]}</div>
+              <div style={{ width: 30, height: 30, borderRadius: "50%", background: "#E8EFF8", color: B.plum, fontSize: 12.5, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{n[0]}</div>
               <div>
                 <div style={{ fontSize: 12.5, fontWeight: 700, marginBottom: 2 }}>{n}</div>
                 <div style={{ fontSize: 13, color: B.text }}>{t}</div>
@@ -1435,7 +1465,7 @@ function Landing({ onStart }) {
         </div>
       </section>
 
-      <section style={{ background: "#fff", borderTop: `1px solid ${B.border}`, padding: "52px 32px" }}>
+      <section id="l-faq" style={{ background: "#fff", borderTop: `1px solid ${B.border}`, padding: "52px 32px" }}>
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
           <h2 data-reveal style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: "0 0 26px" }}>Ko'p so'raladigan savollar</h2>
           {faqs.map((f, i) => (
@@ -1486,7 +1516,7 @@ function PremiumModal({ reason, onClose }) {
     <div className="sws-app" onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(22,32,77,0.42)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, fontFamily: FONT, padding: 16 }}>
       <div className="sws-fade-in" onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 28, boxShadow: "0 40px 80px -30px rgba(22,32,77,0.5)", width: 460, maxWidth: "100%", overflow: "hidden", position: "relative" }}>
         <button onClick={onClose} style={{ position: "absolute", top: 14, right: 14, background: "rgba(255,255,255,0.2)", border: "none", borderRadius: 20, width: 32, height: 32, cursor: "pointer", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}><X size={17} /></button>
-        <div style={{ background: `linear-gradient(135deg, ${B.plum}, #C2185B)`, color: "#fff", padding: "28px 28px 24px" }}>
+        <div style={{ background: `linear-gradient(135deg, ${B.plum}, #1E5AA8)`, color: "#fff", padding: "28px 28px 24px" }}>
           <div style={{ fontSize: 13, fontWeight: 800, opacity: 0.85, letterSpacing: 0.5 }}>💎 PREMIUM</div>
           <div style={{ fontSize: 24, fontWeight: 900, margin: "6px 0 4px" }}>{me && me.premium ? (me.trial ? "Bepul sinov Premium faol" : "Premium faol") : reason === "analysis" ? "To'liq tahlil — Premium'da" : reason ? "Bugungi limit tugadi" : "Cheklovsiz tayyorlaning"}</div>
           <div style={{ fontSize: 15, opacity: 0.9, lineHeight: 1.5 }}>
@@ -1619,7 +1649,7 @@ function CalcPanel({ onClose }) {
         .replace(/sqrt\(/g, "Math.sqrt(").replace(/ln\(/g, "Math.log(");
       compiled = Function("x", `"use strict"; return (${clean});`);
     } catch (e) { return; }
-    ctx.strokeStyle = "#6B3FA0"; ctx.lineWidth = 2; ctx.beginPath();
+    ctx.strokeStyle = "#00356B"; ctx.lineWidth = 2; ctx.beginPath();
     let first = true;
     for (let px = 0; px <= w; px++) {
       const x = (px - w / 2) / scale;
@@ -1962,7 +1992,7 @@ function TestRunner({ test, onExit, onFinish }) {
       {stage.type === "module" && (
         <div style={{ background: "#fff", display: "flex", justifyContent: "center", gap: 4, padding: "8px 12px 6px", flexWrap: "wrap" }}>
           {questions.map((qq, i) => { const r = responses[`${mod.id}-${i}`]; const done = r !== undefined && r !== null && String(r).trim() !== ""; const cur = i === qIndex; const mk = marked[`${mod.id}-${i}`];
-            return <button key={i} onClick={() => setQIndex(i)} title={`Savol ${i + 1}`} style={{ width: cur ? 18 : 9, height: 9, borderRadius: 9, border: mk ? "1.5px solid #C2185B" : "none", padding: 0, cursor: "pointer", background: cur ? BB.blue : done ? "#6B7CC9" : "#D5D8E2", transition: "width .2s" }} />; })}
+            return <button key={i} onClick={() => setQIndex(i)} title={`Savol ${i + 1}`} style={{ width: cur ? 18 : 9, height: 9, borderRadius: 9, border: mk ? "1.5px solid #1E5AA8" : "none", padding: 0, cursor: "pointer", background: cur ? BB.blue : done ? "#6B7CC9" : "#D5D8E2", transition: "width .2s" }} />; })}
         </div>
       )}
       <div style={bbDash} />
@@ -2228,13 +2258,13 @@ function MockTests({ tier, history, onOpenTest, onNeedPay }) {
       <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", border: `1px solid ${B.border}`, borderRadius: 12, padding: "9px 13px", marginBottom: 18, maxWidth: 300 }}>
         <Search size={15} color={B.muted} /><input value={query} onChange={(e) => { setQuery(e.target.value); setPage(0); }} placeholder="Test raqamini qidiring" style={{ border: "none", outline: "none", fontSize: 15, fontFamily: FONT, flex: 1 }} />
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))", gap: 14 }}>
         {slice.map((t) => {
           const locked = !unlocked(tier, t.tier); const completed = done.has(t.id);
           return (
             <div key={t.id} onClick={() => (locked ? onNeedPay(t.tier) : onOpenTest(t))} style={{ background: "#fff", border: `1px solid ${completed ? B.green + "55" : B.border}`, borderRadius: 16, padding: 14, cursor: "pointer", opacity: locked ? 0.7 : 1 }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                <div style={{ width: 30, height: 30, borderRadius: 8, background: locked ? "#F0F1F6" : "#F2EAFB", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ width: 30, height: 30, borderRadius: 8, background: locked ? "#F0F1F6" : "#E8EFF8", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {locked ? <Lock size={14} color={B.muted} /> : completed ? <Check size={15} color={B.green} /> : <FileText size={15} color={B.plum} />}
                 </div>
                 {t.tier === "free" && <span style={{ fontSize: 10.5, fontWeight: 800, padding: "3px 7px", borderRadius: 8, background: "#E6F6EE", color: B.green, height: 16 }}>BEPUL</span>}
@@ -2243,6 +2273,7 @@ function MockTests({ tier, history, onOpenTest, onNeedPay }) {
               <div style={{ fontSize: 15, fontWeight: 700 }}>Test {t.id}</div>
               <div style={{ fontSize: 12.5, color: B.muted }}>{t.difficulty} · 98 savol · 134 daq</div>
               {completed && (() => { const h = [...history].reverse().find((x) => x.testId === t.id); return h ? <div style={{ fontSize: 12.5, fontWeight: 800, color: B.green, marginTop: 3 }}>Natija: {h.total}</div> : null; })()}
+              <div style={{ marginTop: 10, textAlign: "center", borderRadius: 9, padding: "8px", fontSize: 13.5, fontWeight: 600, background: locked ? B.bg : B.plum, color: locked ? B.muted : "#fff" }}>{locked ? "Premium" : completed ? "Qayta yechish" : "Boshlash"}</div>
             </div>
           );
         })}
@@ -2389,7 +2420,7 @@ function QChart({ c }) {
       {ticks(xMin, xMax, c.xLabelStep || xs).map((v) => <text key={"tx" + v} x={X(v)} y={Math.min(T + ph, ax) + 13} fontSize="9.5" textAnchor="middle" fill="#444">{v === 0 && c.axesAtZero ? "" : v}</text>)}
       {ticks(yMin, yMax, c.yLabelStep || ys).map((v) => <text key={"ty" + v} x={Math.max(L, ay) - 5} y={Y(v) + 3.5} fontSize="9.5" textAnchor="end" fill="#444">{v === 0 && c.axesAtZero ? "O" : v}</text>)}
       <g clipPath={`url(#${clip})`}>
-        {(c.polys || []).map((p, i) => <polyline key={i} points={p.map(([x, y]) => `${X(x)},${Y(y)}`).join(" ")} fill="none" stroke={i === 0 ? "#1F3FB8" : "#C2185B"} strokeWidth="2" />)}
+        {(c.polys || []).map((p, i) => <polyline key={i} points={p.map(([x, y]) => `${X(x)},${Y(y)}`).join(" ")} fill="none" stroke={i === 0 ? "#1F3FB8" : "#1E5AA8"} strokeWidth="2" />)}
         {(c.pts || []).map(([x, y], i) => <circle key={i} cx={X(x)} cy={Y(y)} r="3.2" fill="#222" />)}
       </g>
       {(c.marks || []).map(([x, y], i) => <circle key={"m" + i} cx={X(x)} cy={Y(y)} r="3.6" fill="#fff" stroke="#1F3FB8" strokeWidth="2" />)}
@@ -2844,7 +2875,7 @@ function Vocabulary() {
         {VOCAB_SETS.map(([id, label]) => {
           const cnt = !all ? "" : id === "review" ? review.length : all.filter((w) => w[4] === id).length;
           return (
-            <button key={id} onClick={() => setFolder(id)} style={{ display: "flex", alignItems: "center", gap: 7, padding: "10px 16px", borderRadius: 12, border: `1px solid ${folder === id ? B.plum : B.border}`, background: folder === id ? "#F2EAFB" : "#fff", color: folder === id ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 15, fontWeight: 700 }}>
+            <button key={id} onClick={() => setFolder(id)} style={{ display: "flex", alignItems: "center", gap: 7, padding: "10px 16px", borderRadius: 12, border: `1px solid ${folder === id ? B.plum : B.border}`, background: folder === id ? "#E8EFF8" : "#fff", color: folder === id ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 15, fontWeight: 700 }}>
               {id === "review" ? "🔁" : <Folder size={15} />} {label} <span style={{ opacity: 0.6 }}>{cnt}</span>
             </button>
           );
@@ -3030,7 +3061,7 @@ function DashHome({ onGo, history, onGoTests, todaySeconds, goalMinutes, streak,
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12, marginBottom: 16 }}>
         {(() => { const dr = loadLocal("sws_daily_" + todayStr(), null); return (
-          <div onClick={() => onGo && onGo("daily")} style={{ cursor: "pointer", borderRadius: 18, padding: "16px 18px", color: "#fff", background: "linear-gradient(135deg, #6B3FA0, #C2185B)" }}>
+          <div onClick={() => onGo && onGo("daily")} style={{ cursor: "pointer", borderRadius: 18, padding: "16px 18px", color: "#fff", background: "linear-gradient(135deg, #00356B, #1E5AA8)" }}>
             <div style={{ fontSize: 12.5, fontWeight: 800, opacity: 0.85, letterSpacing: 0.5 }}>KUNLIK TEST</div>
             <div style={{ fontSize: 19, fontWeight: 900, margin: "4px 0" }}>{dr ? `Bugun: ${dr.score}/${dr.total} ✓` : "Bugungi 10 ta savol tayyor"}</div>
             <div style={{ fontSize: 13.5, opacity: 0.9 }}>{dr ? "Ertaga yangi savollar chiqadi" : "5 ta R&W + 5 ta Math · ~12 daqiqa →"}</div>
@@ -3173,7 +3204,7 @@ function Profile({ name, setName, goalMinutes, setGoalMinutes, streak, todaySeco
       <p style={{ fontSize: 15.5, color: B.muted, margin: "6px 0 18px" }}>Akkaunt, maqsad va statistikangiz.</p>
 
       <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 20, marginBottom: 18, display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-        <div style={{ width: 56, height: 56, borderRadius: "50%", background: `linear-gradient(135deg, ${B.plum}, #C2185B)`, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, fontWeight: 900, flexShrink: 0 }}>{(name || tgName || "?")[0].toUpperCase()}</div>
+        <div style={{ width: 56, height: 56, borderRadius: "50%", background: `linear-gradient(135deg, ${B.plum}, #1E5AA8)`, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, fontWeight: 900, flexShrink: 0 }}>{(name || tgName || "?")[0].toUpperCase()}</div>
         <div style={{ flex: 1, minWidth: 180 }}>
           <div style={{ fontSize: 18, fontWeight: 900 }}>{name || tgName || "O'quvchi"}</div>
           <div style={{ fontSize: 14, color: B.muted }}>Telegram: {tgName}{username ? ` · @${username}` : ""}{sws.uid ? ` · ID ${sws.uid}` : ""}</div>
@@ -3250,7 +3281,7 @@ function Profile({ name, setName, goalMinutes, setGoalMinutes, streak, todaySeco
         <label style={{ fontSize: 14, color: B.muted, display: "block", marginBottom: 8 }}>Kuniga necha daqiqa dars qilishni xohlaysiz?</label>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {[15, 30, 45, 60, 90, 120].map((m) => (
-            <button key={m} onClick={() => setGoalMinutes(m)} style={{ padding: "8px 16px", borderRadius: 12, border: `1px solid ${goalMinutes === m ? B.plum : B.border}`, background: goalMinutes === m ? "#F2EAFB" : "#fff", color: goalMinutes === m ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: 700 }}>{m} daq</button>
+            <button key={m} onClick={() => setGoalMinutes(m)} style={{ padding: "8px 16px", borderRadius: 12, border: `1px solid ${goalMinutes === m ? B.plum : B.border}`, background: goalMinutes === m ? "#E8EFF8" : "#fff", color: goalMinutes === m ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: 700 }}>{m} daq</button>
           ))}
         </div>
       </div>
@@ -3303,7 +3334,7 @@ function AdminPanel() {
     if (filter === "free") return !u.premium;
     return true;
   });
-  const badge = (u) => u.premium ? (u.paid ? ["💎 Premium", "#FFF4DE", "#9A6200"] : ["🎁 Sinov", "#F2EAFB", B.plum]) : ["Bepul", B.bg, B.muted];
+  const badge = (u) => u.premium ? (u.paid ? ["💎 Premium", "#FFF4DE", "#9A6200"] : ["🎁 Sinov", "#E8EFF8", B.plum]) : ["Bepul", B.bg, B.muted];
   const Card = ({ label, value, color }) => (
     <div style={{ background: "#fff", borderRadius: 16, padding: "14px 16px", boxShadow: "0 1px 0 rgba(22,32,77,0.05), 0 8px 24px -18px rgba(22,32,77,0.35)" }}>
       <div style={{ fontSize: 13, color: B.muted, fontWeight: 700 }}>{label}</div>
@@ -3345,7 +3376,7 @@ function AdminPanel() {
           return (
             <div key={u.id} style={{ background: "#fff", borderRadius: 16, boxShadow: "0 1px 0 rgba(22,32,77,0.05)", overflow: "hidden" }}>
               <div onClick={() => setOpen(isOpen ? null : u.id)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", cursor: "pointer" }}>
-                <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", background: "#F2EAFB", color: B.plum, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 16, flexShrink: 0 }}>
+                <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", background: "#E8EFF8", color: B.plum, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 16, flexShrink: 0 }}>
                   {String(title)[0].toUpperCase()}
                   {u.online && <span style={{ position: "absolute", right: 0, bottom: 0, width: 11, height: 11, borderRadius: "50%", background: B.green, border: "2px solid #fff" }} />}
                 </div>
@@ -3371,8 +3402,8 @@ function AdminPanel() {
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     <button disabled={busy} onClick={() => act({ grant: { uid: u.id, days: 30 } }, "Premium +1 oy berildi")} style={{ ...btn, background: B.gold, color: B.navy }}>💎 +1 oy</button>
                     <button disabled={busy} onClick={() => act({ grant: { uid: u.id, days: 90 } }, "Premium +3 oy berildi")} style={{ ...btn, background: "#FFF4DE", color: "#9A6200" }}>+3 oy</button>
-                    <button disabled={busy} onClick={() => act({ grant: { uid: u.id, days: 7 } }, "+7 kun berildi")} style={{ ...btn, background: "#F2EAFB", color: B.plum }}>+7 kun</button>
-                    {u.premium && <button disabled={busy} onClick={() => { if (window.confirm(title + " — Premium o'chirilsinmi?")) act({ revoke: u.id }, "Premium o'chirildi"); }} style={{ ...btn, background: "#FDECEF", color: "#C2185B" }}>Premiumni o'chirish</button>}
+                    <button disabled={busy} onClick={() => act({ grant: { uid: u.id, days: 7 } }, "+7 kun berildi")} style={{ ...btn, background: "#E8EFF8", color: B.plum }}>+7 kun</button>
+                    {u.premium && <button disabled={busy} onClick={() => { if (window.confirm(title + " — Premium o'chirilsinmi?")) act({ revoke: u.id }, "Premium o'chirildi"); }} style={{ ...btn, background: "#FDECEF", color: "#1E5AA8" }}>Premiumni o'chirish</button>}
                     {u.username && <a href={"https://t.me/" + u.username} target="_blank" rel="noreferrer" style={{ ...btn, background: B.bg, color: B.text, textDecoration: "none" }}>Telegramda yozish</a>}
                   </div>
                 </div>
@@ -3420,7 +3451,7 @@ function Community({ name }) {
   const leaders = [...members].filter((m) => m.minutesToday > 0).sort((x, y) => y.minutesToday - x.minutesToday).slice(0, 10);
   const me = data && data.me;
   const Avatar = ({ n, on }) => (
-    <div style={{ position: "relative", width: 38, height: 38, borderRadius: "50%", background: "#F2EAFB", color: B.plum, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 15, flexShrink: 0 }}>
+    <div style={{ position: "relative", width: 38, height: 38, borderRadius: "50%", background: "#E8EFF8", color: B.plum, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 15, flexShrink: 0 }}>
       {(n || "?")[0].toUpperCase()}
       {on && <span style={{ position: "absolute", right: 0, bottom: 0, width: 11, height: 11, borderRadius: "50%", background: B.green, border: "2px solid #fff" }} />}
     </div>
@@ -3566,7 +3597,7 @@ function SavedPage() {
    DRILLS — short timed mini-practice (5 questions / 5 minutes)
 ============================================================ */
 const DRILL_MODES = [
-  { id: "mix", title: "Aralash drill", sub: "R&W + Math", emoji: "⚡", grad: ["#6B3FA0", "#C2185B"] },
+  { id: "mix", title: "Aralash drill", sub: "R&W + Math", emoji: "⚡", grad: ["#00356B", "#1E5AA8"] },
   { id: "rw", title: "Reading & Writing", sub: "Grammatika, lug'at, matn", emoji: "📖", grad: ["#2B5BD7", "#6B8CFF"] },
   { id: "math", title: "Math", sub: "Algebra, funksiyalar, geometriya", emoji: "📐", grad: ["#0E9F6E", "#36C28E"] },
 ];
@@ -3769,7 +3800,7 @@ function DailyTest() {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, marginBottom: 6 }}>
         <h1 style={{ fontSize: 24, fontWeight: 800, margin: 0 }}>Kunlik test</h1>
-        <span style={{ fontSize: 14, fontWeight: 800, color: B.plum, background: "#F2EAFB", padding: "6px 12px", borderRadius: 20 }}>{i + 1} / {qs.length} · 🔥 {streak.n}</span>
+        <span style={{ fontSize: 14, fontWeight: 800, color: B.plum, background: "#E8EFF8", padding: "6px 12px", borderRadius: 20 }}>{i + 1} / {qs.length} · 🔥 {streak.n}</span>
       </div>
       <p style={{ fontSize: 15, color: B.muted, margin: "0 0 14px" }}>Har kuni hamma uchun bir xil 10 ta savol: 5 ta Reading & Writing, 5 ta Math — osondan qiyinga.</p>
       <div style={{ height: 6, background: B.border, borderRadius: 6, marginBottom: 16 }}><div style={{ height: 6, width: `${(i / qs.length) * 100}%`, background: `linear-gradient(90deg, ${B.plum}, ${B.rose})`, borderRadius: 6, transition: "width .3s" }} /></div>
@@ -3829,7 +3860,7 @@ function StudyPlan({ history, targetScore, examDate, onGo }) {
       <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 18, marginBottom: 16 }}>
         <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 10 }}>Bu haftalik reja</div>
         {days.map(([d, task, pg], k) => (
-          <div key={d} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 8px", borderRadius: 12, background: k === todayIdx ? "#F2EAFB" : "transparent", borderBottom: `1px solid ${B.bg}` }}>
+          <div key={d} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 8px", borderRadius: 12, background: k === todayIdx ? "#E8EFF8" : "transparent", borderBottom: `1px solid ${B.bg}` }}>
             <button onClick={() => toggle(k)} style={{ width: 24, height: 24, borderRadius: 7, border: `2px solid ${done[k] ? B.green : B.border}`, background: done[k] ? B.green : "#fff", color: "#fff", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: 0 }}>{done[k] && <Check size={14} color="#fff" />}</button>
             <div style={{ width: 92, fontSize: 14, fontWeight: 800, color: k === todayIdx ? B.plum : B.text }}>{d}{k === todayIdx ? " · bugun" : ""}</div>
             <div style={{ flex: 1, fontSize: 14.5, textDecoration: done[k] ? "line-through" : "none", color: done[k] ? B.muted : B.text }}>{task}</div>
@@ -3986,6 +4017,12 @@ function AppShell({ onHome }) {
     { id: "community", label: "Jamiyat", icon: MessageCircle }, { id: "profile", label: "Profil", icon: User },
     ...(sws.me && sws.me.isAdmin ? [{ id: "admin", label: "Admin: foydalanuvchilar", icon: Users }] : []),
   ];
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [vw, setVw] = useState(() => window.innerWidth);
+  useEffect(() => { const f = () => setVw(window.innerWidth); window.addEventListener("resize", f); return () => window.removeEventListener("resize", f); }, []);
+  const primaryIds = vw >= 1500 ? ["home", "tests", "daily", "bank", "vocab", "plan", "analytics"] : vw >= 1280 ? ["home", "tests", "daily", "bank", "vocab"] : vw >= 1060 ? ["home", "tests", "daily", "bank"] : ["home", "tests", "daily"];
+  const navPrimary = primaryIds.map((id) => nav.find((n) => n.id === id)).filter(Boolean);
+  const navMore = nav.filter((n) => !primaryIds.includes(n.id));
   const finishTest = (responses, diffPath, mode) => {
     const r = gradeTest(activeTest.id, responses, diffPath, mode);
     const entry = { ...r, testId: activeTest.id, testName: activeTest.name };
@@ -4001,14 +4038,13 @@ function AppShell({ onHome }) {
   return (
     <div className="sws-app" style={{ display: "flex", minHeight: "100vh", fontFamily: FONT, background: B.bg, color: B.text }}>
       {isMobile && navOpen && <div onClick={() => setNavOpen(false)} style={{ position: "fixed", inset: 0, background: "rgba(22,32,77,0.35)", zIndex: 190 }} />}
-      <aside style={isMobile
-        ? { position: "fixed", top: 0, left: 0, bottom: 0, width: 270, maxWidth: "84vw", zIndex: 200, overflowY: "auto", background: "#fff", boxShadow: "0 0 40px rgba(22,32,77,0.25)", padding: "20px 14px 110px", transform: navOpen ? "none" : "translateX(-105%)", transition: "transform .3s cubic-bezier(.22,1,.36,1)" }
-        : { width: 248, background: "rgba(255,255,255,0.78)", backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)", boxShadow: "1px 0 0 rgba(22,32,77,0.05)", padding: "20px 14px", flexShrink: 0, display: navOpen ? "block" : "none", position: "sticky", top: 0, height: "100vh", overflowY: "auto", boxSizing: "border-box" }}>
+      {isMobile && (
+      <aside style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: 270, maxWidth: "84vw", zIndex: 200, overflowY: "auto", background: "#fff", boxShadow: "0 0 40px rgba(22,32,77,0.25)", padding: "20px 14px 110px", transform: navOpen ? "none" : "translateX(-105%)", transition: "transform .3s cubic-bezier(.22,1,.36,1)" }}>
         <button onClick={onHome} style={{ display: "flex", alignItems: "center", gap: 9, background: "transparent", border: "none", cursor: "pointer", marginBottom: 24, padding: "0 6px" }}>
           <Mascot size={30} /><span style={{ fontSize: 16, fontWeight: 800, color: B.text, fontFamily: FONT, textAlign: "left", lineHeight: 1.2 }}>SAT with<br />Shirinabonu</span>
         </button>
         {nav.map((n) => (
-          <button key={n.id} onClick={() => setPage(n.id)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", marginBottom: 3, borderRadius: 12, border: "none", cursor: "pointer", fontSize: 15.5, fontWeight: page === n.id ? 700 : 600, fontFamily: FONT, background: page === n.id ? "#F2EAFB" : "transparent", color: page === n.id ? B.plum : B.muted, textAlign: "left" }}><n.icon size={17} /> {n.label}</button>
+          <button key={n.id} onClick={() => setPage(n.id)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", marginBottom: 3, borderRadius: 12, border: "none", cursor: "pointer", fontSize: 15.5, fontWeight: page === n.id ? 700 : 600, fontFamily: FONT, background: page === n.id ? "#E8EFF8" : "transparent", color: page === n.id ? B.plum : B.muted, textAlign: "left" }}><n.icon size={17} /> {n.label}</button>
         ))}
         <div style={{ marginTop: 22, background: B.navy, borderRadius: 16, padding: 16, color: "#fff" }}>
           <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 5 }}>{tier === "premium" ? (sws.me && sws.me.trial ? "🎁 Sinov Premium" : "💎 Premium") : "Tarif: Bepul"}</div>
@@ -4024,7 +4060,51 @@ function AppShell({ onHome }) {
           )}
         </div>
       </aside>
+      )}
       <main style={{ flex: 1, overflowY: "auto", minWidth: 280 }}>
+        {!isMobile ? (
+          <header style={{ background: "#fff", borderBottom: `1px solid ${B.border}`, position: "sticky", top: 0, zIndex: 40 }}>
+            <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 28px", height: 66, display: "flex", alignItems: "center", gap: 22 }}>
+              <button onClick={() => setPage("home")} style={{ display: "flex", alignItems: "center", gap: 9, background: "transparent", border: "none", cursor: "pointer", padding: 0, flexShrink: 0 }}>
+                <Mascot size={30} /><span style={{ fontSize: 17, fontWeight: 800, color: B.navy, fontFamily: FONT, letterSpacing: -0.3, whiteSpace: "nowrap" }}>SAT with Shirinabonu</span>
+              </button>
+              <nav style={{ display: "flex", alignItems: "center", gap: 2, flex: 1, minWidth: 0 }}>
+                {navPrimary.map((n) => (
+                  <button key={n.id} onClick={() => { setPage(n.id); setMoreOpen(false); }} style={{ position: "relative", background: "transparent", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: page === n.id ? 700 : 500, color: page === n.id ? B.plum : B.muted, padding: "22px 11px", whiteSpace: "nowrap" }}>
+                    {n.label}
+                    {page === n.id && <span style={{ position: "absolute", left: 11, right: 11, bottom: 0, height: 3, borderRadius: 3, background: B.plum }} />}
+                  </button>
+                ))}
+                <div style={{ position: "relative" }}>
+                  <button onClick={() => setMoreOpen((v) => !v)} style={{ background: navMore.some((n) => n.id === page) ? "#E8EFF8" : "transparent", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: 600, color: navMore.some((n) => n.id === page) ? B.plum : B.muted, padding: "8px 12px", borderRadius: 10, display: "flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}>
+                    {navMore.find((n) => n.id === page)?.label || "Yana"} <ChevronDown size={15} />
+                  </button>
+                  {moreOpen && (
+                    <>
+                      <div onClick={() => setMoreOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 41 }} />
+                      <div className="sws-fade-in" style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, zIndex: 42, background: "#fff", border: `1px solid ${B.border}`, borderRadius: 14, boxShadow: "0 20px 40px -18px rgba(15,23,41,0.35)", padding: 8, width: 270 }}>
+                        {navMore.map((n) => (
+                          <button key={n.id} onClick={() => { setPage(n.id); setMoreOpen(false); }} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, border: "none", cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: page === n.id ? 700 : 500, background: page === n.id ? "#E8EFF8" : "transparent", color: page === n.id ? B.plum : B.text, textAlign: "left" }}><n.icon size={16} /> {n.label}</button>
+                        ))}
+                        <div style={{ margin: "8px 4px 2px", background: B.bg, borderRadius: 10, padding: "10px 12px", fontSize: 13, color: B.muted }}>
+                          <b style={{ color: B.text }}>{tier === "premium" ? (sws.me && sws.me.trial ? "Sinov Premium" : "Premium") : "Tarif: Bepul"}</b>
+                          {tier === "premium" ? <div>{sws.me && sws.me.premiumUntil ? new Date(sws.me.premiumUntil).toLocaleDateString("uz-UZ") + " gacha · hammasi cheksiz" : ""}</div>
+                            : Object.entries(LIMIT_NAMES).map(([k, l]) => <div key={k} style={{ display: "flex", justifyContent: "space-between" }}><span>{l[0].toUpperCase() + l.slice(1)}</span><b>{Math.max(0, freeDaily()[k] - usageOf(k))}/{freeDaily()[k]}</b></div>)}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </nav>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                <span title="Streak" style={{ display: "flex", alignItems: "center", gap: 5, border: `1px solid ${B.border}`, padding: "6px 11px", borderRadius: 10, fontSize: 13.5, fontWeight: 600 }}>🔥 {streak}</span>
+                <span title="Bugun" style={{ display: "flex", alignItems: "center", gap: 5, border: `1px solid ${B.border}`, padding: "6px 11px", borderRadius: 10, fontSize: 13.5, fontWeight: 600, color: B.muted }}><Clock size={13} /> {fmtMinutes(todaySeconds)}</span>
+                <button onClick={() => needPay()} style={{ background: tier === "premium" ? "#FFF6E0" : B.plum, color: tier === "premium" ? "#8A5A00" : "#fff", border: "none", borderRadius: 10, padding: "9px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT, whiteSpace: "nowrap" }}>{tier === "premium" ? "💎 Premium" : "Premium olish"}</button>
+                <button onClick={() => setPage("profile")} title={name || "Profil"} style={{ width: 38, height: 38, borderRadius: "50%", border: page === "profile" ? `2px solid ${B.plum}` : `1px solid ${B.border}`, background: "#E8EFF8", color: B.plum, fontWeight: 800, fontSize: 15, cursor: "pointer", fontFamily: FONT }}>{(name || "O")[0].toUpperCase()}</button>
+              </div>
+            </div>
+          </header>
+        ) : (
         <div style={{ background: "rgba(255,255,255,0.78)", backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)", boxShadow: "0 1px 0 rgba(22,32,77,0.05)", position: "sticky", top: 0, zIndex: 10, padding: isMobile ? "10px 12px" : "12px 30px", display: "flex", justifyContent: "flex-end", alignItems: "center", gap: isMobile ? 6 : 10 }}>
           <button onClick={toggleNav} title={navOpen ? "Menyuni yashirish" : "Menyuni ko'rsatish"} style={{ marginRight: "auto", display: "flex", alignItems: "center", gap: 8, background: B.bg, border: "none", borderRadius: 12, padding: "8px 12px", cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: 800, color: B.text }}>
             <span style={{ display: "inline-flex", flexDirection: "column", gap: 3.5 }}>{[0, 1, 2].map((k) => <span key={k} style={{ width: 16, height: 2, borderRadius: 2, background: B.text }} />)}</span>
@@ -4037,12 +4117,13 @@ function AppShell({ onHome }) {
             <span onClick={() => needPay()} style={{ cursor: "pointer", background: tier === "premium" ? B.gold : B.border, color: tier === "premium" ? B.navy : B.muted, fontSize: 11, fontWeight: 800, padding: "2px 7px", borderRadius: 8 }}>{tierLabel(tier).toUpperCase()}</span>
           </div>
         </div>
+        )}
         {sws.me && sws.me.trial && sws.me.premium && (
-          <div onClick={() => needPay()} style={{ margin: isMobile ? "12px 12px 0" : navOpen ? "16px 34px 0" : "16px auto 0", maxWidth: navOpen || isMobile ? 1000 : 1112, boxSizing: "border-box", background: "linear-gradient(90deg, #6B3FA0, #C2185B)", color: "#fff", borderRadius: 16, padding: "12px 18px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+          <div onClick={() => needPay()} style={{ margin: isMobile ? "12px 12px 0" : "18px auto 0", maxWidth: isMobile ? 1000 : 1184, width: isMobile ? "auto" : "calc(100% - 56px)", boxSizing: "border-box", background: "linear-gradient(90deg, #00356B, #1E5AA8)", color: "#fff", borderRadius: 16, padding: "12px 18px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
             <span>🎁 Bepul sinov Premium: yana {Math.max(1, Math.ceil((sws.me.premiumUntil - Date.now()) / 86400000))} kun hammasi cheksiz!</span><span style={{ opacity: 0.9 }}>Davom ettirish → 💎</span>
           </div>
         )}
-        <div key={page} className="sws-fade-in" style={{ padding: isMobile ? "18px 14px 120px" : "32px 34px 120px", maxWidth: navOpen || isMobile ? 1000 : 1180, margin: navOpen || isMobile ? 0 : "0 auto", boxSizing: "border-box" }}>
+        <div key={page} className="sws-fade-in" style={{ padding: isMobile ? "18px 14px 120px" : "28px 28px 80px", maxWidth: isMobile ? 1000 : 1240, margin: isMobile ? 0 : "0 auto", boxSizing: "border-box" }}>
           {page === "home" && <DashHome onGo={setPage} history={history} onGoTests={() => setPage("tests")} todaySeconds={todaySeconds} goalMinutes={goalMinutes} streak={streak} onGoProfile={() => setPage("profile")} targetScore={targetScore} examDate={examDate} />}
           {page === "tests" && <MockTests tier={tier} history={history} onOpenTest={openTest} onNeedPay={() => needPay()} />}
           {page === "bank" && <QuestionBank tier={tier} bankStats={bankStats} onRecord={(d, c, t) => setBankStats((s) => ({ ...s, [d]: { c, t } }))} onNeedPay={needPay} />}
@@ -4068,13 +4149,7 @@ function AppShell({ onHome }) {
             <span style={{ display: "inline-flex", flexDirection: "column", gap: 3.5, padding: "3px 0" }}>{[0, 1, 2].map((k) => <span key={k} style={{ width: 17, height: 2, borderRadius: 2, background: "currentColor" }} />)}</span> Boshqa
           </button>
         </nav>
-      ) : (
-        <div style={{ position: "fixed", bottom: 16, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 50, pointerEvents: "none" }}>
-          <div style={{ pointerEvents: "auto" }}>
-            <MacDock apps={nav} activeId={page} onAppClick={setPage} />
-          </div>
-        </div>
-      )}
+      ) : null}
       {payOpen && <PremiumModal reason={payReason} onClose={() => setPayOpen(false)} />}
       {preparing && (
         <div className="sws-app" style={{ position: "fixed", inset: 0, background: "rgba(246,247,252,0.85)", backdropFilter: "blur(6px)", zIndex: 120, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT }}>
@@ -4139,7 +4214,7 @@ function Onboarding({ onDone }) {
             <p style={{ fontSize: 15, color: B.muted, marginBottom: 20, textAlign: "center" }}>Bu reja va tavsiyalarni moslashtirishga yordam beradi</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
               {[1200, 1300, 1400, 1450, 1500, 1550].map((s) => (
-                <button key={s} onClick={() => setTarget(s)} style={{ padding: "14px 0", borderRadius: 16, border: `2px solid ${target === s ? B.plum : B.border}`, background: target === s ? "#F2EAFB" : "#fff", color: target === s ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 17.5, fontWeight: 800 }}>{s}</button>
+                <button key={s} onClick={() => setTarget(s)} style={{ padding: "14px 0", borderRadius: 16, border: `2px solid ${target === s ? B.plum : B.border}`, background: target === s ? "#E8EFF8" : "#fff", color: target === s ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 17.5, fontWeight: 800 }}>{s}</button>
               ))}
             </div>
           </div>
@@ -4151,7 +4226,7 @@ function Onboarding({ onDone }) {
             <p style={{ fontSize: 15, color: B.muted, marginBottom: 20, textAlign: "center" }}>Kunlik mashq maqsadingizni shunga moslab beramiz</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {[[1, "1 oydan kam"], [2, "~2 oy"], [3, "~3 oy"], [6, "~6 oy"], [12, "Hali bilmayman"]].map(([m, l]) => (
-                <button key={m} onClick={() => setMonthsAway(m)} style={{ padding: "13px 18px", borderRadius: 12, border: `2px solid ${monthsAway === m ? B.plum : B.border}`, background: monthsAway === m ? "#F2EAFB" : "#fff", color: monthsAway === m ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 15.5, fontWeight: 700, textAlign: "left" }}>{l}</button>
+                <button key={m} onClick={() => setMonthsAway(m)} style={{ padding: "13px 18px", borderRadius: 12, border: `2px solid ${monthsAway === m ? B.plum : B.border}`, background: monthsAway === m ? "#E8EFF8" : "#fff", color: monthsAway === m ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 15.5, fontWeight: 700, textAlign: "left" }}>{l}</button>
               ))}
             </div>
           </div>
@@ -4163,7 +4238,7 @@ function Onboarding({ onDone }) {
             <p style={{ fontSize: 15, color: B.muted, marginBottom: 20, textAlign: "center" }}>Bir nechtasini tanlashingiz mumkin (ixtiyoriy)</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {domainOptions.map((d) => (
-                <button key={d} onClick={() => toggleWeak(d)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", borderRadius: 12, border: `2px solid ${weak.includes(d) ? B.plum : B.border}`, background: weak.includes(d) ? "#F2EAFB" : "#fff", color: weak.includes(d) ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 15, fontWeight: 700, textAlign: "left" }}>
+                <button key={d} onClick={() => toggleWeak(d)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", borderRadius: 12, border: `2px solid ${weak.includes(d) ? B.plum : B.border}`, background: weak.includes(d) ? "#E8EFF8" : "#fff", color: weak.includes(d) ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 15, fontWeight: 700, textAlign: "left" }}>
                   {weak.includes(d) ? <Check size={15} /> : <span style={{ width: 15 }} />} {d}
                 </button>
               ))}
