@@ -181,17 +181,23 @@ function Mascot({ size = 96 }) {
   );
 }
 
-// Tariflar: Bepul (3 ta mock + kunlik limitlar) va Premium (49 000 so'm / 30 kun, hammasi cheksiz)
+// Tariflar: Bepul (1 ta mock + kunlik limitlar, kurslarning 1-darsi) va Premium (49 000 so'm / 30 kun, hammasi cheksiz)
 const TIERS = {
-  free: { label: "Bepul", mockLimit: 3 },
+  free: { label: "Bepul", mockLimit: 1 },
   premium: { label: "Premium", mockLimit: 200 },
 };
 const PRICE_UZS = 49000;
 const PRICE = { premium: "49 000" };
-const FREE_DAILY_DEFAULT = { bank: 15, drill: 2, ai: 5, vocab: 30 };
+const FREE_DAILY_DEFAULT = { bank: 5, drill: 1, ai: 2, vocab: 10 };
 const PRICE3 = "119 000";
 const LIMIT_NAMES = { bank: "savollar banki", drill: "tezkor mashq", ai: "AI repetitor", vocab: "lug'at mashqi" };
-const REASONS = { ...LIMIT_NAMES, analysis: "to'liq tahlil" };
+const REASONS = { ...LIMIT_NAMES, analysis: "to'liq tahlil", course: "kurslar", saved: "xatolar", plan: "o'quv reja" };
+// Faqat Premium'da ochiladigan bo'limlar uchun paywall matni
+const PREMIUM_ONLY = {
+  course: ["To'liq kurslar — Premium'da", "Har bir kursning 1-darsi bepul. Qolgan barcha darslar, yechilgan misollar va mashqlar Premium'da ochiladi."],
+  saved: ["Xatolar ustida ishlash — Premium'da", "Barcha xatolaringiz va saqlangan savollar izohlari bilan bir joyda — ularni qayta yechib, zaif joylarni yoping."],
+  plan: ["Shaxsiy o'quv reja — Premium'da", "Maqsad ballingiz, imtihon sanangiz va zaif mavzularingiz asosida har hafta yangilanadigan reja."],
+};
 const LAUNCH_FREE = false;
 const tierLabel = (t) => (TIERS[t] || TIERS.free).label;
 
@@ -1042,7 +1048,7 @@ function gradeTest(testId, responses, diffPath, mode) {
 }
 
 const TEST_LIBRARY = Array.from({ length: 200 }).map((_, i) => ({
-  id: i + 1, name: `Practice Test ${i + 1}`, tier: i < 3 ? "free" : "premium",
+  id: i + 1, name: `Practice Test ${i + 1}`, tier: i < 1 ? "free" : "premium",
   difficulty: i < 60 ? "Standard" : i < 140 ? "Challenging" : "Hard",
 }));
 const tierRank = { free: 0, premium: 2 };
@@ -1463,7 +1469,7 @@ function Landing({ onStart }) {
         <div style={{ textAlign: "center", marginBottom: 26 }}>
           <div style={{ fontSize: 12.5, fontWeight: 800, color: B.plum, letterSpacing: 1.2, marginBottom: 8 }}>BEPUL SINOV TESTI</div>
           <h2 data-reveal style={{ fontSize: isMobile ? 24 : 32, fontWeight: 800, margin: "0 0 10px", color: B.navy, letterSpacing: -0.6 }}>Haqiqiy SAT formatidagi mockni bepul sinab ko'ring</h2>
-          <p style={{ fontSize: 15.5, color: B.muted, margin: 0 }}>Telegram orqali 10 soniyada kiring va birinchi 3 ta testni hoziroq boshlang.</p>
+          <p style={{ fontSize: 15.5, color: B.muted, margin: 0 }}>Telegram orqali 10 soniyada kiring va birinchi testni hoziroq boshlang.</p>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 14 }}>
           {[1, 2, 3].map((n) => (
@@ -1499,7 +1505,7 @@ function Landing({ onStart }) {
           <div data-reveal className="sws-lift" style={{ "--d": "0ms", background: "#fff", border: `1px solid ${B.border}`, borderRadius: 22, padding: 28 }}>
             <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 6 }}>Bepul</div>
             <div style={{ fontSize: 32, fontWeight: 900, marginBottom: 16 }}>0 so'm</div>
-            {["Boshida 3 kun Premium — bepul", "3 ta to'liq mock test", "Savollar banki — kuniga 15 savol", "Tezkor drill — kuniga 2 ta", "Lug'at mashqi — kuniga 30 savol", "AI repetitor — kuniga 5 ta savol"].map((x) => (
+            {["Boshida 3 kun Premium — bepul", "1 ta to'liq mock test", "Kurslarning 1-darsi va kunlik test", "Savollar banki — kuniga 5 savol", "Drill — kuniga 1 ta, lug'at — 10 savol", "AI repetitor — kuniga 2 ta savol"].map((x) => (
               <div key={x} style={{ display: "flex", gap: 9, alignItems: "center", fontSize: 14.5, marginBottom: 10, color: B.text }}><Check size={15} color={B.green} /> {x}</div>
             ))}
             <button onClick={onStart} style={{ marginTop: 12, width: "100%", background: "#fff", border: `1.5px solid ${B.border}`, borderRadius: 12, padding: 13, fontSize: 15, fontWeight: 800, cursor: "pointer", fontFamily: FONT, color: B.text }}>Bepul boshlash</button>
@@ -1509,7 +1515,7 @@ function Landing({ onStart }) {
             <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 6 }}>Premium</div>
             <div style={{ fontSize: 32, fontWeight: 900, marginBottom: 16 }}>{PRICE.premium} <span style={{ fontSize: 14, fontWeight: 600, opacity: 0.7 }}>so'm / oy</span></div>
             <div style={{ fontSize: 14, opacity: 0.85, margin: "-8px 0 14px" }}>yoki {PRICE3} so'm / 3 oy — oyiga ~40 ming</div>
-            {["200 ta mock test — barchasi", "Mock natijasining to'liq tahlili", "Savollar banki — cheksiz", "Drill va lug'at mashqi — cheksiz", "AI repetitor — cheksiz", "To'lov: karta orqali, Telegram bot"].map((x) => (
+            {["200 ta mock test — barchasi", "SAT Math va English kurslari — to'liq", "Mock natijasining to'liq tahlili", "Xatolar ustida ishlash va o'quv reja", "Savollar banki — cheksiz", "Drill va lug'at mashqi — cheksiz", "AI repetitor — cheksiz", "To'lov: karta orqali, Telegram bot"].map((x) => (
               <div key={x} style={{ display: "flex", gap: 9, alignItems: "center", fontSize: 14.5, marginBottom: 10, opacity: 0.95 }}><Check size={15} color={B.gold} /> {x}</div>
             ))}
             <button onClick={onStart} style={{ marginTop: 12, width: "100%", background: B.gold, border: "none", borderRadius: 12, padding: 13, fontSize: 15, fontWeight: 900, cursor: "pointer", fontFamily: FONT, color: B.navy }}>Boshlash</button>
@@ -1598,16 +1604,16 @@ function PremiumModal({ reason, onClose }) {
   const until = me && me.premiumUntil ? new Date(me.premiumUntil).toLocaleDateString("uz-UZ") : null;
   const recheck = async () => { setChecking(true); await swsRefreshMe(); setChecking(false); };
   useEffect(() => { const f = () => { if (document.visibilityState === "visible") swsRefreshMe(); }; document.addEventListener("visibilitychange", f); return () => document.removeEventListener("visibilitychange", f); }, []);
-  const feats = [["📝", "200 ta mock test", "va har birining to'liq tahlili"], ["📚", "Savollar banki", "cheksiz, xohlagancha savol"], ["⚡", "Drill va lug'at mashqi", "kunlik limitsiz"], ["🤖", "AI repetitor", "cheksiz savol-javob"]];
+  const feats = [["📝", "200 ta mock test", "va har birining to'liq tahlili"], ["🎓", "Kurslar", "SAT Math va English — barcha darslar"], ["📚", "Savollar banki", "cheksiz, xohlagancha savol"], ["⚡", "Drill va lug'at mashqi", "kunlik limitsiz"], ["🤖", "AI repetitor", "cheksiz savol-javob"]];
   return (
     <div className="sws-app" onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(22,32,77,0.42)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, fontFamily: FONT, padding: 16 }}>
       <div className="sws-fade-in" onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 28, boxShadow: "0 40px 80px -30px rgba(22,32,77,0.5)", width: 460, maxWidth: "100%", overflow: "hidden", position: "relative" }}>
         <button onClick={onClose} style={{ position: "absolute", top: 14, right: 14, background: "rgba(255,255,255,0.2)", border: "none", borderRadius: 20, width: 32, height: 32, cursor: "pointer", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}><X size={17} /></button>
         <div style={{ background: `linear-gradient(135deg, ${B.plum}, #1E5AA8)`, color: "#fff", padding: "28px 28px 24px" }}>
           <div style={{ fontSize: 13, fontWeight: 800, opacity: 0.85, letterSpacing: 0.5 }}>💎 PREMIUM</div>
-          <div style={{ fontSize: 24, fontWeight: 900, margin: "6px 0 4px" }}>{me && me.premium ? (me.trial ? "Bepul sinov Premium faol" : "Premium faol") : reason === "analysis" ? "To'liq tahlil — Premium'da" : reason ? "Bugungi limit tugadi" : "Cheklovsiz tayyorlaning"}</div>
+          <div style={{ fontSize: 24, fontWeight: 900, margin: "6px 0 4px" }}>{me && me.premium ? (me.trial ? "Bepul sinov Premium faol" : "Premium faol") : PREMIUM_ONLY[reason] ? PREMIUM_ONLY[reason][0] : reason === "analysis" ? "To'liq tahlil — Premium'da" : reason ? "Bugungi limit tugadi" : "Cheklovsiz tayyorlaning"}</div>
           <div style={{ fontSize: 15, opacity: 0.9, lineHeight: 1.5 }}>
-            {me && me.premium ? `${until} gacha barcha imkoniyatlar cheklovsiz.${me.trial ? " Sinov tugagach ham davom etish uchun Premium oling." : ""}` : reason === "analysis" ? "Qaysi mavzularda zaifligingiz, xatolaringiz va ularning izohlari Premium'da to'liq ochiladi." : reason ? `Bepul tarifda ${LIMIT_NAMES[reason] || "bu bo'lim"} uchun kunlik limit tugadi. Ertaga yana ochiladi — yoki Premium bilan hoziroq davom eting.` : "Barcha testlar, savollar va AI repetitor — kunlik limitlarsiz."}
+            {me && me.premium ? `${until} gacha barcha imkoniyatlar cheklovsiz.${me.trial ? " Sinov tugagach ham davom etish uchun Premium oling." : ""}` : PREMIUM_ONLY[reason] ? PREMIUM_ONLY[reason][1] : reason === "analysis" ? "Qaysi mavzularda zaifligingiz, xatolaringiz va ularning izohlari Premium'da to'liq ochiladi." : reason ? `Bepul tarifda ${LIMIT_NAMES[reason] || "bu bo'lim"} uchun kunlik limit tugadi. Ertaga yana ochiladi — yoki Premium bilan hoziroq davom eting.` : "Barcha testlar, savollar va AI repetitor — kunlik limitlarsiz."}
           </div>
         </div>
         <div style={{ padding: "22px 26px 24px" }}>
@@ -2262,7 +2268,7 @@ function TestRunner({ test, onExit, onFinish }) {
 }
 
 // Bepul tarifda: bo'lim ko'rinadi, lekin xira — Premium'da to'liq ochiladi
-function PremiumLock({ children, title, height = 230 }) {
+function PremiumLock({ children, title, height = 230, reason = "analysis", note = "Premium'da to'liq ochiladi" }) {
   const sws = useSws();
   if (isPremium()) return children;
   return (
@@ -2272,8 +2278,8 @@ function PremiumLock({ children, title, height = 230 }) {
         <div style={{ background: "#fff", borderRadius: 18, padding: "18px 20px", textAlign: "center", boxShadow: "0 20px 44px -22px rgba(22,32,77,0.45)", maxWidth: 360 }}>
           <div style={{ fontSize: 26 }}>🔒</div>
           <div style={{ fontSize: 16, fontWeight: 900, margin: "6px 0 4px" }}>{title}</div>
-          <div style={{ fontSize: 13.5, color: B.muted, marginBottom: 12 }}>Premium'da to'liq ochiladi</div>
-          <button onClick={() => swsOpenPaywall("analysis")} style={{ background: B.gold, color: B.navy, border: "none", borderRadius: 12, padding: "10px 20px", fontSize: 14.5, fontWeight: 900, cursor: "pointer", fontFamily: FONT }}>💎 Premium — {PRICE.premium} so'm</button>
+          <div style={{ fontSize: 13.5, color: B.muted, marginBottom: 12 }}>{note}</div>
+          <button onClick={() => swsOpenPaywall(reason)} style={{ background: B.gold, color: B.navy, border: "none", borderRadius: 12, padding: "10px 20px", fontSize: 14.5, fontWeight: 900, cursor: "pointer", fontFamily: FONT }}>💎 Premium — {PRICE.premium} so'm</button>
         </div>
       </div>
     </div>
@@ -2348,7 +2354,7 @@ function MockTests({ tier, history, onOpenTest, onNeedPay }) {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Mock testlar</h1>
-      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 18px" }}>Tarifingiz: <b>{tierLabel(tier)}</b> · {TIERS[tier].mockLimit} ta test ochiq{tier !== "premium" ? " · 4–200-testlar Premium'da" : ""}. Har bir testdagi savollar oldingi testlarda takrorlanmaydi.</p>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 18px" }}>Tarifingiz: <b>{tierLabel(tier)}</b> · {TIERS[tier].mockLimit} ta test ochiq{tier !== "premium" ? ` · ${TIERS.free.mockLimit + 1}–200-testlar Premium'da` : ""}. Har bir testdagi savollar oldingi testlarda takrorlanmaydi.</p>
       <a href="https://satsuite.collegeboard.org/digital/digital-practice-preparation/practice-tests" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 12, background: "linear-gradient(90deg, #EEF2FF, #F7F0FF)", border: `1px solid ${B.border}`, borderRadius: 14, padding: "12px 16px", marginBottom: 16, textDecoration: "none", color: B.text }}>
         <span style={{ fontSize: 24 }}>🎓</span>
         <span style={{ flex: 1, fontSize: 14.5, lineHeight: 1.5 }}><b>Rasmiy College Board practice testlari</b> — haqiqiy imtihon savollari, bepul, Bluebook ilovasida. Bizdagi mocklar bilan birga yeching: ular real darajani ko'rsatadi, biznikilar esa cheksiz yangi savol beradi.</span>
@@ -4299,7 +4305,9 @@ function loadCourses() {
   if (!__coursesPromise) __coursesPromise = fetch("/courses.json").then((r) => { if (!r.ok) throw new Error("courses"); return r.json(); }).catch((e) => { __coursesPromise = null; throw e; });
   return __coursesPromise;
 }
-function Courses() {
+function Courses({ onNeedPay }) {
+  useSws();
+  const canOpen = (i) => i === 0 || isPremium();
   const [data, setData] = useState(null);
   const [err, setErr] = useState(false);
   const [courseId, setCourseId] = useState(null);
@@ -4307,7 +4315,7 @@ function Courses() {
   const [prog, setProg] = useState(() => loadLocal("sws_courses", {}));
   useEffect(() => { loadCourses().then(setData).catch(() => setErr(true)); }, []);
   const saveProg = (id, v) => setProg((p) => { const n = { ...p, [id]: { ...(p[id] || {}), ...v } }; saveLocal("sws_courses", n); return n; });
-  const go = (c, t) => { setCourseId(c); setTopicId(t); try { window.scrollTo(0, 0); } catch (e) {} };
+  const go = (c, t) => { if (c && t) { const cc = data && data.courses.find((x) => x.id === c); const ti = cc ? cc.topics.findIndex((x) => x.id === t) : 0; if (!canOpen(ti)) { onNeedPay && onNeedPay(); return; } } setCourseId(c); setTopicId(t); try { window.scrollTo(0, 0); } catch (e) {} };
   const card = { background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 22 };
   if (err) return <div style={{ ...card, color: B.muted }}>Kurslarni yuklab bo'lmadi. Internetni tekshirib, sahifani yangilang.</div>;
   if (!data) return <div style={{ padding: 30, color: B.muted }}>Yuklanmoqda…</div>;
@@ -4318,7 +4326,7 @@ function Courses() {
   if (!course) return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Kurslar</h1>
-      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 18px" }}>Har bir mavzu: o'zbekcha qisqa dars → yechilgan misol → 3 ta mashq. Mavzularni ketma-ket o'ting.</p>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 18px" }}>Har bir mavzu: o'zbekcha qisqa dars → yechilgan misol → 3 ta mashq. Mavzularni ketma-ket o'ting.{!isPremium() && " Har kursning 1-darsi bepul, qolganlari 💎 Premium'da."}</p>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
         {data.courses.map((c) => { const d = doneIn(c), n = c.topics.length; const isM = c.id === "math";
           return (
@@ -4356,8 +4364,10 @@ function Courses() {
               {course.topics.filter((t) => t.domain === dm).map((t) => { const i = course.topics.indexOf(t); const p = prog[t.id] || {};
                 return (
                   <button key={t.id} onClick={() => go(course.id, t.id)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "12px 12px", border: "none", borderRadius: 14, background: "transparent", cursor: "pointer", fontFamily: FONT, textAlign: "left" }}>
-                    <span style={{ width: 30, height: 30, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13.5, fontWeight: 800, background: p.done ? B.green : "#E8EFF8", color: p.done ? "#fff" : B.plum }}>{p.done ? <Check size={15} /> : i + 1}</span>
-                    <span style={{ flex: 1, fontSize: 15.5, fontWeight: 700, color: B.text }}>{t.title}</span>
+                    <span style={{ width: 30, height: 30, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13.5, fontWeight: 800, background: p.done ? B.green : canOpen(i) ? "#E8EFF8" : B.bg, color: p.done ? "#fff" : canOpen(i) ? B.plum : B.muted }}>{p.done ? <Check size={15} /> : canOpen(i) ? i + 1 : <Lock size={14} />}</span>
+                    <span style={{ flex: 1, fontSize: 15.5, fontWeight: 700, color: canOpen(i) ? B.text : B.muted }}>{t.title}</span>
+                    {i === 0 && !isPremium() && <span style={{ fontSize: 10.5, fontWeight: 800, padding: "3px 7px", borderRadius: 8, background: "#E6F6EE", color: B.green }}>BEPUL</span>}
+                    {!canOpen(i) && <span style={{ fontSize: 10.5, fontWeight: 800, padding: "3px 7px", borderRadius: 8, background: "#FFF3D9", color: "#9A6800" }}>PREMIUM</span>}
                     {p.done && <span style={{ fontSize: 13, fontWeight: 700, color: B.green }}>{p.score}/{t.practice.length}</span>}
                     <ChevronRight size={16} color={B.muted} />
                   </button>
@@ -4582,7 +4592,7 @@ function AppShell({ onHome }) {
   const [vw, setVw] = useState(() => window.innerWidth);
   useEffect(() => { const f = () => setVw(window.innerWidth); window.addEventListener("resize", f); return () => window.removeEventListener("resize", f); }, []);
   // Ekran kengligiga qarab menyudagi bo'limlar soni — hech narsa bir-birining ustiga chiqmasligi uchun
-  const primaryIds = vw >= 1500 ? ["home", "tests", "courses", "daily", "top", "bank", "vocab"] : vw >= 1360 ? ["home", "tests", "courses", "daily", "top", "bank"] : vw >= 1180 ? ["home", "tests", "courses", "daily", "top"] : vw >= 1100 ? ["home", "tests", "courses", "top"] : vw >= 960 ? ["home", "tests", "courses", "bank"] : vw >= 820 ? ["home", "tests", "top"] : ["home", "tests"];
+  const primaryIds = vw >= 1500 ? ["home", "tests", "courses", "daily", "top", "bank"] : vw >= 1360 ? ["home", "tests", "courses", "daily", "top"] : vw >= 1180 ? ["home", "tests", "courses", "top"] : vw >= 1100 ? ["home", "tests", "courses"] : vw >= 960 ? ["home", "tests", "courses", "bank"] : vw >= 820 ? ["home", "tests", "top"] : ["home", "tests"];
   const showChips = vw >= 1100, showBrand = vw >= 860;
   const moreRef = useRef(null);
   useEffect(() => {
@@ -4648,7 +4658,7 @@ function AppShell({ onHome }) {
                 ))}
                 <div ref={moreRef} style={{ position: "relative", flexShrink: 0 }}>
                   <button onClick={() => setMoreOpen((v) => !v)} style={{ background: navMore.some((n) => n.id === page) ? "#E8EFF8" : "transparent", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: 600, color: navMore.some((n) => n.id === page) ? B.plum : B.muted, padding: "8px 12px", borderRadius: 10, display: "flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}>
-                    {navMore.find((n) => n.id === page)?.label || "Yana"} <ChevronDown size={15} />
+                    <span style={{ maxWidth: 110, overflow: "hidden", textOverflow: "ellipsis" }}>{navMore.find((n) => n.id === page)?.label || "Yana"}</span> <ChevronDown size={15} />
                   </button>
                   {moreOpen && (
                     <>
@@ -4698,12 +4708,13 @@ function AppShell({ onHome }) {
           {page === "home" && <DashHome onGo={setPage} history={history} onGoTests={() => setPage("tests")} todaySeconds={todaySeconds} goalMinutes={goalMinutes} streak={streak} onGoProfile={() => setPage("profile")} targetScore={targetScore} examDate={examDate} name={name} onResume={(t) => openTest({ ...t, resume: true })} />}
           {page === "tests" && <MockTests tier={tier} history={history} onOpenTest={openTest} onNeedPay={() => needPay()} />}
           {page === "bank" && <QuestionBank tier={tier} bankStats={bankStats} onRecord={(d, c, t) => setBankStats((s) => ({ ...s, [d]: { c, t } }))} onNeedPay={needPay} />}
-          {page === "courses" && <Courses />}
+          {page === "courses" && <Courses onNeedPay={() => needPay("course")} />}
           {page === "drills" && <DrillsHome />}
           {page === "vocab" && <Vocabulary onGo={setPage} />}
-          {page === "saved" && <SavedPage />}
+          {page === "saved" && (isPremium() ? <SavedPage /> : <PremiumLock reason="saved" title="Xatolar va saqlangan savollar" note="Xatolaringizni izohlari bilan qayta yechish — Premium'da" height={520}><SavedPage /></PremiumLock>)}
           {page === "daily" && <DailyTest />}
-          {page === "plan" && <StudyPlan history={history} targetScore={targetScore} examDate={examDate} onGo={setPage} />}
+          {page === "plan" && !isPremium() && <PremiumLock reason="plan" title="Shaxsiy o'quv reja" note="Haftalik reja va maqsad ballgacha yo'l — Premium'da" height={520}><StudyPlan history={history} targetScore={targetScore} examDate={examDate} onGo={() => {}} /></PremiumLock>}
+          {page === "plan" && isPremium() && <StudyPlan history={history} targetScore={targetScore} examDate={examDate} onGo={setPage} />}
           {page === "tutor" && <AITutor tier={tier} />}
           {page === "analytics" && <Analytics history={history} />}
           {page === "community" && <Community name={name} />}
