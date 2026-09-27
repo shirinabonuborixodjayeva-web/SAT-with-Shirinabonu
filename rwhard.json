@@ -525,6 +525,106 @@
    ],
    "answer": 0,
    "expl": "Changlatuvchilar hech bir gulga yeta olmagan, demak kamayish issiqlikdan. Faqat quyoshdagi o'simliklarda kamayish va soyadagilarda barqarorlik — xulosani to'liq qo'llab-quvvatlaydi."
+  },
+  {
+   "chart": {
+    "type": "lineCat",
+    "title": "Bike-Share Trips per Day (thousands)",
+    "labels": [
+     "2018",
+     "2019",
+     "2020",
+     "2021",
+     "2022"
+    ],
+    "series": [
+     {
+      "name": "City A",
+      "values": [
+       12,
+       14,
+       9,
+       15,
+       18
+      ]
+     },
+     {
+      "name": "City B",
+      "values": [
+       8,
+       9,
+       11,
+       13,
+       14
+      ]
+     }
+    ],
+    "yMin": 0,
+    "yMax": 20,
+    "yStep": 4,
+    "yLabel": "Trips (thousands)",
+    "xLabel": "Year"
+   },
+   "passage": "Urban planner Sofia Marchetti studied bike-share programs in two cities. She noticed that ridership in City B, which had built protected bike lanes before 2018, grew steadily every year, whereas ridership in City A, which added protected lanes only in 2021, was more volatile. Marchetti suggests that protected lanes help a program keep riders even when outside conditions change.",
+   "prompt": "Which choice best describes data from the graph that support Marchetti's suggestion?",
+   "choices": [
+    "In 2020, trips per day fell from 14,000 to 9,000 in City A but rose from 9,000 to 11,000 in City B.",
+    "City A had more trips per day than City B in every year except 2020.",
+    "Trips per day in City A were higher in 2022 than in any other year shown.",
+    "Both cities had more trips per day in 2022 than in 2018."
+   ],
+   "answer": 0,
+   "expl": "Taklif: himoyalangan yo'laklar tashqi sharoit o'zgarganda ham chavandozlarni saqlaydi. 2020 yilda A shahrida keskin tushish, B da o'sish — aynan shuni ko'rsatadi. Boshqa variantlar to'g'ri ma'lumot, lekin taklifga aloqasi yo'q."
+  },
+  {
+   "chart": {
+    "type": "lineCat",
+    "title": "Average Soil Moisture (%) by Month",
+    "labels": [
+     "Apr",
+     "May",
+     "Jun",
+     "Jul",
+     "Aug"
+    ],
+    "series": [
+     {
+      "name": "Plots with cover crops",
+      "values": [
+       31,
+       29,
+       26,
+       24,
+       23
+      ]
+     },
+     {
+      "name": "Plots without cover crops",
+      "values": [
+       32,
+       27,
+       21,
+       17,
+       15
+      ]
+     }
+    ],
+    "yMin": 10,
+    "yMax": 35,
+    "yStep": 5,
+    "yLabel": "Soil moisture (%)",
+    "xLabel": "Month"
+   },
+   "passage": "Agronomist Kwame Asante compared farm plots planted with cover crops (plants grown between main crops to protect soil) with plots left bare. At the start of the growing season, both types of plots had similar soil moisture. Asante concluded that cover crops help soil retain moisture as the season becomes hotter and drier: ______",
+   "prompt": "Which choice most effectively uses data from the graph to complete the statement?",
+   "choices": [
+    "by August, soil moisture had fallen to 23% in plots with cover crops but to 15% in plots without them.",
+    "in April, soil moisture was 31% in plots with cover crops and 32% in plots without them.",
+    "soil moisture in plots with cover crops decreased each month from April to August.",
+    "plots without cover crops had lower soil moisture in June than in May."
+   ],
+   "answer": 0,
+   "expl": "Xulosa: issiq va quruq davrda qoplama ekinlar namlikni saqlaydi. Avgustdagi farq (23% va 15%) buni ko'rsatadi. B variant boshlang'ich holat — xulosani qo'llab-quvvatlamaydi."
   }
  ],
  "Inferences": [

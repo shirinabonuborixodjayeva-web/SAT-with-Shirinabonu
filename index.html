@@ -514,7 +514,7 @@ const MATH_TIERS = {
   "Linear equations & systems": { E: [0, 2, 7, 17], M: [1, 3, 4, 6, 10, 11, 16], H: [5, 8, 9, 12, 13, 14, 15] },
   "Nonlinear functions": { E: [2, 3, 7], M: [0, 1, 5, 10, 12, 13, 20], H: [4, 6, 8, 9, 11, 14, 15, 16, 17, 18, 19] },
   "Ratios, rates, data": { E: [0, 1, 3], M: [2, 4, 5, 7, 9, 10, 11, 15, 16, 17], H: [6, 8, 12, 13, 14] },
-  "Lines, angles, circles": { E: [0, 1, 6], M: [2, 3, 4, 9, 11, 12, 16], H: [5, 7, 8, 10, 13, 14, 15] },
+  "Lines, angles, circles": { E: [0, 1, 6], M: [2, 3, 4, 9, 11, 12, 16, 17, 18, 19, 21], H: [5, 7, 8, 10, 13, 14, 15, 20] },
 };
 const TIER_NAME = { E: "Easy", M: "Medium", H: "Hard" };
 const mathCount = (skill) => { const t = MATH_TIERS[skill] || MATH_TIERS["Lines, angles, circles"]; return t.E.length + t.M.length + t.H.length; };
@@ -532,6 +532,23 @@ function sprOk(val, ans) {
   return Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) < 0.0015 + Math.abs(a) * 0.0002;
 }
 function genMathExtra(skill, rng, t) {
+  // ---- Geometriya chizmalari bilan savollar ----
+  if (!["Linear equations & systems", "Nonlinear functions", "Ratios, rates, data"].includes(skill) && t >= 17) {
+    const NOTE = "Note: Figure not drawn to scale.";
+    if (t === 17) { const a = ri(rng, 30, 70), cc = ri(rng, 30, 75), x = a + cc;
+      return { chart: { type: "geo", note: NOTE, segs: [[40, 180, 290, 180], [40, 180, 120, 40], [120, 40, 230, 180]], dots: [[40, 180], [230, 180], [120, 40]], texts: [[28, 196, "A"], [232, 198, "B"], [120, 30, "C"], [68, 172, `${a}°`], [121, 64, `${cc}°`], [256, 172, "x°", true]] }, prompt: `In the figure, points A, B, and the point to the right of B lie on a line. What is the value of x?`, correct: x, dist: [180 - x, 180 - a, 180 - cc], expl: `An exterior angle of a triangle equals the sum of the two remote interior angles: x = ${a} + ${cc} = ${x}. (Or: angle B = 180 − ${a} − ${cc} = ${180 - x}, so x = 180 − ${180 - x} = ${x}.)` }; }
+    if (t === 18) { const th = ri(rng, 35, 80) + ri(rng, 0, 1) * 55, v = ri(rng, 0, 2); const top = [121.6, 70], bot = [178.4, 160];
+      const pos = v === 0 ? [bot[0] - 24, bot[1] + 18] : v === 1 ? [bot[0] + 18, bot[1] - 8] : [bot[0] - 26, bot[1] - 8]; const ans = v === 2 ? 180 - th : th;
+      return { chart: { type: "geo", note: NOTE, segs: [[15, 70, 285, 70], [15, 160, 285, 160], [90, 20, 210, 210]], texts: [[276, 62, "m", true], [276, 152, "n", true], [top[0] + 20, top[1] - 8, `${th}°`], [pos[0], pos[1], "x°", true]] }, prompt: `In the figure, line m is parallel to line n. What is the value of x?`, correct: ans, dist: [180 - ans, ans + 15, Math.abs(90 - ans) || 20], expl: v === 2 ? `The angle marked x and the angle marked ${th}° are same-side angles formed by a transversal across parallel lines, so they are supplementary: x = 180 − ${th} = ${ans}.` : `Because m ∥ n, the angle marked x is congruent to the angle marked ${th}° (${v === 1 ? "corresponding angles" : "alternate exterior angles"}), so x = ${th}.` }; }
+    if (t === 19) { const [p, q, r] = pickOne(rng, [[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25], [20, 21, 29]]), k = ri(rng, 1, 4), A = p * k, Bs = q * k, Cs = r * k; const fn = pickOne(rng, ["sin", "cos", "tan"]);
+      const rs = { sin: frac(A, Cs), cos: frac(Bs, Cs), tan: frac(A, Bs) }, inv = { sin: frac(Cs, A), cos: frac(Cs, Bs), tan: frac(Bs, A) }; const val = rs[fn];
+      return { chart: { type: "geo", segs: [[60, 180, 250, 180], [60, 180, 60, 40], [60, 40, 250, 180]], right: [[60, 180, 12, -12]], dots: [[60, 180], [60, 40], [250, 180]], texts: [[48, 196, "C"], [48, 36, "B"], [262, 196, "A"], [44, 114, String(A)], [155, 198, String(Bs)], [168, 100, String(Cs)]] }, prompt: `In right triangle ABC shown, angle C is a right angle. What is the value of ${fn}(A)?`, correct: val, dist: [...["sin", "cos", "tan"].filter((f) => f !== fn).map((f) => rs[f]), inv[fn]], expl: `For angle A: the opposite side is BC = ${A}, the adjacent side is AC = ${Bs}, and the hypotenuse is AB = ${Cs}. ${fn}(A) = ${fn === "sin" ? `opposite/hypotenuse = ${A}/${Cs}` : fn === "cos" ? `adjacent/hypotenuse = ${Bs}/${Cs}` : `opposite/adjacent = ${A}/${Bs}`} = ${val}.` }; }
+    if (t === 20) { const th = 2 * ri(rng, 25, 80); const rev = rng() < 0.5; const cx = 150, cy = 112, R0 = 88; const P = (deg) => [cx + R0 * Math.cos((deg * Math.PI) / 180), cy - R0 * Math.sin((deg * Math.PI) / 180)];
+      const A2 = P(-90 - th / 2), B2 = P(-90 + th / 2), C2 = P(90);
+      return { chart: { type: "geo", note: NOTE, circles: [[cx, cy, R0]], segs: [[cx, cy, A2[0], A2[1]], [cx, cy, B2[0], B2[1]], [C2[0], C2[1], A2[0], A2[1]], [C2[0], C2[1], B2[0], B2[1]]], dots: [[cx, cy], A2, B2, C2], texts: [[cx + 12, cy - 4, "O"], [A2[0] - 12, A2[1] + 14, "A"], [B2[0] + 12, B2[1] + 14, "B"], [C2[0], C2[1] - 8, "C"]] }, prompt: rev ? `In the circle shown with center O, points A, B, and C lie on the circle. If the measure of angle ACB is ${th / 2}°, what is the measure, in degrees, of angle AOB?` : `In the circle shown with center O, points A, B, and C lie on the circle. If the measure of angle AOB is ${th}°, what is the measure, in degrees, of angle ACB?`, correct: rev ? th : th / 2, dist: rev ? [th / 2, 180 - th / 2, 360 - th] : [th, 180 - th, 90 - th / 2], expl: `An inscribed angle is half the central angle that intercepts the same arc: angle ACB = ½ · angle AOB, so ${rev ? `angle AOB = 2 · ${th / 2} = ${th}` : `angle ACB = ${th}/2 = ${th / 2}`}.` }; }
+    { const a = ri(rng, 2, 8), b = ri(rng, 1, 8), m = ri(rng, 2, 6), BC = m * (a + b), DE = m * a; const tt = a / (a + b); const D = [150 + (40 - 150) * tt, 30 + (190 - 30) * tt], E = [150 + (260 - 150) * tt, 30 + (190 - 30) * tt];
+      return { chart: { type: "geo", note: NOTE, segs: [[150, 30, 40, 190], [150, 30, 260, 190], [40, 190, 260, 190], [D[0], D[1], E[0], E[1]]], dots: [[150, 30], [40, 190], [260, 190], D, E], texts: [[150, 20, "A"], [28, 204, "B"], [272, 204, "C"], [D[0] - 12, D[1] + 4, "D"], [E[0] + 12, E[1] + 4, "E"], [(150 + D[0]) / 2 - 16, (30 + D[1]) / 2, String(a)], [(D[0] + 40) / 2 - 16, (D[1] + 190) / 2 + 2, String(b)], [150, 206, String(BC)]] }, prompt: `In the figure, segment DE is parallel to segment BC, AD = ${a}, DB = ${b}, and BC = ${BC}. What is the length of segment DE?`, correct: DE, dist: [BC - b, m * b, BC - DE], expl: `Because DE ∥ BC, triangle ADE is similar to triangle ABC with ratio AD/AB = ${a}/${a + b}. So DE = ${BC} × ${a}/${a + b} = ${DE}.` }; }
+  }
   // ---- Grafikli savollar (rasmiy testlardagidek) ----
   if (skill === "Linear equations & systems" && t >= 16) {
     if (t === 16) { const q = pickOne(rng, [1, 2, 3]), p = pickOne(rng, [-3, -2, -1, 1, 2, 3].filter((v) => gcd(v, q) === 1)), b = pickOne(rng, [-4, -3, -2, -1, 1, 2, 3, 4]); const m = p / q; let x1 = q * 2 * (b > 1 ? -1 : 1); if (Math.abs(m * x1 + b) > 7) x1 = x1 / 2;
@@ -916,7 +933,7 @@ function scaleSection(rawCorrect, rawTotal, routedHard) {
 }
 function gradeTest(testId, responses, diffPath, mode) {
   const perDomain = {}; const perSection = { rw: { c: 0, t: 0 }, math: { c: 0, t: 0 } }; const wrong = [];
-  MODULES.filter((m) => m.kind !== "break" && (!mode || mode === "full" || m.kind === mode)).forEach((mod) => {
+  MODULES.filter((m) => m.kind !== "break" && (!mode || mode === "full" || m.kind === mode || m.id === mode)).forEach((mod) => {
     const basis = mod.id === "rw2" ? diffPath.rw1 : mod.id === "m2" ? diffPath.m1 : null;
     const qs = buildModuleCached(mod, testId, basis);
     qs.forEach((q, i) => {
@@ -929,6 +946,9 @@ function gradeTest(testId, responses, diffPath, mode) {
   });
   const rwScore = scaleSection(perSection.rw.c, perSection.rw.t, diffPath.rw1 === "hard");
   const mathScore = scaleSection(perSection.math.c, perSection.math.t, diffPath.m1 === "hard");
+  const oneMod = (r) => Math.max(200, Math.min(800, Math.round((200 + (r.t ? r.c / r.t : 0) * 600) / 10) * 10));
+  if (mode === "rw1") return { mode: "rw", single: true, rwScore: oneMod(perSection.rw), mathScore: null, total: oneMod(perSection.rw), rwRaw: perSection.rw, mathRaw: null, perDomain, wrong };
+  if (mode === "m1") return { mode: "math", single: true, rwScore: null, mathScore: oneMod(perSection.math), total: oneMod(perSection.math), rwRaw: null, mathRaw: perSection.math, perDomain, wrong };
   if (mode === "rw") return { mode, rwScore, mathScore: null, total: rwScore, rwRaw: perSection.rw, mathRaw: null, perDomain, wrong };
   if (mode === "math") return { mode, rwScore: null, mathScore, total: mathScore, rwRaw: null, mathRaw: perSection.math, perDomain, wrong };
   return { rwScore, mathScore, total: rwScore + mathScore, rwRaw: perSection.rw, mathRaw: perSection.math, perDomain, wrong };
@@ -1263,9 +1283,13 @@ function Landing({ onStart }) {
     { icon: BarChart3, t: "Haqiqiy tahlil", d: "Ball va domen aniqligi javoblaringizdan hisoblanadi." },
     { icon: Bookmark, t: "Xatolar va saqlangan", d: "Har qanday savolni belgilab qo'ying, keyinroq qaytib mashq qiling." },
     { icon: Trophy, t: "Streak va jamiyat", d: "Kunlik maqsad, streak, va boshqa o'quvchilar bilan onlayn bellashuv." },
+    { icon: Star, t: "Kunlik test", d: "Har kuni hamma uchun bir xil 10 ta yangi savol — osondan qiyinga." },
+    { icon: Grid3x3, t: "Moslashuvchan rejim", d: "To'liq test, faqat R&W, faqat Math yoki bitta modul — o'zingiz tanlaysiz." },
+    { icon: BarChart3, t: "Grafik va chizmalar", d: "Rasmiy testdagidek grafik, scatterplot, geometrik chizmali savollar." },
   ];
   const faqs = [
     { q: "Tariflar farqi nimada?", a: "Yangi o'quvchilarga 3 kun Premium bepul. Keyin bepul tarifda: 3 ta to'liq mock test, har kuni savollar bankida 15 savol, 2 ta drill, 30 ta lug'at mashqi va 5 ta AI savol. Premium (49 000 so'm / 30 kun yoki 119 000 so'm / 3 oy): 200 ta mock test va barcha bo'limlar cheklovsiz." },
+    { q: "Test rejimlari qanday?", a: "Har bir mockni to'liq (98 savol, 2 soat 14 daqiqa), faqat Reading & Writing, faqat Math yoki bitta modul sifatida yechishingiz mumkin. Test ichida Annotate (matnni belgilash), variantni chizib tashlash, Mark for Review, Desmos kalkulyator va formulalar bor." },
     { q: "Savollar takrorlanadimi?", a: "Yo'q. Yechgan savollaringiz akkauntingizda saqlanadi va mock, savollar banki yoki drillarda qayta chiqmaydi." },
     { q: "Ball qanday hisoblanadi?", a: "To'g'ri javoblar bo'lim bo'yicha 200–800 shkalasiga o'tkaziladi. Adaptiv 2-modul oson variantga tushsa, bo'lim balli haqiqiy SAT kabi cheklanadi." },
     { q: "Savollar banki qanday ishlaydi?", a: "Domen va savol turini tanlaysiz, nechta savol yechishni va vaqt bilan yoki vaqtsiz rejimni o'zingiz belgilaysiz." },
@@ -1273,6 +1297,11 @@ function Landing({ onStart }) {
   ];
   return (
     <div ref={motionRef} style={{ fontFamily: FONT, background: B.bg, color: B.text, overflowX: "hidden" }}>
+      <div style={{ background: `linear-gradient(90deg, ${B.navy}, #2A3C8F)`, color: "#fff", display: "flex", justifyContent: "center", alignItems: "center", gap: 10, padding: "8px 16px", fontSize: 13.5, flexWrap: "wrap", textAlign: "center" }}>
+        <span style={{ background: B.gold, color: B.navy, fontSize: 11, fontWeight: 900, padding: "2px 8px", borderRadius: 8 }}>YANGI</span>
+        <span>Kunlik test, O'quv reja va grafikli savollar qo'shildi — 3 kun Premium bepul!</span>
+        <button onClick={onStart} style={{ background: "#fff", color: B.navy, border: "none", borderRadius: 20, padding: "4px 12px", fontWeight: 800, fontSize: 12.5, cursor: "pointer", fontFamily: FONT }}>Boshlash</button>
+      </div>
       <header data-glass style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 32px", background: "rgba(255,255,255,0.72)", backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)", borderBottom: `1px solid ${B.border}`, position: "sticky", top: 0, zIndex: 20, transition: "box-shadow 0.4s ease" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}><Mascot size={34} /><span style={{ fontSize: 17, fontWeight: 800 }}>{BRAND_NAME}</span></div>
         <button onClick={onStart} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 10, padding: "10px 20px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>Bepul boshlash</button>
@@ -1761,7 +1790,7 @@ function TestRunner({ test, onExit, onFinish }) {
   const studentName = loadLocal("sws_name", "") || "O'quvchi";
   // Rejim: to'liq test, faqat Reading & Writing yoki faqat Math
   const [mode, setMode] = useState("full");
-  const mods = useMemo(() => (mode === "rw" ? MODULES.filter((m) => m.kind === "rw") : mode === "math" ? MODULES.filter((m) => m.kind === "math") : MODULES), [mode]);
+  const mods = useMemo(() => (mode === "rw" ? MODULES.filter((m) => m.kind === "rw") : mode === "math" ? MODULES.filter((m) => m.kind === "math") : mode === "rw1" ? MODULES.filter((m) => m.id === "rw1") : mode === "m1" ? MODULES.filter((m) => m.id === "m1") : MODULES), [mode]);
 
   const mod = mods[stage.modIdx];
   const questions = useMemo(() => {
@@ -1837,8 +1866,8 @@ function TestRunner({ test, onExit, onFinish }) {
               {stage.modIdx === 0 && (
                 <div style={{ marginBottom: 16 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, color: BB.muted, marginBottom: 8 }}>Rejimni tanlang</div>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
-                    {[["full", "To'liq test", "98 savol · 2 soat 14 daq"], ["rw", "Faqat R&W", "54 savol · 64 daq"], ["math", "Faqat Math", "44 savol · 70 daq"]].map(([id, l, sub]) => (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 8 }}>
+                    {[["full", "To'liq test", "98 savol · 2 soat 14 daq"], ["rw", "Faqat R&W", "54 savol · 64 daq"], ["math", "Faqat Math", "44 savol · 70 daq"], ["rw1", "1 modul · R&W", "27 savol · 32 daq"], ["m1", "1 modul · Math", "22 savol · 35 daq"]].map(([id, l, sub]) => (
                       <button key={id} onClick={() => setMode(id)} style={{ textAlign: "left", cursor: "pointer", borderRadius: 10, padding: "10px 12px", fontFamily: BB.ui, background: mode === id ? "#EEF2FF" : "#fff", border: `1.5px solid ${mode === id ? BB.blue : BB.line}` }}>
                         <div style={{ fontSize: 14.5, fontWeight: 800, color: mode === id ? BB.blue : BB.ink }}>{l}</div>
                         <div style={{ fontSize: 12, color: BB.muted, marginTop: 2 }}>{sub}</div>
@@ -1930,6 +1959,12 @@ function TestRunner({ test, onExit, onFinish }) {
 
   const footer = (leftBack, onNext, nextLabel, backDisabled) => (
     <>
+      {stage.type === "module" && (
+        <div style={{ background: "#fff", display: "flex", justifyContent: "center", gap: 4, padding: "8px 12px 6px", flexWrap: "wrap" }}>
+          {questions.map((qq, i) => { const r = responses[`${mod.id}-${i}`]; const done = r !== undefined && r !== null && String(r).trim() !== ""; const cur = i === qIndex; const mk = marked[`${mod.id}-${i}`];
+            return <button key={i} onClick={() => setQIndex(i)} title={`Savol ${i + 1}`} style={{ width: cur ? 18 : 9, height: 9, borderRadius: 9, border: mk ? "1.5px solid #C2185B" : "none", padding: 0, cursor: "pointer", background: cur ? BB.blue : done ? "#6B7CC9" : "#D5D8E2", transition: "width .2s" }} />; })}
+        </div>
+      )}
       <div style={bbDash} />
       <div style={{ background: "#fff", height: 68, padding: "0 24px", display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", flexShrink: 0, position: "relative" }}>
         <span style={{ fontSize: 15, fontWeight: 700, color: BB.ink, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{studentName}</span>
@@ -2128,7 +2163,7 @@ function ScoreReport({ test, report, onBack }) {
         <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 30, textAlign: "center", marginBottom: 18 }}>
           <div style={{ fontSize: 14.5, color: B.muted }}>{test.name} · {report.mode === "rw" ? "Reading and Writing" : report.mode === "math" ? "Math" : "Umumiy ball"}</div>
           <div style={{ fontSize: 54, fontWeight: 800, margin: "6px 0 4px" }}>{report.total}</div>
-          <div style={{ fontSize: 14.5, color: B.muted, marginBottom: 20 }}>{report.mode ? "200–800 shkalasi · faqat bitta bo'lim" : "400–1600 shkalasi"}</div>
+          <div style={{ fontSize: 14.5, color: B.muted, marginBottom: 20 }}>{report.single ? "200–800 shkalasi · bitta modul bo'yicha taxminiy ball" : report.mode ? "200–800 shkalasi · faqat bitta bo'lim" : "400–1600 shkalasi"}</div>
           <div style={{ display: "grid", gridTemplateColumns: report.mode ? "1fr" : "1fr 1fr", gap: 14 }}>
             {[["Reading and Writing", report.rwScore, report.rwRaw], ["Math", report.mathScore, report.mathRaw]].filter(([, sc]) => sc != null).map(([l, s, raw]) => (
               <div key={l} style={{ background: B.bg, borderRadius: 16, padding: 16 }}><div style={{ fontSize: 14, color: B.muted, marginBottom: 4 }}>{l}</div><div style={{ fontSize: 29, fontWeight: 800 }}>{s}</div><div style={{ fontSize: 12.5, color: B.muted }}>{raw.c} / {raw.t} to'g'ri</div></div>
@@ -2206,7 +2241,8 @@ function MockTests({ tier, history, onOpenTest, onNeedPay }) {
                 {t.tier === "premium" && <span style={{ fontSize: 10.5, fontWeight: 800, padding: "3px 7px", borderRadius: 8, background: "#FFF3D9", color: "#9A6800", height: 16 }}>PREMIUM</span>}
               </div>
               <div style={{ fontSize: 15, fontWeight: 700 }}>Test {t.id}</div>
-              <div style={{ fontSize: 12.5, color: B.muted }}>{t.difficulty}</div>
+              <div style={{ fontSize: 12.5, color: B.muted }}>{t.difficulty} · 98 savol · 134 daq</div>
+              {completed && (() => { const h = [...history].reverse().find((x) => x.testId === t.id); return h ? <div style={{ fontSize: 12.5, fontWeight: 800, color: B.green, marginTop: 3 }}>Natija: {h.total}</div> : null; })()}
             </div>
           );
         })}
@@ -2245,9 +2281,9 @@ const MATH_SKILL_TEMPLATES = {
   "Inference from sample statistics and margin of error": ["Ratios, rates, data", [10, 15]],
   "Probability and conditional probability": ["Ratios, rates, data", [4, 12]],
   "Area and volume": ["Lines, angles, circles", [7, 12, 15, 16]],
-  "Lines, angles, and triangles": ["Lines, angles, circles", [0, 4, 6, 11, 14]],
-  "Right triangles and trigonometry": ["Lines, angles, circles", [3, 10]],
-  "Circles": ["Lines, angles, circles", [1, 2, 5, 8, 9, 13]],
+  "Lines, angles, and triangles": ["Lines, angles, circles", [0, 4, 6, 11, 14, 17, 18, 21]],
+  "Right triangles and trigonometry": ["Lines, angles, circles", [3, 10, 19]],
+  "Circles": ["Lines, angles, circles", [1, 2, 5, 8, 9, 13, 20]],
 };
 const POOL_TOTAL = 500;
 const diffForIndex = (i, total) => (i < total / 3 ? "Easy" : i < (2 * total) / 3 ? "Medium" : "Hard");
@@ -2275,6 +2311,43 @@ function QChart({ c }) {
   if (!c) return null;
   const W = 380, H = 270, L = 48, R = 14, T = 14, Bm = 40;
   const pw = W - L - R, ph = H - T - Bm;
+  if (c.type === "geo") {
+    return (
+      <div style={{ margin: "0 auto 16px", maxWidth: 380 }}>
+        <svg viewBox="0 0 300 220" style={{ width: "100%", display: "block", fontFamily: "Georgia, 'Times New Roman', serif" }}>
+          {(c.circles || []).map(([cx, cy, r], i) => <circle key={"c" + i} cx={cx} cy={cy} r={r} fill="none" stroke="#222" strokeWidth="1.6" />)}
+          {(c.segs || []).map(([x1, y1, x2, y2, dash], i) => <line key={"s" + i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#222" strokeWidth="1.6" strokeDasharray={dash ? "5 4" : undefined} />)}
+          {(c.right || []).map(([x, y, dx, dy], i) => <polyline key={"r" + i} points={`${x + dx},${y} ${x + dx},${y + dy} ${x},${y + dy}`} fill="none" stroke="#222" strokeWidth="1.3" />)}
+          {(c.dots || []).map(([x, y], i) => <circle key={"d" + i} cx={x} cy={y} r="2.6" fill="#222" />)}
+          {(c.texts || []).map(([x, y, t, it], i) => <text key={"t" + i} x={x} y={y} fontSize="14" textAnchor="middle" fontStyle={it ? "italic" : "normal"} fill="#111">{t}</text>)}
+        </svg>
+        {c.note && <div style={{ fontSize: 12.5, color: "#555", textAlign: "center", fontStyle: "italic" }}>{c.note}</div>}
+      </div>
+    );
+  }
+  if (c.type === "lineCat") {
+    const series = c.series, n = c.labels.length, yMin0 = c.yMin || 0, maxV = c.yMax, step = c.yStep;
+    const X = (i) => L + 18 + ((pw - 36) * i) / Math.max(1, n - 1), Y = (v) => T + ph - ((v - yMin0) / (maxV - yMin0)) * ph;
+    const cols = ["#3B5BDB", "#E8547C", "#1C9A5B"], shapes = ["circle", "square", "tri"];
+    const ticksY = []; for (let v = yMin0; v <= maxV + 1e-9; v += step) ticksY.push(Math.round(v * 100) / 100);
+    return (
+      <svg viewBox={`0 0 ${W} ${H + 18}`} style={{ width: "100%", maxWidth: 440, display: "block", margin: "0 auto 16px", fontFamily: "Arial, sans-serif" }}>
+        {c.title && <text x={W / 2} y={11} textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#222">{c.title}</text>}
+        {ticksY.map((v) => <g key={v}><line x1={L} x2={W - R} y1={Y(v)} y2={Y(v)} stroke="#E3E3E3" /><text x={L - 6} y={Y(v) + 4} fontSize="10" textAnchor="end" fill="#444">{v}</text></g>)}
+        <line x1={L} x2={L} y1={T} y2={T + ph} stroke="#333" /><line x1={L} x2={W - R} y1={T + ph} y2={T + ph} stroke="#333" />
+        {c.labels.map((lab, i) => <text key={lab} x={X(i)} y={T + ph + 14} fontSize="10" textAnchor="middle" fill="#333">{lab}</text>)}
+        {series.map((s, k) => (
+          <g key={k}>
+            <polyline points={s.values.map((v, i) => `${X(i)},${Y(v)}`).join(" ")} fill="none" stroke={cols[k]} strokeWidth="2" />
+            {s.values.map((v, i) => shapes[k] === "square" ? <rect key={i} x={X(i) - 3.5} y={Y(v) - 3.5} width="7" height="7" fill={cols[k]} /> : shapes[k] === "tri" ? <polygon key={i} points={`${X(i)},${Y(v) - 4.5} ${X(i) - 4.5},${Y(v) + 3.5} ${X(i) + 4.5},${Y(v) + 3.5}`} fill={cols[k]} /> : <circle key={i} cx={X(i)} cy={Y(v)} r="3.5" fill={cols[k]} />)}
+          </g>
+        ))}
+        {c.xLabel && <text x={L + pw / 2} y={H - 6} fontSize="10.5" textAnchor="middle" fill="#222">{c.xLabel}</text>}
+        {c.yLabel && <text transform={`translate(12 ${T + ph / 2}) rotate(-90)`} fontSize="10.5" textAnchor="middle" fill="#222">{c.yLabel}</text>}
+        {series.map((s, k) => <g key={"l" + k}><rect x={L + k * 150} y={H + 4} width="10" height="10" fill={cols[k]} /><text x={L + 14 + k * 150} y={H + 13} fontSize="10.5" fill="#222">{s.name}</text></g>)}
+      </svg>
+    );
+  }
   if (c.type === "bar") {
     const series = c.series || [{ name: "", values: c.values }];
     const maxV = c.yMax || Math.max(...series.flatMap((s) => s.values)) * 1.15;
@@ -2917,7 +2990,21 @@ function Analytics({ history }) {
   );
 }
 
-function DashHome({ history, onGoTests, todaySeconds, goalMinutes, streak, onGoProfile, targetScore, examDate }) {
+// Yangiliklar paneli (yopib qo'yish mumkin)
+const ANNOUNCE = { id: "a3", text: "Yangi: grafik va chizmali savollar, Kunlik test va O'quv reja qo'shildi!", cta: "Kunlik testni boshlash", page: "daily" };
+function DashAnnounce({ onGo }) {
+  const [hidden, setHidden] = useState(() => loadLocal("sws_announce_hidden", "") === ANNOUNCE.id);
+  if (hidden) return null;
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", background: B.navy, color: "#fff", borderRadius: 14, padding: "10px 14px", marginBottom: 18, fontSize: 14.5 }}>
+      <span style={{ background: B.gold, color: B.navy, fontSize: 11.5, fontWeight: 900, padding: "3px 8px", borderRadius: 8, letterSpacing: 0.5 }}>YANGILIK</span>
+      <span style={{ flex: 1, minWidth: 180, fontWeight: 600 }}>{ANNOUNCE.text}</span>
+      <button onClick={() => onGo && onGo(ANNOUNCE.page)} style={{ background: "#fff", color: B.navy, border: "none", borderRadius: 20, padding: "6px 14px", fontWeight: 800, fontSize: 13.5, cursor: "pointer", fontFamily: FONT }}>{ANNOUNCE.cta}</button>
+      <button onClick={() => { saveLocal("sws_announce_hidden", ANNOUNCE.id); setHidden(true); }} title="Yopish" style={{ background: "transparent", border: "none", color: "#fff", opacity: 0.7, cursor: "pointer", fontSize: 18, lineHeight: 1 }}>×</button>
+    </div>
+  );
+}
+function DashHome({ onGo, history, onGoTests, todaySeconds, goalMinutes, streak, onGoProfile, targetScore, examDate }) {
   const last = history[history.length - 1]; const prev = history[history.length - 2];
   const remindToStudy = todaySeconds < goalMinutes * 60;
   const daysLeft = examDate ? Math.max(0, Math.ceil((new Date(examDate) - new Date()) / 86400000)) : null;
@@ -2931,8 +3018,29 @@ function DashHome({ history, onGoTests, todaySeconds, goalMinutes, streak, onGoP
   const perDomainMinutes = weakest.length ? Math.max(5, Math.round(goalMinutes / weakest.length)) : 0;
   return (
     <div>
-      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Xush kelibsiz</h1>
-      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 22px" }}>{history.length === 0 ? "Hali test yechmagansiz." : `${history.length} ta test yechildi.`}</p>
+      <DashAnnounce onGo={onGo} />
+      <h1 style={{ fontSize: 30, fontWeight: 900, margin: "0 0 4px", letterSpacing: -0.5, lineHeight: 1.15 }}>Xush kelibsiz{loadLocal("sws_name", "") ? ", " + loadLocal("sws_name", "") : ""} 👋</h1>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 16px" }}>{history.length === 0 ? "Hali test yechmagansiz — birinchi mockdan boshlang." : `${history.length} ta test yechildi. Davom eting!`}</p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 10, marginBottom: 16 }}>
+        {[["Mock testlar", history.length, "📝"], ["Eng yaxshi ball", history.length ? Math.max(...history.map((h) => h.total)) : "—", "🏆"], ["Ko'rilgan savollar", seenSet().size, "✅"], ["Streak", `${streak} kun`, "🔥"]].map(([l, v, e]) => (
+          <div key={l} style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 16, padding: "12px 14px" }}>
+            <div style={{ fontSize: 12.5, color: B.muted, fontWeight: 700 }}>{e} {l}</div><div style={{ fontSize: 24, fontWeight: 900, marginTop: 2 }}>{v}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12, marginBottom: 16 }}>
+        {(() => { const dr = loadLocal("sws_daily_" + todayStr(), null); return (
+          <div onClick={() => onGo && onGo("daily")} style={{ cursor: "pointer", borderRadius: 18, padding: "16px 18px", color: "#fff", background: "linear-gradient(135deg, #6B3FA0, #C2185B)" }}>
+            <div style={{ fontSize: 12.5, fontWeight: 800, opacity: 0.85, letterSpacing: 0.5 }}>KUNLIK TEST</div>
+            <div style={{ fontSize: 19, fontWeight: 900, margin: "4px 0" }}>{dr ? `Bugun: ${dr.score}/${dr.total} ✓` : "Bugungi 10 ta savol tayyor"}</div>
+            <div style={{ fontSize: 13.5, opacity: 0.9 }}>{dr ? "Ertaga yangi savollar chiqadi" : "5 ta R&W + 5 ta Math · ~12 daqiqa →"}</div>
+          </div>); })()}
+        <div onClick={() => onGo && onGo("plan")} style={{ cursor: "pointer", borderRadius: 18, padding: "16px 18px", background: "#fff", border: `1px solid ${B.border}` }}>
+          <div style={{ fontSize: 12.5, fontWeight: 800, color: B.plum, letterSpacing: 0.5 }}>O'QUV REJA</div>
+          <div style={{ fontSize: 19, fontWeight: 900, margin: "4px 0" }}>Haftalik rejangiz</div>
+          <div style={{ fontSize: 13.5, color: B.muted }}>Zaif mavzular va imtihon sanasiga moslangan →</div>
+        </div>
+      </div>
 
       {(targetScore || daysLeft !== null) && (
         <div style={{ background: B.navy, color: "#fff", borderRadius: 18, padding: "16px 20px", marginBottom: 16, display: "flex", gap: 24, flexWrap: "wrap" }}>
@@ -3604,6 +3712,145 @@ function DrillsHome() {
     </div>
   );
 }
+// ---- Kunlik test: har kuni hamma uchun bir xil 10 ta savol ----
+const DAILY_MATH = ["Linear equations & systems", "Nonlinear functions", "Ratios, rates, data", "Lines, angles, circles"];
+function buildDaily(date) {
+  const rng = mulberry32(hashStr("daily|" + date));
+  const rwSkills = [...new Set(RW_BLUEPRINT.map(([, s]) => s))];
+  const out = [];
+  for (let i = 0; i < 5; i++) {
+    const skill = rwSkills[Math.floor(rng() * rwSkills.length)]; const all = rwAll(skill); if (!all.length) continue;
+    const src = all[Math.floor(rng() * all.length)]; const dom = (RW_BLUEPRINT.find(([, s]) => s === skill) || [""])[0];
+    let q = { ...src };
+    if (!src.fixed && !src.ai) { const order = src.choices.map((_, k) => k); for (let k = order.length - 1; k > 0; k--) { const j = Math.floor(rng() * (k + 1)); [order[k], order[j]] = [order[j], order[k]]; } q = { ...src, choices: order.map((k) => src.choices[k]), answer: order.indexOf(src.answer) }; }
+    out.push({ ...q, type: "mc", skill, domain: dom });
+  }
+  ["E", "M", "M", "H", "H"].forEach((tier, i) => {
+    const skill = DAILY_MATH[(i + Math.floor(rng() * 4)) % 4]; const pool = MATH_TIERS[skill][tier];
+    const g = genMath(skill, rng, false, pool[Math.floor(rng() * pool.length)]);
+    out.push({ ...g, skill, domain: (MATH_BLUEPRINT.find(([, s]) => s === skill) || [""])[0], passage: null });
+  });
+  return out;
+}
+function DailyTest() {
+  const date = todayStr();
+  const [qs, setQs] = useState(null);
+  const [i, setI] = useState(0);
+  const [picked, setPicked] = useState(null);
+  const [log, setLog] = useState([]);
+  const saved = loadLocal("sws_daily_" + date, null);
+  const [result, setResult] = useState(saved);
+  useEffect(() => { loadRwBank().then(() => setQs(buildDaily(date))); }, []);
+  const streak = loadLocal("sws_daily_streak", { last: null, n: 0 });
+  const finish = (lg) => {
+    const score = lg.filter((x) => x.ok).length; const r = { score, total: lg.length, at: Date.now() };
+    saveLocal("sws_daily_" + date, r); setResult(r);
+    const y = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const st = loadLocal("sws_daily_streak", { last: null, n: 0 }); if (st.last !== date) saveLocal("sws_daily_streak", { last: date, n: st.last === y ? st.n + 1 : 1 });
+  };
+  const card = { background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 24 };
+  if (result && !log.length) return (
+    <div>
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 6px" }}>Kunlik test</h1>
+      <div style={{ ...card, textAlign: "center" }}>
+        <div style={{ fontSize: 46 }}>{result.score >= 8 ? "🏆" : result.score >= 5 ? "💪" : "📚"}</div>
+        <div style={{ fontSize: 15, color: B.muted }}>Bugungi natijangiz</div>
+        <div style={{ fontSize: 44, fontWeight: 900, margin: "4px 0" }}>{result.score}/{result.total}</div>
+        <div style={{ fontSize: 15, color: B.muted }}>Kunlik test seriyasi: 🔥 {loadLocal("sws_daily_streak", { n: 0 }).n} kun · Ertaga yangi 10 ta savol chiqadi</div>
+      </div>
+    </div>
+  );
+  if (!qs) return <div style={{ padding: 30, color: B.muted }}>Yuklanmoqda…</div>;
+  if (i >= qs.length) { return null; }
+  const q = qs[i]; const revealed = picked !== null;
+  const choose = (k) => { if (revealed) return; setPicked(k); const ok = k === q.answer; if (!ok) addSaved({ ...q, mistake: true }); setLog((l) => [...l, { ok }]); };
+  const next = () => { if (i + 1 >= qs.length) { finish(log); setI(i + 1); setLog([]); } else { setI(i + 1); setPicked(null); } };
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, marginBottom: 6 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 800, margin: 0 }}>Kunlik test</h1>
+        <span style={{ fontSize: 14, fontWeight: 800, color: B.plum, background: "#F2EAFB", padding: "6px 12px", borderRadius: 20 }}>{i + 1} / {qs.length} · 🔥 {streak.n}</span>
+      </div>
+      <p style={{ fontSize: 15, color: B.muted, margin: "0 0 14px" }}>Har kuni hamma uchun bir xil 10 ta savol: 5 ta Reading & Writing, 5 ta Math — osondan qiyinga.</p>
+      <div style={{ height: 6, background: B.border, borderRadius: 6, marginBottom: 16 }}><div style={{ height: 6, width: `${(i / qs.length) * 100}%`, background: `linear-gradient(90deg, ${B.plum}, ${B.rose})`, borderRadius: 6, transition: "width .3s" }} /></div>
+      <div style={card}>
+        <div style={{ fontSize: 12.5, fontWeight: 800, color: B.muted, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 10 }}>{q.domain} · {q.skill}{q.difficulty ? " · " + q.difficulty : ""}</div>
+        {q.passage && <div style={{ fontSize: 16, lineHeight: 1.75, marginBottom: 16, whiteSpace: "pre-line", fontFamily: BB.serif }}>{q.passage}</div>}
+        {q.chart && <QChart c={q.chart} />}
+        <p style={{ fontSize: 16.5, marginBottom: 16, lineHeight: 1.6, whiteSpace: "pre-line", fontWeight: 600 }}>{q.prompt}</p>
+        {q.choices.map((ch, k) => { const isC = k === q.answer, isP = k === picked;
+          return <button key={k} onClick={() => choose(k)} style={{ display: "flex", gap: 10, alignItems: "center", width: "100%", textAlign: "left", marginBottom: 8, padding: "12px 14px", borderRadius: 12, cursor: revealed ? "default" : "pointer", fontFamily: FONT, fontSize: 15.5, border: `1.5px solid ${revealed && isC ? B.green : revealed && isP ? B.rose : B.border}`, background: revealed && isC ? "#E6F6EE" : revealed && isP ? "#FDECEF" : "#fff", color: B.text }}><b style={{ width: 22 }}>{String.fromCharCode(65 + k)}</b>{ch}</button>; })}
+        {revealed && (
+          <div style={{ marginTop: 10, background: B.bg, borderRadius: 12, padding: "12px 14px", fontSize: 14.5, lineHeight: 1.6 }}>
+            <b style={{ color: picked === q.answer ? B.green : B.rose }}>{picked === q.answer ? "To'g'ri! " : "Noto'g'ri. "}</b>{q.expl}
+          </div>
+        )}
+        {revealed && <button onClick={next} style={{ marginTop: 14, background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "12px 22px", fontWeight: 800, fontSize: 15, cursor: "pointer", fontFamily: FONT }}>{i + 1 >= qs.length ? "Natijani ko'rish" : "Keyingi savol →"}</button>}
+      </div>
+    </div>
+  );
+}
+// ---- O'quv reja: imtihon sanasi va maqsad ballga qarab haftalik reja ----
+function StudyPlan({ history, targetScore, examDate, onGo }) {
+  const last = history[history.length - 1];
+  const base = last ? last.total : 1000;
+  const target = targetScore || 1400;
+  const daysLeft = examDate ? Math.max(0, Math.ceil((new Date(examDate) - new Date()) / 86400000)) : null;
+  const weeks = daysLeft !== null ? Math.max(1, Math.ceil(daysLeft / 7)) : 8;
+  const agg = {}; history.forEach((h) => Object.entries(h.perDomain || {}).forEach(([d, v]) => { agg[d] = agg[d] || { c: 0, t: 0 }; agg[d].c += v.c; agg[d].t += v.t; }));
+  let weak = Object.entries(agg).filter(([, v]) => v.t >= 2).sort((a, b) => a[1].c / a[1].t - b[1].c / b[1].t).map(([d]) => d);
+  if (weak.length < 3) weak = [...weak, ...loadLocal("sws_weak_areas", []), "Advanced Math", "Craft and Structure", "Problem-Solving and Data Analysis"].filter((v, i, a) => a.indexOf(v) === i);
+  const lastWeek = weeks <= 1;
+  const days = [
+    ["Dushanba", `${weak[0]} — savollar banki, 20 ta savol`, "bank"],
+    ["Seshanba", `${weak[1]} — savollar banki, 20 ta savol`, "bank"],
+    ["Chorshanba", "Lug'at: 30 ta so'z + 5 daqiqalik mashq", "vocab"],
+    ["Payshanba", `${weak[2]} — 20 ta savol + xatolar tahlili`, "bank"],
+    ["Juma", lastWeek ? "Faqat R&W: 1 modul (32 daqiqa)" : "Kunlik test + 1 modul · Math (35 daqiqa)", "tests"],
+    ["Shanba", "To'liq mock test (2 soat 14 daqiqa) — imtihon sharoitida", "tests"],
+    ["Yakshanba", lastWeek ? "Yengil takrorlash va dam olish" : "Xatolar/Saqlangan sahifasini takrorlash", "saved"],
+  ];
+  const wk = (() => { const d = new Date(); const day = (d.getDay() + 6) % 7; d.setDate(d.getDate() - day); return d.toISOString().slice(0, 10); })();
+  const [done, setDone] = useState(() => loadLocal("sws_plan_" + wk, {}));
+  const toggle = (k) => setDone((x) => { const n = { ...x, [k]: !x[k] }; saveLocal("sws_plan_" + wk, n); return n; });
+  const todayIdx = (new Date().getDay() + 6) % 7;
+  const milestones = Array.from({ length: Math.min(weeks, 12) }, (_, i) => Math.round((base + ((target - base) * (i + 1)) / Math.min(weeks, 12)) / 10) * 10);
+  const doneCount = days.filter((_, k) => done[k]).length;
+  return (
+    <div>
+      <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>O'quv reja</h1>
+      <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 16px" }}>Maqsad ball, imtihon sanasi va zaif mavzularingiz asosida tuzilgan haftalik reja.</p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 10, marginBottom: 16 }}>
+        {[["Hozirgi ball", last ? last.total : "—"], ["Maqsad", target], ["Imtihongacha", daysLeft !== null ? `${daysLeft} kun` : "sana yo'q"], ["Bu hafta bajarildi", `${doneCount}/7`]].map(([l, v]) => (
+          <div key={l} style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 16, padding: "14px 16px" }}><div style={{ fontSize: 13, color: B.muted, fontWeight: 700 }}>{l}</div><div style={{ fontSize: 24, fontWeight: 900 }}>{v}</div></div>
+        ))}
+      </div>
+      {daysLeft === null && <div onClick={() => onGo("profile")} style={{ background: "#FFF7E8", borderRadius: 12, padding: "12px 16px", fontSize: 14.5, marginBottom: 14, cursor: "pointer" }}>📅 Aniqroq reja uchun Profil sahifasida imtihon sanasi va maqsad ballni kiriting →</div>}
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 18, marginBottom: 16 }}>
+        <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 10 }}>Bu haftalik reja</div>
+        {days.map(([d, task, pg], k) => (
+          <div key={d} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 8px", borderRadius: 12, background: k === todayIdx ? "#F2EAFB" : "transparent", borderBottom: `1px solid ${B.bg}` }}>
+            <button onClick={() => toggle(k)} style={{ width: 24, height: 24, borderRadius: 7, border: `2px solid ${done[k] ? B.green : B.border}`, background: done[k] ? B.green : "#fff", color: "#fff", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: 0 }}>{done[k] && <Check size={14} color="#fff" />}</button>
+            <div style={{ width: 92, fontSize: 14, fontWeight: 800, color: k === todayIdx ? B.plum : B.text }}>{d}{k === todayIdx ? " · bugun" : ""}</div>
+            <div style={{ flex: 1, fontSize: 14.5, textDecoration: done[k] ? "line-through" : "none", color: done[k] ? B.muted : B.text }}>{task}</div>
+            <button onClick={() => onGo(pg)} style={{ background: B.bg, border: "none", borderRadius: 10, padding: "7px 12px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: FONT, color: B.plum }}>Boshlash</button>
+          </div>
+        ))}
+      </div>
+      <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 18 }}>
+        <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 12 }}>Haftalik maqsadlar ({base} → {target})</div>
+        <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4 }}>
+          {milestones.map((m, i) => (
+            <div key={i} style={{ minWidth: 76, textAlign: "center", background: i === 0 ? B.navy : B.bg, color: i === 0 ? "#fff" : B.text, borderRadius: 14, padding: "10px 6px" }}>
+              <div style={{ fontSize: 11.5, opacity: 0.75, fontWeight: 700 }}>{i + 1}-hafta</div><div style={{ fontSize: 18, fontWeight: 900 }}>{m}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ fontSize: 13, color: B.muted, marginTop: 10 }}>Har hafta oxirida to'liq mock yeching va natijani shu maqsad bilan solishtiring.</div>
+      </div>
+    </div>
+  );
+}
 function AppShell({ onHome }) {
   const [page, setPageRaw] = useState("home");
   const sws = useSws();
@@ -3732,6 +3979,7 @@ function AppShell({ onHome }) {
   };
   const nav = [
     { id: "home", label: "Bosh sahifa", icon: Home }, { id: "tests", label: "Mock testlar", icon: FileText },
+    { id: "daily", label: "Kunlik test", icon: Star }, { id: "plan", label: "O'quv reja", icon: Target },
     { id: "bank", label: "Savollar banki", icon: ListChecks }, { id: "drills", label: "Tezkor mashqlar", icon: Timer },
     { id: "vocab", label: "Lug'at", icon: Layers }, { id: "saved", label: "Xatolar/Saqlangan", icon: Bookmark },
     { id: "tutor", label: "AI repetitor", icon: MessageCircle }, { id: "analytics", label: "Tahlil", icon: BarChart3 },
@@ -3795,12 +4043,14 @@ function AppShell({ onHome }) {
           </div>
         )}
         <div key={page} className="sws-fade-in" style={{ padding: isMobile ? "18px 14px 120px" : "32px 34px 120px", maxWidth: navOpen || isMobile ? 1000 : 1180, margin: navOpen || isMobile ? 0 : "0 auto", boxSizing: "border-box" }}>
-          {page === "home" && <DashHome history={history} onGoTests={() => setPage("tests")} todaySeconds={todaySeconds} goalMinutes={goalMinutes} streak={streak} onGoProfile={() => setPage("profile")} targetScore={targetScore} examDate={examDate} />}
+          {page === "home" && <DashHome onGo={setPage} history={history} onGoTests={() => setPage("tests")} todaySeconds={todaySeconds} goalMinutes={goalMinutes} streak={streak} onGoProfile={() => setPage("profile")} targetScore={targetScore} examDate={examDate} />}
           {page === "tests" && <MockTests tier={tier} history={history} onOpenTest={openTest} onNeedPay={() => needPay()} />}
           {page === "bank" && <QuestionBank tier={tier} bankStats={bankStats} onRecord={(d, c, t) => setBankStats((s) => ({ ...s, [d]: { c, t } }))} onNeedPay={needPay} />}
           {page === "drills" && <DrillsHome />}
           {page === "vocab" && <Vocabulary />}
           {page === "saved" && <SavedPage />}
+          {page === "daily" && <DailyTest />}
+          {page === "plan" && <StudyPlan history={history} targetScore={targetScore} examDate={examDate} onGo={setPage} />}
           {page === "tutor" && <AITutor tier={tier} />}
           {page === "analytics" && <Analytics history={history} />}
           {page === "community" && <Community name={name} />}
