@@ -344,7 +344,14 @@ const qid = (q) => (q.passage ? "r" : "m") + hashStr((q.passage || "").slice(0, 
 const RW_EXTRA = {};
 let __rwBankPromise = null;
 function loadRwBank() {
-  if (!__rwBankPromise) __rwBankPromise = fetch("/rwbank.json").then((r) => r.json()).then((d) => { Object.entries(d || {}).forEach(([k, arr]) => { RW_EXTRA[k] = arr.map((q) => ({ ...q, fixed: true })); }); }).catch(() => {});
+  if (!__rwBankPromise) __rwBankPromise = Promise.all([
+    fetch("/rwbank.json").then((r) => r.json()).catch(() => ({})),
+    // rwhard.json: haqiqiy imtihon darajasidagi qiyin savollar (variantlar har safar aralashtiriladi)
+    fetch("/rwhard.json").then((r) => r.json()).catch(() => ({})),
+  ]).then(([d, h]) => {
+    Object.entries(d || {}).forEach(([k, arr]) => { RW_EXTRA[k] = arr.map((q) => ({ ...q, fixed: true })); });
+    Object.entries(h || {}).forEach(([k, arr]) => { RW_EXTRA[k] = [...(RW_EXTRA[k] || []), ...arr.map((q) => ({ ...q, difficulty: "Hard", pro: true }))]; });
+  }).catch(() => {});
   return __rwBankPromise;
 }
 const rwAll = (skill) => [...(RW_POOL[skill] || []), ...(RW_EXTRA[skill] || [])];
@@ -370,9 +377,16 @@ async function ensureRW(needs) {
   });
   await Promise.all(tasks);
 }
-function pickUnseenRW(skill) {
+function pickUnseenRW(skill, tier) {
   const st = seenSet();
-  const fresh = rwAll(skill).filter((q) => !st.has(qid(q)));
+  let fresh = rwAll(skill).filter((q) => !st.has(qid(q)));
+  if (tier && fresh.length) {
+    // Avval kerakli qiyinlikdagi savol, bo'lmasa eng yaqin darajadagisi
+    const order = { E: ["Easy", "Medium", "Hard"], M: ["Medium", "Hard", "Easy"], H: ["Hard", "Medium", "Easy"] }[tier];
+    const pro = tier === "H" ? fresh.filter((q) => q.pro) : [];
+    if (pro.length) fresh = pro;
+    else for (const d of order) { const f = fresh.filter((q) => (q.difficulty || "Medium") === d); if (f.length) { fresh = f; break; } }
+  }
   let src = null;
   if (fresh.length) src = fresh[Math.floor(Math.random() * fresh.length)];
   else {
@@ -389,9 +403,10 @@ function pickUnseenRW(skill) {
   return { ...src, choices: order.map((k) => src.choices[k]), answer: order.indexOf(src.answer) };
 }
 // Math: har safar yangi raqamlar; ko'rilgan savol chiqsa qayta yaratamiz
-function genMathUnseen(skill, isSPR, forceT) {
+function genMathUnseen(skill, isSPR, forceT, tier) {
   const st = seenSet(); let g = null;
-  for (let t = 0; t < 30; t++) { g = genMath(skill, freshRng(), isSPR, forceT); if (!st.has(qid(g))) break; }
+  const pool = tier && forceT == null ? (MATH_TIERS[skill] || MATH_TIERS["Lines, angles, circles"])[tier] : null;
+  for (let t = 0; t < 30; t++) { const ft = pool ? pool[Math.floor(Math.random() * pool.length)] : forceT; g = genMath(skill, freshRng(), isSPR, ft); if (!st.has(qid(g))) break; }
   markSeen(qid(g));
   return g;
 }
@@ -407,7 +422,10 @@ function buildChoices(rng, correct, distractors) {
 
 function genMath(skill, rng, isSPR, forceT) {
   let q;
-  if (skill === "Linear equations & systems") {
+  if (forceT == null) forceT = ri(rng, 0, mathCount(skill) - 1);
+  if (forceT >= 8) {
+    q = genMathExtra(skill, rng, forceT);
+  } else if (skill === "Linear equations & systems") {
     const t = forceT != null ? forceT : ri(rng, 0, 7);
     if (t === 0) { const a = ri(rng, 2, 24), x = ri(rng, 2, 40), b = ri(rng, 1, 60); const c = a * x - b;
       q = { prompt: `If ${a}x − ${b} = ${c}, what is the value of x?`, correct: x, dist: [x + 1, x - 1, x + ri(rng, 2, 6)], expl: `${a}x = ${c + b}, so x = ${x}.` };
@@ -483,10 +501,86 @@ function genMath(skill, rng, isSPR, forceT) {
     } else { const k = ri(rng, 2, 6), b = ri(rng, 10, 100), sy = b * k * k, vy = ri(rng, 2, 50) * k * k * k, vx = vy / (k * k * k);
       q = { prompt: `Right rectangular prism X is similar to right rectangular prism Y. The surface area of right rectangular prism X is ${b} square centimeters, and the surface area of right rectangular prism Y is ${sy} square centimeters. The volume of right rectangular prism Y is ${vy} cubic centimeters. What is the sum of the volumes, in cubic centimeters, of right rectangular prism X and right rectangular prism Y?`, correct: vx + vy, dist: [vy, vx, vy - vx], expl: `The surface-area ratio ${sy}/${b} = ${k * k}, so the linear scale factor is ${k} and the volume ratio is ${k}³ = ${k * k * k}. Volume X = ${vy}/${k * k * k} = ${vx}, so the sum is ${vx} + ${vy} = ${vx + vy}.` }; }
   }
-  if (isSPR) return { type: "spr", prompt: q.prompt, answer: String(q.correct), expl: q.expl };
-  const { choices, answer } = buildChoices(rng, q.correct, q.dist);
-  return { type: "mc", prompt: q.prompt, choices, answer, expl: q.expl };
+  const difficulty = TIER_NAME[tierOfTemplate(skill, forceT)];
+  // SPR (javobni o'zi yozadi) faqat son/kasr javobli savollarda
+  if (isSPR && Number.isFinite(sprNum(q.correct))) return { type: "spr", prompt: q.prompt, answer: String(q.correct), expl: q.expl, difficulty };
+  const uniq = []; q.dist.forEach((d) => { if (String(d) !== String(q.correct) && !uniq.includes(String(d))) uniq.push(String(d)); });
+  let pad = 1; while (uniq.length < 3) { const alt = Number.isFinite(Number(q.correct)) ? String(Number(q.correct) + pad * (pad % 2 ? 1 : -1) * 2) : String(q.correct) + " + " + pad; if (!uniq.includes(alt) && alt !== String(q.correct)) uniq.push(alt); pad++; }
+  const { choices, answer } = buildChoices(rng, q.correct, uniq.slice(0, 3));
+  return { type: "mc", prompt: q.prompt, choices, answer, expl: q.expl, difficulty };
 }
+// Qiyinlik darajalari: har bir math shabloni Easy / Medium / Hard guruhiga ajratilgan
+const MATH_TIERS = {
+  "Linear equations & systems": { E: [0, 2, 7], M: [1, 3, 4, 6, 10, 11], H: [5, 8, 9, 12] },
+  "Nonlinear functions": { E: [2, 3, 7], M: [0, 1, 5, 10, 12, 13], H: [4, 6, 8, 9, 11] },
+  "Ratios, rates, data": { E: [0, 1, 3], M: [2, 4, 5, 7, 9, 10, 11], H: [6, 8, 12] },
+  "Lines, angles, circles": { E: [0, 1, 6], M: [2, 3, 4, 9, 11, 12], H: [5, 7, 8, 10] },
+};
+const TIER_NAME = { E: "Easy", M: "Medium", H: "Hard" };
+const mathCount = (skill) => { const t = MATH_TIERS[skill] || MATH_TIERS["Lines, angles, circles"]; return t.E.length + t.M.length + t.H.length; };
+const tierOfTemplate = (skill, t) => { const T = MATH_TIERS[skill] || MATH_TIERS["Lines, angles, circles"]; return T.H.includes(t) ? "H" : T.M.includes(t) ? "M" : "E"; };
+const sgn = (n, v) => (n < 0 ? ` − ${-n === 1 && v ? "" : -n}${v}` : ` + ${n === 1 && v ? "" : n}${v}`);
+const gcd = (a, b) => (b ? gcd(b, a % b) : Math.abs(a));
+const frac = (n, d) => { const g = gcd(n, d); const nn = n / g, dd = d / g; return dd === 1 ? String(nn) : `${nn}/${dd}`; };
+// SPR javobini tekshirish: 17/3, 5.666, 5.667 — hammasi qabul qilinadi (haqiqiy SAT'dagidek)
+function sprNum(s) { s = String(s ?? "").trim().replace(/\s/g, "").replace("−", "-"); if (/^-?\d+\/\d+$/.test(s)) { const [a, b] = s.split("/").map(Number); return b ? a / b : NaN; } return /^-?\d*\.?\d+$/.test(s) ? Number(s) : NaN; }
+function sprOk(val, ans) {
+  const v = String(val ?? "").trim(); if (!v) return false;
+  if (v.replace(/\s/g, "") === String(ans).replace(/\s/g, "")) return true;
+  const a = sprNum(ans), b = sprNum(v);
+  return Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) < 0.0015 + Math.abs(a) * 0.0002;
+}
+function genMathExtra(skill, rng, t) {
+  if (skill === "Linear equations & systems") {
+    if (t === 8) { const a = ri(rng, 2, 9), b = ri(rng, 2, 11), k = ri(rng, 2, 6); let c = ri(rng, 3, 40); if (c === b) c++; const r = k * b, s = k * c;
+      return { prompt: `${a}x + ${b}y = ${c}\n${k * a}x + ry = s\n\nIn the given system of equations, r and s are constants. If the system has infinitely many solutions, what is the value of r + s?`, correct: r + s, dist: [r, s, r + s + k], expl: `For infinitely many solutions the second equation must be ${k} times the first: r = ${k}(${b}) = ${r} and s = ${k}(${c}) = ${s}, so r + s = ${r + s}.` }; }
+    if (t === 9) { const m = pickOne(rng, [-5, -4, -3, -2, 2, 3, 4, 5, 6, 7]), b0 = ri(rng, -20, 30), x1 = ri(rng, 1, 9), x2 = x1 + ri(rng, 2, 8); const y1 = m * x1 + b0, y2 = m * x2 + b0;
+      return { prompt: `In the xy-plane, the graph of the linear function f passes through the points (${x1}, ${y1}) and (${x2}, ${y2}). What is the value of f(0)?`, correct: b0, dist: [m, y1 - x1, b0 + m], expl: `Slope = (${y2} − ${y1})/(${x2} − ${x1}) = ${m}. Then f(0) = ${y1} − ${m}(${x1}) = ${b0}.` }; }
+    if (t === 10) { const p = ri(rng, 3, 12), R = ri(rng, 20, 200); let need = ri(rng, 60, 400); if (need % p === 0) need += 1; const T = R + need, n = Math.ceil(need / p);
+      return { prompt: `A club needs to raise at least $${T} for a trip. It has already raised $${R}. The members will sell boxes of cookies for $${p} each. What is the least number of boxes they must sell to reach their goal?`, correct: n, dist: [n - 1, n + 1, Math.ceil(T / p) === n ? n + 2 : Math.ceil(T / p)], expl: `They still need ${T} − ${R} = ${need}. ${p}b ≥ ${need} gives b ≥ ${(need / p).toFixed(2)}, so the least whole number is ${n}.` }; }
+    if (t === 11) { const m = pickOne(rng, [-6, -4, -3, -2, 2, 3, 5, 7]), b0 = ri(rng, -15, 25), a = ri(rng, -5, 3), bb = a + ri(rng, 2, 6), c = bb + ri(rng, 2, 9); const f = (x) => m * x + b0;
+      return { prompt: `For the linear function f, f(${a}) = ${f(a)} and f(${bb}) = ${f(bb)}. What is the value of f(${c})?`, correct: f(c), dist: [f(c) + m, f(c) - m, f(a) + f(bb)], expl: `Slope = (${f(bb)} − (${f(a)}))/(${bb} − (${a})) = ${m}, so f(x) = ${m}x${sgn(b0, "")} and f(${c}) = ${f(c)}.` }; }
+    { const tt = ri(rng, 2, 6), e = ri(rng, 1, 30), px = ri(rng, -6, 8), c = ri(rng, -10, 15), d = c + tt * px;
+      return { prompt: `In the xy-plane, line k is perpendicular to the line defined by x − ${tt}y = ${e}. Line k passes through the point (${px}, ${c}). What is the y-coordinate of the y-intercept of line k?`, correct: d, dist: [c - tt * px, d + tt, c + px], expl: `x − ${tt}y = ${e} has slope 1/${tt}, so line k has slope −${tt}. y = −${tt}x + d through (${px}, ${c}): d = ${c} + ${tt}(${px}) = ${d}.` }; }
+  }
+  if (skill === "Nonlinear functions") {
+    if (t === 8) { const a = pickOne(rng, [-3, -2, -1, 1, 2, 3]), h = ri(rng, -6, 8), k = pickOne(rng, [-1, 1]) * ri(rng, 1, 20), d = ri(rng, 1, 3), e = ri(rng, 4, 6); const y1 = a * d * d + k, ans = a * e * e + k;
+      return { prompt: `The graph of the quadratic function f in the xy-plane has its vertex at (${h}, ${k}) and passes through the point (${h + d}, ${y1}). What is the value of f(${h + e})?`, correct: ans, dist: [y1, a * e * e - k, a * e + k], expl: `f(x) = a(x − ${h})²${sgn(k, "")}. Using (${h + d}, ${y1}): a(${d})² = ${y1 - k}, so a = ${a}. Then f(${h + e}) = ${a}(${e})²${sgn(k, "")} = ${ans}.` }; }
+    if (t === 9) { const P = ri(rng, 4, 60) * 500, p = pickOne(rng, [5, 10, 15, 20, 25]), n = pickOne(rng, [2, 3, 4, 5]); const dm = (1 - p / 100).toFixed(2), um = (1 + p / 100).toFixed(2), pm = (p / 100).toFixed(2);
+      return { prompt: `A machine was worth $${P.toLocaleString("en-US")} when it was purchased. Its value decreases by ${p}% every ${n} years. Which function V gives the value of the machine, in dollars, t years after it was purchased?`, correct: `V(t) = ${P}(${dm})^(t/${n})`, dist: [`V(t) = ${P}(${dm})^(${n}t)`, `V(t) = ${P}(${pm})^(t/${n})`, `V(t) = ${P}(${um})^(t/${n})`], expl: `Each ${n}-year period multiplies the value by 1 − ${p / 100} = ${dm}. After t years there are t/${n} periods, so V(t) = ${P}(${dm})^(t/${n}).` }; }
+    if (t === 10) { const a = ri(rng, 2, 7); let b = ri(rng, 5, 40); while (gcd(a, b) !== 1) b++; const c = ri(rng, 1, 30);
+      return { prompt: `What is the sum of the solutions to ${a}x² − ${b}x − ${c} = 0?`, correct: frac(b, a), dist: [`−${frac(b, a)}`, `−${frac(c, a)}`, `${b}`], expl: `For ax² + bx + c = 0 the sum of the solutions is −b/a = ${b}/${a}.` }; }
+    if (t === 11) { const h = pickOne(rng, [-1, 1]) * ri(rng, 1, 12), c = ri(rng, -20, 60), k = c - h * h;
+      return { prompt: `y = x²${sgn(-2 * h, "x")}${sgn(c, "")}\ny = k\n\nIn the given system of equations, k is a constant. If the system has exactly one real solution, what is the value of k?`, correct: k, dist: [c, c + h * h, h], expl: `The horizontal line y = k meets the parabola exactly once only at its vertex. The vertex is at x = ${h}, so k = (${h})² − ${2 * h}(${h}) + ${c} = ${h * h} − ${2 * h * h} + ${c} = ${k}.` }; }
+    if (t === 12) { const a = ri(rng, 2, 15);
+      return { prompt: `Which expression is equivalent to (x + ${a})² − (x − ${a})²?`, correct: `${4 * a}x`, dist: [`${2 * a * a}`, `0`, `2x² + ${2 * a * a}`], expl: `(x² + ${2 * a}x + ${a * a}) − (x² − ${2 * a}x + ${a * a}) = ${4 * a}x.` }; }
+    { const a = ri(rng, 2, 14);
+      return { prompt: `For x ≠ ${a}, which expression is equivalent to (x² − ${a * a}) / (x − ${a})?`, correct: `x + ${a}`, dist: [`x − ${a}`, `x + ${a * a}`, `x − ${a * a}`], expl: `x² − ${a * a} = (x − ${a})(x + ${a}); dividing by (x − ${a}) leaves x + ${a}.` }; }
+  }
+  if (skill === "Ratios, rates, data") {
+    if (t === 8) { const p = pickOne(rng, [10, 20, 25, 50]), q = pickOne(rng, [10, 20, 40, 50]); const r = ((100 + p) * (100 - q)) / 100; const rs = Number.isInteger(r) ? r : Number(r.toFixed(1));
+      return { prompt: `The price of a jacket was increased by ${p}%. Later, the new price was decreased by ${q}%. The final price is what percent of the original price?`, correct: rs, dist: [100 + p - q, 100 - q, 100 + p - q + (p * q) / 100], expl: `Final = original × ${(1 + p / 100).toFixed(2)} × ${(1 - q / 100).toFixed(2)} = ${(r / 100).toFixed(3)} × original, which is ${rs}% of the original.` }; }
+    if (t === 9) { let n1 = ri(rng, 5, 15), n2 = ri(rng, 5, 15); if (n1 === n2) n2++; const M = ri(rng, 55, 75), m1 = M - n2, m2 = M + n1;
+      return { prompt: `In a class, ${n1} students took a test and their mean score was ${m1}. Another ${n2} students took the same test and their mean score was ${m2}. What is the mean score of all ${n1 + n2} students?`, correct: M, dist: [(m1 + m2) / 2, M - 1, M + 2], expl: `Total = ${n1}(${m1}) + ${n2}(${m2}) = ${n1 * m1 + n2 * m2}. Mean = ${n1 * m1 + n2 * m2}/${n1 + n2} = ${M}.` }; }
+    if (t === 10) { const N = ri(rng, 3, 12) * 100, p = ri(rng, 30, 70), m = ri(rng, 2, 6), pop = pickOne(rng, ["residents of a city", "students at a university", "voters in a district"]);
+      return { prompt: `A researcher surveyed a random sample of ${N} ${pop}. Of those surveyed, ${p}% said they support building a new park. The margin of error for this estimate is ${m}%. Which statement is best supported by this information?`, correct: `It is plausible that between ${p - m}% and ${p + m}% of all ${pop} support building a new park.`, dist: [`Exactly ${p}% of all ${pop} support building a new park.`, `Between ${p - m}% and ${p + m}% of the people in the sample support building a new park.`, `At least ${p + m}% of all ${pop} support building a new park.`], expl: `A margin of error gives a plausible range for the whole population: ${p}% ± ${m}%, from ${p - m}% to ${p + m}%. It does not give an exact value.` }; }
+    if (t === 11) { const v = pickOne(rng, [5, 10, 15, 20, 25, 30]);
+      return { prompt: `A cyclist rides at a constant speed of ${v} meters per second. What is this speed in kilometers per hour? (1 kilometer = 1,000 meters)`, correct: Math.round(v * 3.6), dist: [v * 60, v * 36, v * 6], expl: `${v} m/s × 3,600 s/h = ${v * 3600} m/h = ${v * 3.6} km/h.` }; }
+    { const r1c1 = ri(rng, 10, 40), r1c2 = ri(rng, 10, 40), r2c1 = ri(rng, 10, 60), r2c2 = ri(rng, 30, 100); const cB = r1c2 + r2c2, tR2 = r2c1 + r2c2, total = r1c1 + r1c2 + tR2;
+      return { prompt: `                Group A   Group B   Total\nCategory X         ${r1c1}        ${r1c2}       ${r1c1 + r1c2}\nCategory Y         ${r2c1}        ${r2c2}       ${tR2}\nTotal              ${r1c1 + r2c1}        ${cB}      ${total}\n\nThe table summarizes members of a club. If a member of Group B is selected at random, what is the probability that the member is in Category Y?`, correct: `${r2c2}/${cB}`, dist: [`${r2c2}/${total}`, `${r2c2}/${tR2}`, `${tR2}/${total}`], expl: `Only Group B counts: ${r2c2} of its ${cB} members are in Category Y, so the probability is ${r2c2}/${cB}.` }; }
+  }
+  if (t === 8) { const h = pickOne(rng, [-1, 1]) * ri(rng, 1, 9), k = pickOne(rng, [-1, 1]) * ri(rng, 1, 9), r = ri(rng, 2, 12); const c = r * r - h * h - k * k;
+    return { prompt: `x²${sgn(-2 * h, "x")} + y²${sgn(-2 * k, "y")} = ${c}\n\nThe equation of a circle in the xy-plane is shown. What is the radius of the circle?`, correct: r, dist: [r * r, 2 * r, Math.abs(c)], expl: `Completing the square: (x ${h < 0 ? "+" : "−"} ${Math.abs(h)})² + (y ${k < 0 ? "+" : "−"} ${Math.abs(k)})² = ${c} + ${h * h} + ${k * k} = ${r * r}, so the radius is ${r}.` }; }
+  if (t === 9) { const kk = pickOne(rng, [2, 3, 4, 6]); let n = ri(rng, 1, 2 * kk - 1); while (gcd(n, kk) !== 1) n++; const r = kk * ri(rng, 1, 6), arc = (r * n) / kk; const ang = `${n === 1 ? "" : n}π/${kk}`;
+    return { prompt: `A circle has a radius of ${r} centimeters. A central angle of the circle measures ${ang} radians. What is the length, in centimeters, of the arc intercepted by this angle?`, correct: `${arc}π`, dist: [`${2 * arc}π`, `${arc + r}π`, `${r * n}π`], expl: `Arc length = radius × angle (in radians) = ${r} × ${ang} = ${arc}π.` }; }
+  if (t === 10) { const kv = ri(rng, 3, 12), a = ri(rng, 2, 5), c = ri(rng, 1, 4); let b = ri(rng, 0, 20); if (a * kv + b > 80) b = 0; const x = a * kv + b, d = 90 - x - c * kv;
+    return { prompt: `sin((${a}x${sgn(b, "")})°) = cos((${c === 1 ? "" : c}x${sgn(d, "")})°)\n\nIn the given equation, both angle measures are between 0° and 90°. What is the value of x?`, correct: kv, dist: [kv + 1, kv - 1, kv + 3], expl: `sin(A) = cos(B) for acute angles means A + B = 90: (${a} + ${c})x ${b + d < 0 ? "−" : "+"} ${Math.abs(b + d)} = 90, so ${a + c}x = ${90 - b - d} and x = ${kv}.` }; }
+  if (t === 11) { const a = ri(rng, 2, 9), b = ri(rng, 1, 9), m = ri(rng, 2, 6);
+    return { prompt: `In triangle ABC, point D lies on side AB and point E lies on side AC such that segment DE is parallel to segment BC. If AD = ${a}, DB = ${b}, and DE = ${a * m}, what is the length of BC?`, correct: m * (a + b), dist: [a * m + b, m * b, a + b + m], expl: `Triangle ADE is similar to triangle ABC. AB/AD = ${a + b}/${a}, so BC = ${a * m} × ${a + b}/${a} = ${m * (a + b)}.` }; }
+  { const r = ri(rng, 2, 9), h = 3 * ri(rng, 1, 8), V = r * r * h;
+    return { prompt: `A right circular cone and a right circular cylinder have the same radius, ${r} inches, and the same height, ${h} inches. What is the volume, in cubic inches, of the cone?`, correct: `${V / 3}π`, dist: [`${V}π`, `${(2 * V) / 3}π`, `${r * h}π`], expl: `Cone volume = (1/3)πr²h = (1/3)π(${r * r})(${h}) = ${V / 3}π.` }; }
+}
+
 
 const RW_POOL = {
   "Words in Context": [
@@ -695,13 +789,36 @@ const MODULES = [
   { id: "m1", section: "Math", label: "Section 2, Module 1", minutes: 35, kind: "math" },
   { id: "m2", section: "Math", label: "Section 2, Module 2", minutes: 35, kind: "math", adaptive: true },
 ];
+// Modul qiyinligi: 1-modul aralash; 2-modul 1-modul natijasiga qarab qiyin yoki osonroq (adaptiv)
+const TIER_MIX = { standard: [0.3, 0.4, 0.3], hard: [0.1, 0.35, 0.55], easy: [0.45, 0.4, 0.15] };
+function tierList(n, basis) {
+  const [e, m] = TIER_MIX[basis] || TIER_MIX.standard;
+  const ne = Math.round(n * e), nm = Math.round(n * m);
+  return [...Array(ne).fill("E"), ...Array(nm).fill("M"), ...Array(Math.max(0, n - ne - nm)).fill("H")];
+}
+const shuffleArr = (a) => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
 function buildModule(mod, testId, diffPath) {
-  const bp = mod.kind === "rw" ? RW_BLUEPRINT : MATH_BLUEPRINT;
-  return balanceAnswers(bp.map(([domain, skill], i) => {
-    const isSPR = mod.kind === "math" && i >= Math.floor(bp.length * 0.75);
-    if (mod.kind === "math") return { n: i + 1, domain, skill, ...genMathUnseen(skill, isSPR), passage: null };
-    const v = pickUnseenRW(skill);
-    return { n: i + 1, domain, skill, type: "mc", passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl };
+  const basis = mod.adaptive ? (diffPath === "hard" ? "hard" : "easy") : "standard";
+  if (mod.kind === "math") {
+    // Haqiqiy SAT'dagidek: mavzular aralash, savollar osondan qiyinga; bir xil mavzu ketma-ket kelmaydi
+    const slots = shuffleArr(MATH_BLUEPRINT);
+    for (let i = 1; i < slots.length; i++) if (slots[i][1] === slots[i - 1][1]) { const j = slots.findIndex((s, k) => k > i && s[1] !== slots[i - 1][1] && (k + 1 >= slots.length || true)); if (j > 0) [slots[i], slots[j]] = [slots[j], slots[i]]; }
+    const tiers = tierList(slots.length, basis);
+    return balanceAnswers(slots.map(([domain, skill], i) => {
+      const isSPR = i > 1 && (i % 4 === 3 || i === slots.length - 1);
+      return { n: i + 1, domain, skill, ...genMathUnseen(skill, isSPR, null, tiers[i]), passage: null };
+    }));
+  }
+  // R&W: savol turlari tartibi haqiqiy SAT'dagidek, har bir tur ichida osondan qiyinga
+  const tiers = shuffleArr(tierList(RW_BLUEPRINT.length, basis));
+  const rank = { E: 0, M: 1, H: 2 };
+  let start = 0;
+  for (let i = 1; i <= RW_BLUEPRINT.length; i++) {
+    if (i === RW_BLUEPRINT.length || RW_BLUEPRINT[i][1] !== RW_BLUEPRINT[start][1]) { const part = tiers.slice(start, i).sort((a, b) => rank[a] - rank[b]); tiers.splice(start, part.length, ...part); start = i; }
+  }
+  return balanceAnswers(RW_BLUEPRINT.map(([domain, skill], i) => {
+    const v = pickUnseenRW(skill, tiers[i]);
+    return { n: i + 1, domain, skill, type: "mc", difficulty: v.difficulty || TIER_NAME[tiers[i]], passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl };
   }));
 }
 // Bir xil harfdagi to'g'ri javob ketma-ket 3 martadan ko'p kelmasin (haqiqiy SAT'dagidek aralash)
@@ -722,7 +839,7 @@ function balanceAnswers(qs) {
 function buildModuleCached(mod, testId, diffPath) {
   if (mod.kind === "break") return [];
   const basis = mod.adaptive ? (diffPath || "easy") : "standard";
-  const cacheKey = `sws_qcache_v3_${testId}_${mod.id}_${basis}`;
+  const cacheKey = `sws_qcache_v4_${testId}_${mod.id}_${basis}`;
   const cached = loadLocal(cacheKey, null);
   if (cached) return cached;
   const fresh = buildModule(mod, testId, diffPath);
@@ -734,14 +851,14 @@ function scaleSection(rawCorrect, rawTotal, routedHard) {
   const ceiling = routedHard ? 800 : 620, floor = 200;
   return Math.max(200, Math.min(800, Math.round((floor + pct * (ceiling - floor)) / 10) * 10));
 }
-function gradeTest(testId, responses, diffPath) {
+function gradeTest(testId, responses, diffPath, mode) {
   const perDomain = {}; const perSection = { rw: { c: 0, t: 0 }, math: { c: 0, t: 0 } }; const wrong = [];
-  MODULES.filter((m) => m.kind !== "break").forEach((mod) => {
+  MODULES.filter((m) => m.kind !== "break" && (!mode || mode === "full" || m.kind === mode)).forEach((mod) => {
     const basis = mod.id === "rw2" ? diffPath.rw1 : mod.id === "m2" ? diffPath.m1 : null;
     const qs = buildModuleCached(mod, testId, basis);
     qs.forEach((q, i) => {
       const r = responses[`${mod.id}-${i}`];
-      let ok = q.type === "spr" ? String(r ?? "").trim() !== "" && String(r).trim() === String(q.answer) : r === q.answer;
+      let ok = q.type === "spr" ? sprOk(r, q.answer) : r === q.answer;
       perDomain[q.domain] = perDomain[q.domain] || { c: 0, t: 0 }; perDomain[q.domain].t++; if (ok) perDomain[q.domain].c++;
       else wrong.push({ domain: q.domain, skill: q.skill, prompt: q.prompt, expl: q.expl, module: mod.label });
       const sec = mod.kind === "rw" ? "rw" : "math"; perSection[sec].t++; if (ok) perSection[sec].c++;
@@ -749,6 +866,8 @@ function gradeTest(testId, responses, diffPath) {
   });
   const rwScore = scaleSection(perSection.rw.c, perSection.rw.t, diffPath.rw1 === "hard");
   const mathScore = scaleSection(perSection.math.c, perSection.math.t, diffPath.m1 === "hard");
+  if (mode === "rw") return { mode, rwScore, mathScore: null, total: rwScore, rwRaw: perSection.rw, mathRaw: null, perDomain, wrong };
+  if (mode === "math") return { mode, rwScore: null, mathScore, total: mathScore, rwRaw: null, mathRaw: perSection.math, perDomain, wrong };
   return { rwScore, mathScore, total: rwScore + mathScore, rwRaw: perSection.rw, mathRaw: perSection.math, perDomain, wrong };
 }
 
@@ -1573,13 +1692,16 @@ function TestRunner({ test, onExit, onFinish }) {
   const [split, setSplit] = useState(50);
   const splitRef = useRef(null);
   const studentName = loadLocal("sws_name", "") || "O'quvchi";
+  // Rejim: to'liq test, faqat Reading & Writing yoki faqat Math
+  const [mode, setMode] = useState("full");
+  const mods = useMemo(() => (mode === "rw" ? MODULES.filter((m) => m.kind === "rw") : mode === "math" ? MODULES.filter((m) => m.kind === "math") : MODULES), [mode]);
 
-  const mod = MODULES[stage.modIdx];
+  const mod = mods[stage.modIdx];
   const questions = useMemo(() => {
     if (!mod || mod.kind === "break") return [];
     const basis = mod.id === "rw2" ? diffPath.rw1 : mod.id === "m2" ? diffPath.m1 : null;
     return buildModuleCached(mod, test.id, basis);
-  }, [stage.modIdx, test.id, diffPath.rw1, diffPath.m1]);
+  }, [stage.modIdx, test.id, diffPath.rw1, diffPath.m1, mode]);
 
   useEffect(() => {
     if (stage.type !== "module" && stage.type !== "review" && stage.type !== "break") return;
@@ -1593,13 +1715,13 @@ function TestRunner({ test, onExit, onFinish }) {
       let correct = 0;
       questions.forEach((q, i) => {
         const r = responses[`${mod.id}-${i}`];
-        if (q.type === "spr") { if (String(r ?? "").trim() === String(q.answer)) correct++; } else if (r === q.answer) correct++;
+        if (q.type === "spr") { if (sprOk(r, q.answer)) correct++; } else if (r === q.answer) correct++;
       });
       if (mod.id === "rw1" || mod.id === "m1") setDiffPath((d) => ({ ...d, [mod.id]: correct / questions.length >= 0.6 ? "hard" : "easy" }));
     }
     const nextIdx = stage.modIdx + 1;
-    if (nextIdx >= MODULES.length) { onFinish(responses, diffPath); return; }
-    const nm = MODULES[nextIdx];
+    if (nextIdx >= mods.length) { onFinish(responses, diffPath, mode); return; }
+    const nm = mods[nextIdx];
     if (nm.kind === "break") { setSeconds(nm.minutes * 60); setStage({ type: "break", modIdx: nextIdx }); }
     else setStage({ type: "intro", modIdx: nextIdx });
   };
@@ -1645,6 +1767,19 @@ function TestRunner({ test, onExit, onFinish }) {
               </div>
               <p style={{ fontSize: 15, lineHeight: 1.7, color: "#333", margin: "0 0 16px" }}>{DIRECTIONS[isRw ? "rw" : "math"]}</p>
               {!isRw && <p style={{ fontSize: 14, color: BB.muted, margin: "0 0 16px" }}>Kalkulyator (Desmos) va formulalar varag'i test ichida doim mavjud.</p>}
+              {stage.modIdx === 0 && (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: BB.muted, marginBottom: 8 }}>Rejimni tanlang</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
+                    {[["full", "To'liq test", "98 savol · 2 soat 14 daq"], ["rw", "Faqat R&W", "54 savol · 64 daq"], ["math", "Faqat Math", "44 savol · 70 daq"]].map(([id, l, sub]) => (
+                      <button key={id} onClick={() => setMode(id)} style={{ textAlign: "left", cursor: "pointer", borderRadius: 10, padding: "10px 12px", fontFamily: BB.ui, background: mode === id ? "#EEF2FF" : "#fff", border: `1.5px solid ${mode === id ? BB.blue : BB.line}` }}>
+                        <div style={{ fontSize: 14.5, fontWeight: 800, color: mode === id ? BB.blue : BB.ink }}>{l}</div>
+                        <div style={{ fontSize: 12, color: BB.muted, marginTop: 2 }}>{sub}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               {mod.adaptive && (
                 <div style={{ background: "#FFF7E8", borderRadius: 10, padding: "12px 16px", fontSize: 14, display: "flex", gap: 10, lineHeight: 1.5 }}>
                   <AlertCircle size={18} color="#D98A00" style={{ flexShrink: 0, marginTop: 1 }} />Bu modulning qiyinligi 1-moduldagi natijangizga qarab tanlandi — xuddi haqiqiy Digital SAT'dagidek.
@@ -1691,7 +1826,8 @@ function TestRunner({ test, onExit, onFinish }) {
       <div style={{ background: "#fff", height: 68, padding: "0 24px", display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", flexShrink: 0 }}>
         <div style={{ minWidth: 0 }}>
           <div style={{ fontSize: 16.5, fontWeight: 700, color: BB.ink, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{mod.label}: {mod.section}</div>
-          <button onClick={() => setDirOpen(true)} style={{ background: "transparent", border: "none", padding: 0, marginTop: 2, cursor: "pointer", fontFamily: BB.ui, fontSize: 14, color: BB.ink, display: "flex", alignItems: "center", gap: 4 }}>Directions {BbSvg.caret(false)}</button>
+          <button onClick={() => setDirOpen(true)} style={{ background: "transparent", border: "none", padding: 0, marginTop: 2, cursor: "pointer", fontFamily: BB.ui, fontSize: 14, color: BB.ink, display: "inline-flex", alignItems: "center", gap: 4 }}>Directions {BbSvg.caret(false)}</button>
+          <span style={{ fontSize: 12.5, color: BB.muted, marginLeft: 12 }}>{questions.filter((q, i) => { const r = responses[`${mod.id}-${i}`]; return r !== undefined && r !== null && String(r).trim() !== ""; }).length}/{questions.length} javob berildi</span>
         </div>
         <div style={{ textAlign: "center" }}>
           {!timerHidden ? (
@@ -1768,7 +1904,7 @@ function TestRunner({ test, onExit, onFinish }) {
             </div>
           </div>
         </div>
-        {footer(() => setStage({ type: "module", modIdx: stage.modIdx }), advance, stage.modIdx === MODULES.length - 1 ? "Testni yakunlash" : "Next", false)}
+        {footer(() => setStage({ type: "module", modIdx: stage.modIdx }), advance, stage.modIdx === mods.length - 1 ? "Testni yakunlash" : "Next", false)}
         {modals}
       </div>
     );
@@ -1894,11 +2030,11 @@ function ScoreReport({ test, report, onBack }) {
       <div style={{ maxWidth: 760, margin: "0 auto" }}>
         <button onClick={onBack} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 15.5, marginBottom: 20, fontFamily: FONT }}><ChevronLeft size={16} /> Orqaga</button>
         <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 30, textAlign: "center", marginBottom: 18 }}>
-          <div style={{ fontSize: 14.5, color: B.muted }}>{test.name} · Umumiy ball</div>
+          <div style={{ fontSize: 14.5, color: B.muted }}>{test.name} · {report.mode === "rw" ? "Reading and Writing" : report.mode === "math" ? "Math" : "Umumiy ball"}</div>
           <div style={{ fontSize: 54, fontWeight: 800, margin: "6px 0 4px" }}>{report.total}</div>
-          <div style={{ fontSize: 14.5, color: B.muted, marginBottom: 20 }}>400–1600 shkalasi</div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-            {[["Reading and Writing", report.rwScore, report.rwRaw], ["Math", report.mathScore, report.mathRaw]].map(([l, s, raw]) => (
+          <div style={{ fontSize: 14.5, color: B.muted, marginBottom: 20 }}>{report.mode ? "200–800 shkalasi · faqat bitta bo'lim" : "400–1600 shkalasi"}</div>
+          <div style={{ display: "grid", gridTemplateColumns: report.mode ? "1fr" : "1fr 1fr", gap: 14 }}>
+            {[["Reading and Writing", report.rwScore, report.rwRaw], ["Math", report.mathScore, report.mathRaw]].filter(([, sc]) => sc != null).map(([l, s, raw]) => (
               <div key={l} style={{ background: B.bg, borderRadius: 16, padding: 16 }}><div style={{ fontSize: 14, color: B.muted, marginBottom: 4 }}>{l}</div><div style={{ fontSize: 29, fontWeight: 800 }}>{s}</div><div style={{ fontSize: 12.5, color: B.muted }}>{raw.c} / {raw.t} to'g'ri</div></div>
             ))}
           </div>
@@ -1988,27 +2124,29 @@ const BANK_DOMAINS = [
   { d: "Craft and Structure", kind: "rw", skills: ["Words in Context", "Text Structure and Purpose", "Cross-Text Connections"] },
   { d: "Expression of Ideas", kind: "rw", skills: ["Rhetorical Synthesis", "Transitions"] },
   { d: "Standard English Conventions", kind: "rw", skills: ["Boundaries", "Form, Structure, and Sense"] },
-  { d: "Algebra", kind: "math", skills: ["Linear equations in one variable", "Linear functions", "Systems of two linear equations in two variables"] },
+  { d: "Algebra", kind: "math", skills: ["Linear equations in one variable", "Linear functions", "Linear inequalities in one or two variables", "Systems of two linear equations in two variables"] },
   { d: "Advanced Math", kind: "math", skills: ["Equivalent expressions", "Nonlinear equations in one variable and systems of equations in two variables", "Nonlinear functions"] },
-  { d: "Problem-Solving and Data Analysis", kind: "math", skills: ["Ratios, rates, proportional relationships, and units", "Percentages", "One-variable data: Distributions and measures of center and spread", "Probability and conditional probability"] },
+  { d: "Problem-Solving and Data Analysis", kind: "math", skills: ["Ratios, rates, proportional relationships, and units", "Percentages", "One-variable data: Distributions and measures of center and spread", "Inference from sample statistics and margin of error", "Probability and conditional probability"] },
   { d: "Geometry and Trigonometry", kind: "math", skills: ["Area and volume", "Lines, angles, and triangles", "Right triangles and trigonometry", "Circles"] },
 ];
 // College Board ko'nikmasi -> savol generatoridagi shablonlar
 const MATH_SKILL_TEMPLATES = {
   "Linear equations in one variable": ["Linear equations & systems", [0, 3, 7]],
-  "Linear functions": ["Linear equations & systems", [2]],
-  "Systems of two linear equations in two variables": ["Linear equations & systems", [1, 4, 5, 6]],
-  "Equivalent expressions": ["Nonlinear functions", [7]],
-  "Nonlinear equations in one variable and systems of equations in two variables": ["Nonlinear functions", [1, 6]],
-  "Nonlinear functions": ["Nonlinear functions", [0, 2, 3, 4, 5]],
-  "Ratios, rates, proportional relationships, and units": ["Ratios, rates, data", [0, 3, 6]],
-  "Percentages": ["Ratios, rates, data", [1, 7]],
-  "One-variable data: Distributions and measures of center and spread": ["Ratios, rates, data", [2, 5]],
-  "Probability and conditional probability": ["Ratios, rates, data", [4]],
-  "Area and volume": ["Lines, angles, circles", [7]],
-  "Lines, angles, and triangles": ["Lines, angles, circles", [0, 4, 6]],
-  "Right triangles and trigonometry": ["Lines, angles, circles", [3]],
-  "Circles": ["Lines, angles, circles", [1, 2, 5]],
+  "Linear functions": ["Linear equations & systems", [2, 9, 11, 12]],
+  "Linear inequalities in one or two variables": ["Linear equations & systems", [10]],
+  "Systems of two linear equations in two variables": ["Linear equations & systems", [1, 4, 5, 6, 8]],
+  "Equivalent expressions": ["Nonlinear functions", [7, 12, 13]],
+  "Nonlinear equations in one variable and systems of equations in two variables": ["Nonlinear functions", [1, 6, 10, 11]],
+  "Nonlinear functions": ["Nonlinear functions", [0, 2, 3, 4, 5, 8, 9]],
+  "Ratios, rates, proportional relationships, and units": ["Ratios, rates, data", [0, 3, 6, 11]],
+  "Percentages": ["Ratios, rates, data", [1, 7, 8]],
+  "One-variable data: Distributions and measures of center and spread": ["Ratios, rates, data", [2, 5, 9]],
+  "Inference from sample statistics and margin of error": ["Ratios, rates, data", [10]],
+  "Probability and conditional probability": ["Ratios, rates, data", [4, 12]],
+  "Area and volume": ["Lines, angles, circles", [7, 12]],
+  "Lines, angles, and triangles": ["Lines, angles, circles", [0, 4, 6, 11]],
+  "Right triangles and trigonometry": ["Lines, angles, circles", [3, 10]],
+  "Circles": ["Lines, angles, circles", [1, 2, 5, 8, 9]],
 };
 const POOL_TOTAL = 500;
 const diffForIndex = (i, total) => (i < total / 3 ? "Easy" : i < (2 * total) / 3 ? "Medium" : "Hard");
@@ -2017,7 +2155,7 @@ function genSkillQuestion(domain, skill, index) {
   if (domain.kind === "math") {
     const [gen, ts] = MATH_SKILL_TEMPLATES[skill];
     const g = genMathUnseen(gen, false, ts[Math.floor(Math.random() * ts.length)]);
-    return { domain: domain.d, skill, difficulty, passage: null, ...g };
+    return { domain: domain.d, skill, passage: null, ...g, difficulty: g.difficulty || difficulty };
   }
   const v = pickUnseenRW(skill);
   return { domain: domain.d, skill, difficulty: v.difficulty || difficulty, type: "mc", passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl };
@@ -2048,7 +2186,7 @@ function PracticeSession({ selection, count, timed, onExit, onRecord }) {
   const qStartRef = useRef(Date.now());
   const q = useMemo(() => { const pick = selection[Math.floor(Math.random() * selection.length)]; return genSkillQuestion(pick.domain, pick.skill, Math.floor(Math.random() * POOL_TOTAL)); }, [selection, i]);
   const revealed = picked !== null;
-  const correct = (val) => (q.type === "spr" ? String(val).trim() === String(q.answer) : val === q.answer);
+  const correct = (val) => (q.type === "spr" ? sprOk(val, q.answer) : val === q.answer);
   const flushStats = () => { Object.entries(perDomainRef.current).forEach(([d, v]) => onRecord(d, v.c, v.t)); perDomainRef.current = {}; };
   const finish = () => { flushStats(); setFinished(true); flushSeen(); };
   useEffect(() => { if (!timed || finished) return; const t = setInterval(() => setLeft((s) => { if (s <= 1) { clearInterval(t); setTimeout(finish, 0); return 0; } return s - 1; }), 1000); return () => clearInterval(t); }, [timed, finished]);
@@ -3185,7 +3323,7 @@ function Drill({ mode, onExit }) {
   }, [done]);
   useEffect(() => { if (done) { const st = loadLocal("sws_drill_stats", { runs: 0, best: 0, total: 0, correct: 0 }); const sc = log.filter((x) => x.ok).length; saveLocal("sws_drill_stats", { runs: st.runs + 1, best: Math.max(st.best, sc), total: st.total + log.length, correct: st.correct + sc, last: todayStr() }); flushSeen(); } }, [done]);
   const q = questions[i];
-  const ok = (v) => (q.type === "spr" ? String(v).trim() === String(q.answer) : v === q.answer);
+  const ok = (v) => (q.type === "spr" ? sprOk(v, q.answer) : v === q.answer);
   const choose = (v) => { if (picked !== null) return; setPicked(v); setLog((l) => [...l, { q, v, ok: ok(v), sec: Math.round((Date.now() - qStart.current) / 1000) }]); if (!ok(v)) addSaved({ ...q, mistake: true }); };
   const next = () => { if (i === questions.length - 1) { setDone(true); return; } setI((x) => x + 1); setPicked(null); setSpr(""); qStart.current = Date.now(); };
   const m = DRILL_MODES.find((x) => x.id === mode);
@@ -3438,10 +3576,13 @@ function AppShell({ onHome }) {
     { id: "community", label: "Jamiyat", icon: MessageCircle }, { id: "profile", label: "Profil", icon: User },
     ...(sws.me && sws.me.isAdmin ? [{ id: "admin", label: "Admin: foydalanuvchilar", icon: Users }] : []),
   ];
-  const finishTest = (responses, diffPath) => {
-    const r = gradeTest(activeTest.id, responses, diffPath);
+  const finishTest = (responses, diffPath, mode) => {
+    const r = gradeTest(activeTest.id, responses, diffPath, mode);
     const entry = { ...r, testId: activeTest.id, testName: activeTest.name };
-    setHistory((h) => [...h, entry]); setReport(entry);
+    // Faqat bitta bo'lim yechilsa umumiy ball tarixiga qo'shmaymiz (1600 lik grafik buzilmasin)
+    if (!r.mode) setHistory((h) => [...h, entry]);
+    else saveLocal("sws_section_history", [...loadLocal("sws_section_history", []), { ...entry, wrong: undefined, at: Date.now() }].slice(-100));
+    setReport(entry);
   };
 
   if (activeTest && !report) return <TestRunner test={activeTest} onExit={() => setActiveTest(null)} onFinish={finishTest} />;
