@@ -47,6 +47,30 @@
    ],
    "answer": 0,
    "expl": "Qarash dalilga emas, tarafdorlarining xurofotiga asoslangan — ya'ni g'arazli, bir tomonlama ('tendentious'). 'Obsolete' faqat eskirganini bildiradi, xurofotni emas."
+  },
+  {
+   "passage": "Although early reviewers found the sociologist's 1962 study of neighborhood life ______, faulting its reliance on a single city block, later scholars have praised precisely that narrow focus, arguing that it allowed a depth of observation that broader surveys could never achieve.",
+   "prompt": "Which choice completes the text with the most logical and precise word or phrase?",
+   "choices": [
+    "parochial",
+    "meticulous",
+    "prescient",
+    "conciliatory"
+   ],
+   "answer": 0,
+   "expl": "Dastlabki taqrizchilar 'bitta ko'chaga tayangan'ini tanqid qilgan — ya'ni doirasi tor, 'parochial'. 'Meticulous' maqtov so'zi, tanqid emas."
+  },
+  {
+   "passage": "Some economists regard the informal lending circles common in many West African markets as merely a ______ for formal banking, a stopgap that communities will abandon once banks arrive. Anthropologist Adaeze Okonkwo disagrees: her fieldwork shows that members often keep contributing to their circles long after opening bank accounts, valuing the social obligations the circles create.",
+   "prompt": "Which choice completes the text with the most logical and precise word or phrase?",
+   "choices": [
+    "surrogate",
+    "catalyst",
+    "prerequisite",
+    "rival"
+   ],
+   "answer": 0,
+   "expl": "'Stopgap' — vaqtincha o'rinbosar; bank kelguncha uning o'rnini bosuvchi narsa — 'surrogate'. 'Rival' raqobatchi degani, 'stopgap' ma'nosiga mos emas."
   }
  ],
  "Text Structure and Purpose": [
@@ -97,6 +121,30 @@
    ],
    "answer": 0,
    "expl": "Matn olib tashlash taklifini, Reyesning e'tirozini va uning muqobil yechimini ko'rsatadi. Reyes xavf yo'q demaydi — faqat olib tashlash samarasiz deydi."
+  },
+  {
+   "passage": "Ecologists have long used the presence of lichens as a rough indicator of clean air, since many lichen species cannot tolerate sulfur dioxide. A 2021 survey of London parks, however, found several sensitive species thriving near busy roads. The researchers point out that sulfur dioxide levels in the city have fallen sharply, while nitrogen pollution from traffic has risen—and that some lichens tolerate, or even benefit from, nitrogen. Lichen surveys, they conclude, now reveal which pollutants are present rather than simply whether the air is clean.",
+   "prompt": "Which choice best describes the overall structure of the text?",
+   "choices": [
+    "It describes an established method, reports a finding that seems to undermine that method, and then explains how the method's significance should be reinterpreted.",
+    "It introduces a type of pollution, identifies its sources, and then proposes a way of reducing it.",
+    "It compares two methods of measuring air quality and then argues that one is more accurate than the other.",
+    "It presents a scientific hypothesis, describes an experiment designed to test it, and then reports that the hypothesis was confirmed."
+   ],
+   "answer": 0,
+   "expl": "Avval an'anaviy usul (lishayniklar toza havo belgisi), keyin unga zid ko'ringan topilma, oxirida usulning ma'nosi qayta talqin qilinadi. Usul rad etilmaydi."
+  },
+  {
+   "passage": "The following text is adapted from a 1916 novel. Cora, a schoolteacher, is watching her students leave for the summer.\nThey went off down the lane in a noisy cluster, swinging their lunch pails, and not one of them looked back. Cora told herself she was glad of it; that was how it ought to be. Still, she stood in the doorway until the last blue cap had disappeared beyond the mill, and for some time after, as though the lane might yet return something to her.",
+   "prompt": "Which choice best states the main purpose of the text?",
+   "choices": [
+    "To convey Cora's conflicted feelings as she watches her students depart",
+    "To illustrate the students' eagerness to begin working at the mill",
+    "To suggest that Cora is disappointed in her students' behavior",
+    "To describe the landscape surrounding Cora's school"
+   ],
+   "answer": 0,
+   "expl": "Cora o'ziga 'xursandman' deydi, lekin eshik oldida uzoq turadi — ichki ikkilanish. U bolalarning xatti-harakatidan norozi emas ('that was how it ought to be')."
   }
  ],
  "Cross-Text Connections": [
@@ -147,6 +195,30 @@
    ],
    "answer": 0,
    "expl": "Vance laboratoriya natijalarini rad etmaydi, lekin doza real emas va boshqa sabablar hisobga olinmagan deydi — ya'ni xulosa shoshilinch."
+  },
+  {
+   "passage": "Text 1\nMany historians argue that the collapse of the Western Roman Empire in the fifth century CE was driven primarily by external pressure. Waves of migrating groups, they contend, overwhelmed frontier defenses that had held for centuries.\n\nText 2\nHistorian Marta Lindqvist acknowledges that migrations strained Rome's frontiers but notes that the empire had absorbed similar pressures before. What had changed by the fifth century, she argues, was the empire's fiscal capacity: decades of civil war and tax evasion had left it unable to pay the armies that previously repelled such incursions. External pressure, in her view, proved decisive only because of this prior internal weakening.",
+   "prompt": "Based on the texts, how would Lindqvist (Text 2) most likely respond to the historians' argument in Text 1?",
+   "choices": [
+    "She would argue that it identifies a genuine factor but mistakes a proximate cause for the fundamental one.",
+    "She would reject it on the grounds that migrations did not affect Rome's frontiers in the fifth century.",
+    "She would accept it fully and add that fiscal problems were a result of the migrations.",
+    "She would argue that the empire's frontier defenses were weaker in earlier centuries than in the fifth century."
+   ],
+   "answer": 0,
+   "expl": "Lindqvist tashqi bosimni inkor qilmaydi, lekin u faqat ichki zaiflik tufayli hal qiluvchi bo'lgan deydi — ya'ni yaqin sababni asosiy sabab deb adashishgan."
+  },
+  {
+   "passage": "Text 1\nThe composer Hiroshi Tanaka's late string quartets are often described as austere. Built from short, repeated motifs and long silences, they lack the lush harmonies of his early orchestral works, and some critics hear in them a composer whose creative energy had waned.\n\nText 2\nMusicologist Priya Raman contends that the sparseness of Tanaka's late quartets reflects not exhaustion but a deliberate turn toward the aesthetics of traditional Japanese court music, in which silence is treated as a structural element equal to sound. Tanaka's sketchbooks from this period, she notes, contain detailed notes on court music performances.",
+   "prompt": "Based on the texts, how would Raman (Text 2) most likely respond to the critics' interpretation described in Text 1?",
+   "choices": [
+    "By arguing that the feature the critics treat as a sign of decline was instead an intentional artistic choice",
+    "By agreeing that the late quartets are less accomplished than Tanaka's orchestral works",
+    "By disputing the claim that the late quartets contain long silences and repeated motifs",
+    "By suggesting that Tanaka's late quartets were influenced more by his early orchestral works than critics recognize"
+   ],
+   "answer": 0,
+   "expl": "Raman quartetlardagi siyraklikni inkor qilmaydi; u buni charchoq emas, ataylab qilingan tanlov deb izohlaydi (eskiz daftarlari dalili bilan)."
   }
  ],
  "Central Ideas and Details": [
@@ -197,6 +269,30 @@
    ],
    "answer": 0,
    "expl": "Katalog yo'q, tizim ko'rinmaydi, lekin u har bir kitob joyini biladi — tartibsiz to'plamni juda yaxshi biladi."
+  },
+  {
+   "passage": "Coral reefs are often described as \"rainforests of the sea,\" and like rainforests they are commonly thought to depend on stable conditions. But marine biologist Tevita Fonua's surveys of reefs around Tonga suggest a more complicated picture. Reefs that had experienced moderate storm damage every few years supported more coral species than either reefs that were rarely disturbed or reefs battered by frequent severe storms. Fonua proposes that occasional disturbance prevents a few fast-growing species from crowding out others.",
+   "prompt": "Which choice best states the main idea of the text?",
+   "choices": [
+    "Research suggests that a moderate level of disturbance may help maintain coral diversity on reefs.",
+    "Coral reefs around Tonga are more diverse than rainforests are.",
+    "Frequent severe storms are the main threat to coral reefs around Tonga.",
+    "Fast-growing coral species are more resistant to storm damage than other species are."
+   ],
+   "answer": 0,
+   "expl": "Asosiy g'oya: o'rtacha bezovtalik tur xilma-xilligini saqlaydi. Kuchli bo'ronlar tafsilot, asosiy fikr emas."
+  },
+  {
+   "passage": "The following text is adapted from a 1921 essay about the writer's grandfather.\nHe distrusted any machine he could not take apart. The new tractor stood in the barn for a full season while he studied it, bolt by bolt, filling a notebook with drawings; only when he could have rebuilt it blindfolded did he consent to drive it into the field. My father thought this a waste of a good summer. My grandfather thought it the only honest way to own a thing.",
+   "prompt": "Based on the text, how does the grandfather's view of the tractor differ from the father's?",
+   "choices": [
+    "The grandfather believes that truly owning the tractor requires understanding how it works, whereas the father sees that effort as unnecessary.",
+    "The grandfather believes the tractor is poorly made, whereas the father thinks it is reliable.",
+    "The grandfather wants to sell the tractor, whereas the father wants to keep it.",
+    "The grandfather prefers to farm by hand, whereas the father prefers to use machines."
+   ],
+   "answer": 0,
+   "expl": "Bobo mashinani to'liq tushunishni 'yagona halol egalik' deb biladi; ota esa buni yozni isrof qilish deb hisoblaydi."
   }
  ],
  "Command of Evidence (Textual)": [
@@ -247,6 +343,30 @@
    ],
    "answer": 0,
    "expl": "Da'vo ikki qismli: yorqinlik + yolg'izlik. Faqat birinchi iqtibosda ikkalasi bor: minglab yonayotgan derazalar va har birining ortida yolg'iz yuz."
+  },
+  {
+   "passage": "Linguist Rafael Moreno hypothesizes that speakers of languages that mark evidentiality—grammatical markers indicating how a speaker knows a piece of information (for example, by direct observation or by hearsay)—are more attentive to the sources of information in everyday situations than are speakers of languages without such markers. To test this, Moreno showed participants short video clips and later asked them to recall not only what happened but also how they had learned about each event.",
+   "prompt": "Which finding, if true, would most directly weaken Moreno's hypothesis?",
+   "choices": [
+    "Speakers of languages with evidential markers and speakers of languages without them recalled how they had learned about events with similar accuracy.",
+    "Speakers of languages with evidential markers recalled the events in the clips more accurately than speakers of other languages did.",
+    "Some languages with evidential markers distinguish among more than two sources of information.",
+    "Participants in both groups found some video clips more memorable than others."
+   ],
+   "answer": 0,
+   "expl": "Gipoteza: evidentsial tillar egalari manbaga ko'proq e'tibor beradi. Agar ikki guruh manbani bir xil aniqlikda eslasa — gipoteza zaiflashadi."
+  },
+  {
+   "passage": "Research team A rated each of several published studies of urban heat for how clearly it described its procedures (\"transparency\") and how closely its temperature categories matched a standard classification (\"comparability\"). Based on these ratings, a second team concluded that the methods of a study by Okafor and Lindgren were more reliable than those of a study by Vasquez and colleagues.",
+   "prompt": "Which finding, if true, would most directly challenge the second team's conclusion?",
+   "choices": [
+    "The study by Okafor and Lindgren received lower ratings for both transparency and comparability than the study by Vasquez and colleagues did.",
+    "The study by Okafor and Lindgren received high ratings for both transparency and comparability.",
+    "The study by Vasquez and colleagues was published more recently than the study by Okafor and Lindgren.",
+    "Research team A rated more than a dozen studies of urban heat."
+   ],
+   "answer": 0,
+   "expl": "Ikkinchi jamoa xulosasi reytinglarga asoslangan. Agar Okafor va Lindgren ikkala reytingda ham pastroq bo'lsa, xulosa bevosita shubha ostida qoladi."
   }
  ],
  "Command of Evidence (Quantitative)": [
@@ -297,6 +417,30 @@
    ],
    "answer": 0,
    "expl": "Samaradorlikni ulush bilan solishtirish kerak: 52/80 = 65%, 42/120 = 35%. Uchinchi variant son solishtiradi va dune grass qo'riqlash bilan bog'liq emas."
+  },
+  {
+   "passage": "Percentage of Seedlings Surviving One Year, by Planting Method\nMethod                   Site 1   Site 2   Site 3\nBare-root                 48%      52%      45%\nContainer-grown           71%      69%      74%\nContainer + mulch         73%      88%      76%\n\nForester Lena Brandt tested three planting methods at three sites. She concluded that adding mulch to container-grown seedlings made a substantial difference at only one of the three sites.",
+   "prompt": "Which choice best describes data from the table that support Brandt's conclusion?",
+   "choices": [
+    "At Site 2, survival rose from 69% for container-grown seedlings to 88% with mulch, while at Sites 1 and 3 mulch raised survival by only 2 percentage points.",
+    "At every site, container-grown seedlings survived at a higher rate than bare-root seedlings did.",
+    "At Site 3, bare-root seedlings had the lowest survival rate of any method at any site.",
+    "Container-grown seedlings with mulch had a survival rate above 70% at all three sites."
+   ],
+   "answer": 0,
+   "expl": "Xulosa: mulch faqat bitta joyda katta farq qildi. Site 2 da +19, qolganlarida +2 — faqat birinchi variant mulch ta'sirini solishtiradi."
+  },
+  {
+   "passage": "Share of Respondents Who Read News Daily, by Source and Age Group\nAge group    Print   Website   Social media\n18–29         4%      21%        48%\n30–49         9%      34%        37%\n50–64        22%      38%        24%\n65+          41%      29%        12%\n\nA student claims that the most common daily news source differs across age groups, with no single source being the most common for every group.",
+   "prompt": "Which choice most effectively uses data from the table to support the student's claim?",
+   "choices": [
+    "Social media was the most common source for respondents aged 18–29 (48%), websites for those aged 50–64 (38%), and print for those aged 65 and older (41%).",
+    "The share of respondents who read print news daily increased with each older age group.",
+    "Among respondents aged 30–49, 34% read news daily on websites.",
+    "Fewer than 25% of respondents in every age group read news daily in print, except those aged 65 and older."
+   ],
+   "answer": 0,
+   "expl": "Da'vo: har xil yosh guruhida eng keng tarqalgan manba har xil. Birinchi variant uch guruhdagi uch xil 'eng ko'p' manbani ko'rsatadi."
   }
  ],
  "Inferences": [
@@ -347,6 +491,30 @@
    ],
    "answer": 0,
    "expl": "Muz yuqoridan pastga to'planadi, demak kul ustidagi muz kuldan keyin, ya'ni 25 000 yildan kamroq vaqt oldin hosil bo'lgan."
+  },
+  {
+   "passage": "In many desert plants, a type of photosynthesis called CAM allows leaves to open their pores only at night, when cooler air reduces water loss. Botanist Salma Haddad found that one shrub species switches to CAM only during droughts, using ordinary daytime photosynthesis when water is plentiful. Because ordinary photosynthesis supports faster growth but loses more water, Haddad's finding suggests that the shrub ______",
+   "prompt": "Which choice most logically completes the text?",
+   "choices": [
+    "trades rapid growth for water conservation only when conditions make conservation necessary.",
+    "grows more quickly during droughts than when water is plentiful.",
+    "is unable to survive in regions where droughts are common.",
+    "loses less water during wet periods than other desert plants do."
+   ],
+   "answer": 0,
+   "expl": "Suv ko'p bo'lsa tez o'sish (oddiy fotosintez), qurg'oqchilikda suvni tejash (CAM) — ya'ni o'simlik faqat zarur bo'lganda tezlikni tejashga almashtiradi."
+  },
+  {
+   "passage": "Historians studying medieval trade have relied heavily on surviving merchant contracts, most of which were drawn up by notaries in large port cities such as Genoa and Venice. Economic historian Nadia Sorensen notes, however, that small inland traders rarely used notaries, often sealing agreements orally or with brief informal notes that were seldom preserved. If Sorensen is correct, reconstructions of medieval commerce based mainly on notarial contracts ______",
+   "prompt": "Which choice most logically completes the text?",
+   "choices": [
+    "may overrepresent the activity of large coastal merchants relative to that of small inland traders.",
+    "are likely to underestimate the importance of port cities such as Genoa and Venice.",
+    "should be replaced by studies of inland traders' oral agreements, which were carefully preserved.",
+    "demonstrate that small inland traders were more numerous than coastal merchants."
+   ],
+   "answer": 0,
+   "expl": "Saqlangan shartnomalar asosan port shaharlaridagi notariuslardan — kichik ichki savdogarlar deyarli qayd etilmagan. Demak manbalar yirik qirg'oq savdogarlarini ortiqcha aks ettiradi."
   }
  ],
  "Boundaries": [
@@ -397,6 +565,30 @@
    ],
    "answer": 0,
    "expl": "Birinchi qism 'something unexpected' deb e'lon qiladi, ikkinchi qism uni tushuntiradi — bu holatda ikki nuqta ishlatiladi."
+  },
+  {
+   "passage": "In 1976, the Viking 1 lander became the first spacecraft to operate successfully on the surface of ______ transmitting images and weather data to Earth for more than six years, it far outlasted its planned ninety-day mission.",
+   "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+   "choices": [
+    "Mars;",
+    "Mars,",
+    "Mars",
+    "Mars, and"
+   ],
+   "answer": 0,
+   "expl": "'transmitting ... six years' ikkinchi mustaqil gapning boshi (it far outlasted...). Ikki mustaqil gap orasida nuqtali vergul kerak."
+  },
+  {
+   "passage": "The novelist's archive, which scholars had assumed was lost in a 1943 ______ turned up in 2019 in the basement of a Lisbon bookshop, its letters and manuscripts remarkably intact.",
+   "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+   "choices": [
+    "fire,",
+    "fire",
+    "fire;",
+    "fire—"
+   ],
+   "answer": 0,
+   "expl": "'which scholars had assumed was lost in a 1943 fire' — vergul bilan boshlangan izoh qismi; u vergul bilan yopilishi kerak."
   }
  ],
  "Form, Structure, and Sense": [
@@ -447,6 +639,30 @@
    ],
    "answer": 0,
    "expl": "Olmosh 'the ancient city of Merv' (birlik) ga qaytadi va egalikni bildiradi: 'its'. 'It's' = 'it is'."
+  },
+  {
+   "passage": "Each of the twelve tapestries in the museum's newly restored series ______ a different month of the year, from January's snow-covered fields to December's candlelit feasts.",
+   "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+   "choices": [
+    "depicts",
+    "depict",
+    "are depicting",
+    "have depicted"
+   ],
+   "answer": 0,
+   "expl": "Ega — 'Each' (birlik), 'tapestries' emas. Shuning uchun birlikdagi fe'l: 'depicts'."
+  },
+  {
+   "passage": "By the time the archaeologists finished excavating the site in 2015, they ______ more than 4,000 artifacts, including pottery, tools, and fragments of woven cloth.",
+   "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+   "choices": [
+    "had recovered",
+    "recover",
+    "will have recovered",
+    "are recovering"
+   ],
+   "answer": 0,
+   "expl": "'By the time ... finished (o'tgan zamon)' — undan oldin tugagan harakat: Past Perfect 'had recovered'."
   }
  ],
  "Transitions": [
@@ -497,6 +713,30 @@
    ],
    "answer": 0,
    "expl": "Oxirgi gap oldingi fikrni boshqacha so'z bilan xulosalaydi (xato deb ko'rilgan narsa — ataylab tanlov) — 'In other words'."
+  },
+  {
+   "passage": "Early studies of the drug suggested that it reduced symptoms in nearly 70 percent of patients. These studies, however, did not include a control group receiving a placebo. When later trials added such a group, the drug's apparent effect shrank considerably. ______ much of the improvement seen in the early studies may have reflected patients' expectations rather than the drug itself.",
+   "prompt": "Which choice completes the text with the most logical transition?",
+   "choices": [
+    "In other words,",
+    "Nevertheless,",
+    "By contrast,",
+    "Similarly,"
+   ],
+   "answer": 0,
+   "expl": "Oxirgi gap oldingi dalillardan chiqqan xulosani boshqacha ifodalaydi — 'In other words'. 'Nevertheless' qarama-qarshilik bildiradi, bu yerda yo'q."
+  },
+  {
+   "passage": "The Great Pacific Garbage Patch is often imagined as a floating island of trash. In fact, most of its plastic consists of tiny fragments suspended below the surface, invisible from a passing ship. ______ satellite images, which can reveal large debris fields, are of limited use for measuring the patch's extent.",
+   "prompt": "Which choice completes the text with the most logical transition?",
+   "choices": [
+    "For this reason,",
+    "Moreover,",
+    "Instead,",
+    "Still,"
+   ],
+   "answer": 0,
+   "expl": "Plastik suv ostidagi mayda bo'laklar bo'lgani uchun sun'iy yo'ldosh suratlari foydasi kam — sabab-natija: 'For this reason'."
   }
  ],
  "Rhetorical Synthesis": [
@@ -547,6 +787,30 @@
    ],
    "answer": 0,
    "expl": "'Lasting significance' — uzoq muddatli ahamiyat: ikki asr davomida standart manba bo'lib qolgani. Faqat birinchi variant buni aytadi."
+  },
+  {
+   "passage": "While researching a topic, a student has taken the following notes:\n  • Sourdough bread is leavened by a starter containing wild yeast and bacteria.\n  • Researchers analyzed 500 sourdough starters from 14 countries.\n  • They found more than 70 species of yeast across the starters.\n  • The microbes in a starter were not strongly linked to the country it came from.\n  • Instead, household factors, such as the baker's habits, better predicted a starter's microbes.",
+   "prompt": "The student wants to present the study's most surprising finding. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+   "choices": [
+    "Researchers who analyzed 500 sourdough starters found that a starter's microbes were better predicted by household factors, such as the baker's habits, than by the country it came from.",
+    "Sourdough bread is leavened by a starter that contains wild yeast and bacteria.",
+    "Researchers analyzed 500 sourdough starters from 14 countries and found more than 70 species of yeast.",
+    "Sourdough starters from 14 countries contain wild yeast and bacteria that leaven bread."
+   ],
+   "answer": 0,
+   "expl": "'Eng kutilmagan topilma' — mikroblar davlatga emas, uy sharoitiga bog'liqligi. Faqat birinchi variant buni aytadi."
+  },
+  {
+   "passage": "While researching a topic, a student has taken the following notes:\n  • The Karakum Canal is one of the longest irrigation canals in the world.\n  • It carries water from the Amu Darya river across Turkmenistan.\n  • Construction began in 1954.\n  • The canal allowed cotton farming to expand across the desert.\n  • Much of its water is lost through seepage and evaporation because most of the canal is unlined.",
+   "prompt": "The student wants to emphasize a drawback of the canal's design. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+   "choices": [
+    "Because most of the Karakum Canal is unlined, much of the water it carries from the Amu Darya is lost through seepage and evaporation.",
+    "The Karakum Canal, begun in 1954, carries water from the Amu Darya river across Turkmenistan.",
+    "One of the world's longest irrigation canals, the Karakum Canal allowed cotton farming to expand across the desert.",
+    "Construction of the Karakum Canal, which carries water across Turkmenistan, began in 1954."
+   ],
+   "answer": 0,
+   "expl": "Vazifa — loyihaning kamchiligini ta'kidlash: qoplanmaganligi sababli suv yo'qolishi. Paxtachilikning kengayishi esa afzallik."
   }
  ]
 }

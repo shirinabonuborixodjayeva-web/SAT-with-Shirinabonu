@@ -511,14 +511,15 @@ function genMath(skill, rng, isSPR, forceT) {
 }
 // Qiyinlik darajalari: har bir math shabloni Easy / Medium / Hard guruhiga ajratilgan
 const MATH_TIERS = {
-  "Linear equations & systems": { E: [0, 2, 7], M: [1, 3, 4, 6, 10, 11], H: [5, 8, 9, 12] },
-  "Nonlinear functions": { E: [2, 3, 7], M: [0, 1, 5, 10, 12, 13], H: [4, 6, 8, 9, 11] },
-  "Ratios, rates, data": { E: [0, 1, 3], M: [2, 4, 5, 7, 9, 10, 11], H: [6, 8, 12] },
-  "Lines, angles, circles": { E: [0, 1, 6], M: [2, 3, 4, 9, 11, 12], H: [5, 7, 8, 10] },
+  "Linear equations & systems": { E: [0, 2, 7], M: [1, 3, 4, 6, 10, 11], H: [5, 8, 9, 12, 13, 14, 15] },
+  "Nonlinear functions": { E: [2, 3, 7], M: [0, 1, 5, 10, 12, 13], H: [4, 6, 8, 9, 11, 14, 15, 16, 17, 18] },
+  "Ratios, rates, data": { E: [0, 1, 3], M: [2, 4, 5, 7, 9, 10, 11, 15], H: [6, 8, 12, 13, 14] },
+  "Lines, angles, circles": { E: [0, 1, 6], M: [2, 3, 4, 9, 11, 12, 16], H: [5, 7, 8, 10, 13, 14, 15] },
 };
 const TIER_NAME = { E: "Easy", M: "Medium", H: "Hard" };
 const mathCount = (skill) => { const t = MATH_TIERS[skill] || MATH_TIERS["Lines, angles, circles"]; return t.E.length + t.M.length + t.H.length; };
 const tierOfTemplate = (skill, t) => { const T = MATH_TIERS[skill] || MATH_TIERS["Lines, angles, circles"]; return T.H.includes(t) ? "H" : T.M.includes(t) ? "M" : "E"; };
+const lin = (n) => (n === 0 ? "" : n < 0 ? ` − ${-n}` : ` + ${n}`);
 const sgn = (n, v) => (n < 0 ? ` − ${-n === 1 && v ? "" : -n}${v}` : ` + ${n === 1 && v ? "" : n}${v}`);
 const gcd = (a, b) => (b ? gcd(b, a % b) : Math.abs(a));
 const frac = (n, d) => { const g = gcd(n, d); const nn = n / g, dd = d / g; return dd === 1 ? String(nn) : `${nn}/${dd}`; };
@@ -531,6 +532,45 @@ function sprOk(val, ans) {
   return Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) < 0.0015 + Math.abs(a) * 0.0002;
 }
 function genMathExtra(skill, rng, t) {
+  // ---- Qo'shimcha qiyin shablonlar (rasmiy 2-modul darajasi) ----
+  if (skill === "Linear equations & systems" && t >= 13) {
+    if (t === 13) { let V, lo, hi, x, c, g = 0; do { V = pickOne(rng, [6, 8, 10, 12, 15, 20]); lo = pickOne(rng, [5, 10, 15, 20]); hi = pickOne(rng, [30, 40, 50, 60]); x = ri(rng, 2, 30); c = (V * lo + x * hi) / (V + x); g++; } while ((!Number.isInteger(c) || c <= lo || c >= hi) && g < 200);
+      return { prompt: `How many liters of a ${hi}% salt solution must be added to ${V} liters of a ${lo}% salt solution to obtain a ${c}% salt solution?`, correct: x, dist: [V, x + V, Math.max(1, Math.round((V * (c - lo)) / hi))], expl: `Salt balance: ${lo / 100}(${V}) + ${hi / 100}x = ${c / 100}(${V} + x). ${V * lo} + ${hi}x = ${V * c} + ${c}x, so ${hi - c}x = ${V * (c - lo)} and x = ${x}.` }; }
+    if (t === 14) { const u = ri(rng, -20, 60), v = ri(rng, -15, 30), a = ri(rng, 3, 19), b = ri(rng, 3, 15), k = ri(rng, 2, 9); const p = u - a * v, q = u + b * v;
+      return { prompt: `(g − h) − ${a}(m + n) = ${p}\n(g − h) + ${b}(m + n) = ${q}\n\nFor the given system of equations, what is the value of ${k}(g − h)?`, correct: k * u, dist: [u, k * v, k * (u + v)], expl: `Let A = g − h and B = m + n. Subtracting the first equation from the second: ${a + b}B = ${q - p}, so B = ${v}. Then A = ${p} + ${a}(${v}) = ${u}, and ${k}A = ${k * u}.` }; }
+    { const m = pickOne(rng, [-9, -7, -5, -3, -2, 2, 3, 4, 6, 8]), x0 = pickOne(rng, [-6, -5, -4, -3, -2, 2, 3, 4, 5, 6]), c = pickOne(rng, [10, 12, 15, 20, 25]); const d = c - m * x0;
+      return { prompt: `f(x) = ${m}x + d\n\nFor the linear function f, d is a constant. In the xy-plane, the graph of y = f(x) − ${c} passes through the point (${x0}, 0). Which equation defines y = f(x) + ${c}?`, correct: `y = ${m}x${lin(d + c)}`, dist: [`y = ${m}x${lin(d - c)}`, `y = ${m}x${lin(d)}`, `y = ${m}x${lin(d + 2 * c)}`], expl: `f(${x0}) − ${c} = 0 means ${m}(${x0}) + d = ${c}, so d = ${d}. Then f(x) + ${c} = ${m}x${lin(d)} + ${c} = ${m}x${lin(d + c)}.` }; }
+  }
+  if (skill === "Nonlinear functions" && t >= 14) {
+    if (t === 14) { const b = 2 * ri(rng, 5, 40);
+      return { prompt: `The quadratic equation ax² + ${b}x + c = 0 has at least one real solution, where a and c are constants. What is the greatest possible value of ac?`, correct: (b * b) / 4, dist: [(b * b) / 2, b * b, b / 2], expl: `At least one real solution means the discriminant is nonnegative: ${b}² − 4ac ≥ 0, so ac ≤ ${b * b}/4 = ${(b * b) / 4}.` }; }
+    if (t === 15) { let a, x0; do { a = ri(rng, 2, 9); x0 = pickOne(rng, [2, 3]); } while (a ** x0 > 800); const b = -(a ** x0);
+      return { prompt: `The function f is defined by f(x) = a^x + b, where a and b are constants and a > 0. In the xy-plane, the graph of y = f(x) has an x-intercept at (${x0}, 0) and a y-intercept at (0, ${1 + b}). What is the value of a + b?`, correct: a + b, dist: [a + b + 1, b, a - b], expl: `f(0) = 1 + b = ${1 + b}, so b = ${b}. f(${x0}) = a^${x0} − ${-b} = 0, so a^${x0} = ${-b} and a = ${a}. a + b = ${a + b}.` }; }
+    if (t === 16) { const P0 = ri(rng, 2, 60) * 1000, k = pickOne(rng, [2, 3, 4]), x = ri(rng, 2, 12), D = k * x;
+      return { prompt: `A model estimates that there are ${P0.toLocaleString("en-US")} bacteria in a sample. ${D} days later, the model estimates ${(P0 * 2 ** k).toLocaleString("en-US")} bacteria. Assuming exponential growth, the formula P = A(2)^(t/x) gives the estimated number of bacteria P, t days after the first estimate, where A and x are constants. What is the value of x?`, correct: x, dist: [D, 2 * x + 1, x + k + 1], expl: `The population multiplied by ${2 ** k} = 2^${k}, so it doubled ${k} times in ${D} days. One doubling takes ${D}/${k} = ${x} days, so x = ${x}.` }; }
+    if (t === 17) { const c = ri(rng, 3, 25);
+      return { prompt: `If a > 0, x² + y² = a, and xy = a − ${c}, what is (x + y)² in terms of a?`, correct: `3a − ${2 * c}`, dist: [`2a − ${2 * c}`, `3a − ${c}`, `a − ${2 * c}`], expl: `(x + y)² = x² + y² + 2xy = a + 2(a − ${c}) = 3a − ${2 * c}.` }; }
+    { const T = ri(rng, 3, 12), m = ri(rng, 2, 16), H = m * T * T; let t1 = ri(rng, 2, 2 * T - 1); if (t1 === T) t1 = T + 1; const h1 = H - m * (t1 - T) ** 2;
+      return { prompt: `A quadratic function models the height, in feet, of an object above the ground t seconds after it is launched from the ground. The object reaches its maximum height of ${H} feet ${T} seconds after it is launched. Based on the model, what is the height, in feet, of the object ${t1} seconds after it is launched?`, correct: h1, dist: [H, H - m * Math.abs(t1 - T), m * t1 * t1], expl: `h(t) = a(t − ${T})² + ${H}. Since h(0) = 0, a(${T * T}) = −${H}, so a = −${m}. h(${t1}) = −${m}(${t1 - T})² + ${H} = ${h1}.` }; }
+  }
+  if (skill === "Ratios, rates, data" && t >= 13) {
+    if (t === 13) { const M = 4 * ri(rng, 2, 25), p = pickOne(rng, [150, 175, 225, 250, 300, 350, 400, 650, 900, 1900]); const N = (M * (100 + p)) / 100;
+      return { prompt: `${N} is p% greater than ${M}. What is the value of p?`, correct: p, dist: [p + 100, p - 100, N - M], expl: `${N} = ${M}(1 + p/100), so 1 + p/100 = ${N / M} and p = ${p}.` }; }
+    if (t === 14) { let nA, nB, mA, mB, M, g = 0; do { nA = ri(rng, 10, 40); nB = ri(rng, 10, 40); mA = ri(rng, 150, 260); mB = ri(rng, 120, 240); M = (nA * mA + nB * mB) / (nA + nB); g++; } while ((!Number.isInteger(M) || mA === mB) && g < 400);
+      return { prompt: `Data sets A and B together contain ${nA + nB} values, and the mean of all ${nA + nB} values is ${M}. Data set A contains ${nA} values with a mean of ${mA}. What is the mean of data set B?`, correct: mB, dist: [2 * M - mA, M, Math.round((M + mA) / 2)], expl: `Total = ${nA + nB}(${M}) = ${(nA + nB) * M}. Set A totals ${nA}(${mA}) = ${nA * mA}. Set B mean = (${(nA + nB) * M} − ${nA * mA})/${nB} = ${mB}.` }; }
+    { const p1 = ri(rng, 40, 75), p2 = ri(rng, 40, 85), e1 = (ri(rng, 50, 99) / 10).toFixed(1), e2 = (ri(rng, 20, 45) / 10).toFixed(1);
+      return { prompt: `A researcher selected two random samples of employees at a large company to estimate the percentage who favor a new schedule. Based on the first sample, the estimate was ${p1}% with a margin of error of ${e1}%. Based on the second sample, the estimate was ${p2}% with a margin of error of ${e2}%. Assuming the margins of error were calculated the same way, which choice best explains why the second sample had a smaller margin of error?`, correct: "The second sample contained more employees than the first sample.", dist: ["The second sample contained fewer employees than the first sample.", "The second sample was selected after the first sample.", `The second sample had a ${p2 > p1 ? "higher" : "lower"} percentage of employees who favor the new schedule.`], expl: `When margins of error are calculated the same way, a larger random sample gives a smaller margin of error.` }; }
+  }
+  if (!["Linear equations & systems", "Nonlinear functions", "Ratios, rates, data"].includes(skill) && t >= 13) {
+    if (t === 13) { const h = pickOne(rng, [-1, 1]) * ri(rng, 1, 9), k = pickOne(rng, [-1, 1]) * ri(rng, 1, 9), r = ri(rng, 2, 15); const F = h * h + k * k - r * r;
+      return { prompt: `A circle in the xy-plane has its center at (${h}, ${k}) and has a radius of ${r}. An equation of this circle is x² + y² + ax + by + c = 0, where a, b, and c are constants. What is the value of c?`, correct: F, dist: [h * h + k * k + r * r, r * r - h * h - k * k, F + 2 * r], expl: `(x${lin(-h)})² + (y${lin(-k)})² = ${r * r} expands to x² + y² ${-2 * h < 0 ? "−" : "+"} ${Math.abs(2 * h)}x ${-2 * k < 0 ? "−" : "+"} ${Math.abs(2 * k)}y + ${h * h + k * k} − ${r * r} = 0, so c = ${F}.` }; }
+    if (t === 14) { let n = ri(rng, 7, 120); if (n % 2 === 0 && gcd(n - 2, n) === n) n++;
+      return { prompt: `A polygon has exactly ${n} sides. If the measure of each of the ${n} interior angles of this polygon is (180k)°, what is the value of k?`, correct: frac(n - 2, n), dist: [frac(n, n - 2), frac(2, n), frac(n - 1, n)], expl: `The interior angles sum to 180(${n} − 2)°, so each is 180 · ${n - 2}/${n} degrees, and k = ${frac(n - 2, n)}.` }; }
+    if (t === 15) { const W = ri(rng, 20, 60), L = W + ri(rng, 3, 25), x = ri(rng, 2, 9), A = (W + 2 * x) * (L + 2 * x);
+      return { prompt: `Rectangle P has a width of ${W} feet and a length of ${L} feet and is located inside rectangle Q. A uniform distance x, in feet, separates each side of rectangle P from the corresponding side of rectangle Q. If the area of rectangle Q is ${A.toLocaleString("en-US")} square feet, what is the value of x?`, correct: x, dist: [2 * x, x + 1, Math.round((A - W * L) / (W + L))], expl: `Q is (${W} + 2x) by (${L} + 2x). (${W} + 2x)(${L} + 2x) = ${A}; testing or solving the quadratic gives x = ${x}.` }; }
+    { const r = ri(rng, 2, 12), m = ri(rng, 2, 9);
+      return { prompt: `Sphere A has a radius of ${r}n, and sphere B has a radius of ${r * m}n, where n is a positive constant. The volume of sphere B is how many times the volume of sphere A?`, correct: m ** 3, dist: [m, m * m, 3 * m], expl: `Volume scales with the cube of the radius. The radius ratio is ${m}, so the volume ratio is ${m}³ = ${m ** 3}.` }; }
+  }
   if (skill === "Linear equations & systems") {
     if (t === 8) { const a = ri(rng, 2, 9), b = ri(rng, 2, 11), k = ri(rng, 2, 6); let c = ri(rng, 3, 40); if (c === b) c++; const r = k * b, s = k * c;
       return { prompt: `${a}x + ${b}y = ${c}\n${k * a}x + ry = s\n\nIn the given system of equations, r and s are constants. If the system has infinitely many solutions, what is the value of r + s?`, correct: r + s, dist: [r, s, r + s + k], expl: `For infinitely many solutions the second equation must be ${k} times the first: r = ${k}(${b}) = ${r} and s = ${k}(${c}) = ${s}, so r + s = ${r + s}.` }; }
@@ -2169,21 +2209,21 @@ const BANK_DOMAINS = [
 // College Board ko'nikmasi -> savol generatoridagi shablonlar
 const MATH_SKILL_TEMPLATES = {
   "Linear equations in one variable": ["Linear equations & systems", [0, 3, 7]],
-  "Linear functions": ["Linear equations & systems", [2, 9, 11, 12]],
+  "Linear functions": ["Linear equations & systems", [2, 9, 11, 12, 15]],
   "Linear inequalities in one or two variables": ["Linear equations & systems", [10]],
-  "Systems of two linear equations in two variables": ["Linear equations & systems", [1, 4, 5, 6, 8]],
-  "Equivalent expressions": ["Nonlinear functions", [7, 12, 13]],
-  "Nonlinear equations in one variable and systems of equations in two variables": ["Nonlinear functions", [1, 6, 10, 11]],
-  "Nonlinear functions": ["Nonlinear functions", [0, 2, 3, 4, 5, 8, 9]],
+  "Systems of two linear equations in two variables": ["Linear equations & systems", [1, 4, 5, 6, 8, 13, 14]],
+  "Equivalent expressions": ["Nonlinear functions", [7, 12, 13, 17]],
+  "Nonlinear equations in one variable and systems of equations in two variables": ["Nonlinear functions", [1, 6, 10, 11, 14]],
+  "Nonlinear functions": ["Nonlinear functions", [0, 2, 3, 4, 5, 8, 9, 15, 16, 18]],
   "Ratios, rates, proportional relationships, and units": ["Ratios, rates, data", [0, 3, 6, 11]],
-  "Percentages": ["Ratios, rates, data", [1, 7, 8]],
-  "One-variable data: Distributions and measures of center and spread": ["Ratios, rates, data", [2, 5, 9]],
-  "Inference from sample statistics and margin of error": ["Ratios, rates, data", [10]],
+  "Percentages": ["Ratios, rates, data", [1, 7, 8, 13]],
+  "One-variable data: Distributions and measures of center and spread": ["Ratios, rates, data", [2, 5, 9, 14]],
+  "Inference from sample statistics and margin of error": ["Ratios, rates, data", [10, 15]],
   "Probability and conditional probability": ["Ratios, rates, data", [4, 12]],
-  "Area and volume": ["Lines, angles, circles", [7, 12]],
-  "Lines, angles, and triangles": ["Lines, angles, circles", [0, 4, 6, 11]],
+  "Area and volume": ["Lines, angles, circles", [7, 12, 15, 16]],
+  "Lines, angles, and triangles": ["Lines, angles, circles", [0, 4, 6, 11, 14]],
   "Right triangles and trigonometry": ["Lines, angles, circles", [3, 10]],
-  "Circles": ["Lines, angles, circles", [1, 2, 5, 8, 9]],
+  "Circles": ["Lines, angles, circles", [1, 2, 5, 8, 9, 13]],
 };
 const POOL_TOTAL = 500;
 const diffForIndex = (i, total) => (i < total / 3 ? "Easy" : i < (2 * total) / 3 ? "Medium" : "Hard");
