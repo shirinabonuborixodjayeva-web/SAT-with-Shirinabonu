@@ -4838,7 +4838,27 @@ function AppShell({ onHome }) {
   const [vw, setVw] = useState(() => window.innerWidth);
   useEffect(() => { const f = () => setVw(window.innerWidth); window.addEventListener("resize", f); return () => window.removeEventListener("resize", f); }, []);
   // Ekran kengligiga qarab menyudagi bo'limlar soni — hech narsa bir-birining ustiga chiqmasligi uchun
-  const primaryIds = vw >= 1500 ? ["home", "tests", "courses", "daily", "top", "bank"] : vw >= 1360 ? ["home", "tests", "courses", "daily", "top"] : vw >= 1180 ? ["home", "tests", "courses", "top"] : vw >= 1100 ? ["home", "tests", "courses"] : vw >= 960 ? ["home", "tests", "courses", "bank"] : vw >= 820 ? ["home", "tests", "top"] : ["home", "tests"];
+  // Menyuda nechta bo'lim sig'ishini haqiqiy o'lcham bo'yicha hisoblaymiz — bo'limlar o'ngdagi tugmalar (Premium va h.k.) ustiga chiqmasligi uchun
+  const NAV_ORDER = ["home", "tests", "courses", "daily", "top", "bank", "vocab", "plan"];
+  const navRef = useRef(null); const measureRef = useRef(null);
+  const [fit, setFit] = useState(3);
+  React.useLayoutEffect(() => {
+    const calc = () => {
+      const nv = navRef.current, m = measureRef.current; if (!nv || !m) return;
+      const ws = [...m.children].map((c) => c.offsetWidth + 2); let best = 1, sum = 0;
+      for (let n = 1; n <= ws.length; n++) {
+        sum += ws[n - 1];
+        const reserve = n >= NAV_ORDER.length ? 0 : NAV_ORDER.slice(0, n).includes(page) || !NAV_ORDER.includes(page) && page === "home" ? 100 : 170;
+        if (sum + reserve <= nv.clientWidth) best = n; else break;
+      }
+      setFit(best);
+    };
+    calc();
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(calc) : null; if (ro && navRef.current) ro.observe(navRef.current);
+    window.addEventListener("resize", calc); if (document.fonts && document.fonts.ready) document.fonts.ready.then(calc).catch(() => {});
+    return () => { if (ro) ro.disconnect(); window.removeEventListener("resize", calc); };
+  }, [isMobile, page]);
+  const primaryIds = NAV_ORDER.slice(0, fit);
   const showChips = vw >= 1100, showBrand = vw >= 860;
   const moreRef = useRef(null);
   useEffect(() => {
@@ -4896,7 +4916,10 @@ function AppShell({ onHome }) {
               <button onClick={() => setPage("home")} style={{ display: "flex", alignItems: "center", gap: 9, background: "transparent", border: "none", cursor: "pointer", padding: 0, flexShrink: 0 }}>
                 <Mascot size={30} />{showBrand && <span style={{ fontSize: 17, fontWeight: 800, color: B.navy, fontFamily: FONT, letterSpacing: -0.3, whiteSpace: "nowrap" }}>SAT with Shirinabonu</span>}
               </button>
-              <nav style={{ display: "flex", alignItems: "center", gap: 2, flex: 1, minWidth: 0 }}>
+              <nav ref={navRef} style={{ position: "relative", display: "flex", alignItems: "center", gap: 2, flex: 1, minWidth: 0 }}>
+                <div ref={measureRef} aria-hidden="true" style={{ position: "absolute", left: 0, top: -9999, visibility: "hidden", display: "flex", gap: 2, pointerEvents: "none", whiteSpace: "nowrap" }}>
+                  {NAV_ORDER.map((id) => { const n = nav.find((x) => x.id === id); return n ? <span key={id} style={{ fontFamily: FONT, fontSize: 14.5, fontWeight: 700, padding: "22px 11px", whiteSpace: "nowrap" }}>{n.label}</span> : null; })}
+                </div>
                 {navPrimary.map((n) => (
                   <button key={n.id} onClick={() => { setPage(n.id); setMoreOpen(false); }} style={{ position: "relative", background: "transparent", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: 14.5, fontWeight: page === n.id ? 700 : 500, color: page === n.id ? B.plum : B.muted, padding: "22px 11px", whiteSpace: "nowrap" }}>
                     {n.label}
