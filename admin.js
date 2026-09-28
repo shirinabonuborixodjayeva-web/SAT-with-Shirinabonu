@@ -19,7 +19,8 @@ async function scanIds(pattern) {
 
 // O'quvchining mock natijalari: oxirgi ballar va zaif mavzular (barcha testlar bo'yicha domen aniqligi)
 function summarize(list) {
-  const results = (Array.isArray(list) ? list : []).map(parse).filter(Boolean);
+  const empty = (r) => (r.rwRaw || r.mathRaw) && (!r.rwRaw || !r.rwRaw.c) && (!r.mathRaw || !r.mathRaw.c);
+  const results = (Array.isArray(list) ? list : []).map(parse).filter((r) => r && !empty(r)).sort((a, b) => (b.at || 0) - (a.at || 0));
   const agg = {};
   results.forEach((r) => Object.entries(r.perDomain || {}).forEach(([d, v]) => { agg[d] = agg[d] || { c: 0, t: 0 }; agg[d].c += Number(v.c) || 0; agg[d].t += Number(v.t) || 0; }));
   const domains = Object.entries(agg).filter(([, v]) => v.t > 0).map(([d, v]) => ({ d, c: v.c, t: v.t, p: Math.round((v.c / v.t) * 100) })).sort((a, b) => a.p - b.p);

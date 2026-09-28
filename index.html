@@ -2344,6 +2344,7 @@ function TestReview({ items }) {
   const [filter, setFilter] = useState("all");
   const [sel, setSel] = useState(null);
   const [ai, setAi] = useState({});
+  const [view, setView] = useState("table");
   const prem = isPremium();
   const list = items.filter((x) => x.m === mod);
   const shown = list.filter((x) => filter === "all" || (filter === "wrong" ? !x.ok && x.r != null && x.r !== "" : filter === "skip" ? x.r == null || x.r === "" : x.ok));
@@ -2374,13 +2375,35 @@ function TestReview({ items }) {
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
         {[["all", "Hammasi"], ["wrong", "Xatolar"], ["skip", "Javobsiz"], ["right", "To'g'ri"]].map(([id, l]) => <button key={id} onClick={() => setFilter(id)} style={{ border: `1px solid ${filter === id ? B.plum : B.border}`, cursor: "pointer", borderRadius: 20, padding: "5px 12px", fontFamily: FONT, fontSize: 13, fontWeight: 700, background: filter === id ? "#E8EFF8" : "#fff", color: filter === id ? B.plum : B.muted }}>{l}</button>)}
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(42px, 1fr))", gap: 7, marginBottom: 6 }}>
+      <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>{[["table", "☰ Jadval"], ["grid", "▦ Raqamlar"]].map(([id, l]) => <button key={id} onClick={() => setView(id)} style={{ border: "none", cursor: "pointer", borderRadius: 8, padding: "5px 10px", fontFamily: FONT, fontSize: 12.5, fontWeight: 800, background: view === id ? B.plum : B.bg, color: view === id ? "#fff" : B.muted }}>{l}</button>)}</div>
+      {view === "table" && (
+        <div style={{ overflowX: "auto", marginBottom: 6 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13.5, minWidth: 560 }}>
+            <thead><tr style={{ textAlign: "left", color: B.muted, fontSize: 12, textTransform: "uppercase", letterSpacing: 0.3 }}>{["#", "Ko'nikma", "Qiyinlik", "Sizning javob", "To'g'ri javob", ""].map((h) => <th key={h} style={{ padding: "8px 8px", borderBottom: `1px solid ${B.border}`, fontWeight: 800 }}>{h}</th>)}</tr></thead>
+            <tbody>
+              {shown.map((x) => { const i = idxOf(x); const c = box(x); const skipped = x.r == null || x.r === "";
+                return (
+                  <tr key={i} onClick={() => setSel(sel === i ? null : i)} style={{ cursor: "pointer", background: sel === i ? "#E8EFF8" : "transparent", borderBottom: `1px solid ${B.bg}` }}>
+                    <td style={{ padding: "9px 8px", fontWeight: 800 }}>{x.n}</td>
+                    <td style={{ padding: "9px 8px" }}>{x.q.skill || x.q.domain}</td>
+                    <td style={{ padding: "9px 8px", color: B.muted }}>{x.q.difficulty || "—"}</td>
+                    <td style={{ padding: "9px 8px", fontWeight: 700, color: skipped ? B.muted : x.ok ? B.green : "#D63B5C" }}>{skipped ? "—" : x.q.type === "spr" ? String(x.r) : L[x.r]}</td>
+                    <td style={{ padding: "9px 8px", fontWeight: 700 }}>{x.q.type === "spr" ? String(x.q.answer) : L[x.q.answer]}</td>
+                    <td style={{ padding: "9px 8px" }}><span style={{ fontSize: 12, fontWeight: 800, padding: "3px 8px", borderRadius: 10, background: c.bg, color: c.fg, whiteSpace: "nowrap" }}>{x.ok ? "✓ To'g'ri" : skipped ? "Javobsiz" : "✗ Xato"}</span></td>
+                  </tr>
+                ); })}
+            </tbody>
+          </table>
+          {!shown.length && <div style={{ fontSize: 14, color: B.muted, padding: 6 }}>Bu filtrda savol yo'q.</div>}
+        </div>
+      )}
+      {view === "grid" && <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(42px, 1fr))", gap: 7, marginBottom: 6 }}>
         {shown.map((x) => { const c = box(x); const i = idxOf(x); const on = sel === i;
           return <button key={i} onClick={() => setSel(on ? null : i)} title={x.ok ? "To'g'ri" : x.r == null || x.r === "" ? "Javob berilmagan" : "Xato"} style={{ height: 40, borderRadius: 9, border: `2px solid ${on ? B.navy : c.bd}`, background: on ? B.navy : c.bg, color: on ? "#fff" : c.fg, fontWeight: 800, fontSize: 14, cursor: "pointer", fontFamily: FONT }}>{x.n}</button>; })}
         {!shown.length && <div style={{ gridColumn: "1 / -1", fontSize: 14, color: B.muted, padding: 6 }}>Bu filtrda savol yo'q.</div>}
-      </div>
+      </div>}
       <div style={{ display: "flex", gap: 14, fontSize: 12.5, color: B.muted, fontWeight: 600, margin: "4px 0 2px", flexWrap: "wrap" }}>
-        <span>🟩 To'g'ri</span><span>🟥 Xato</span><span>⬜ Javobsiz</span><span>Savol raqamini bosing</span>
+        <span>🟩 To'g'ri</span><span>🟥 Xato</span><span>⬜ Javobsiz</span><span>Savolni bosing — to'liq tahlil ochiladi</span>
       </div>
       {cur && (
         <div style={{ marginTop: 16, borderTop: `1px solid ${B.border}`, paddingTop: 16 }}>
@@ -2432,6 +2455,110 @@ function TestReview({ items }) {
   );
 }
 
+// ---- Tailored practice: xato qilingan ko'nikmalar bo'yicha shaxsiy mashq (Bluebook/My Practice uslubida) ----
+const DIFF_TIER = { Easy: "E", Medium: "M", Hard: "H" };
+function buildTailored(items, n = 10) {
+  const wrong = items.filter((x) => !x.ok);
+  const src = wrong.length ? wrong : items;
+  const bySkill = {};
+  src.forEach((x) => { const k = (x.q.domain && /Math|Algebra|Geometry|Problem-Solving/.test(x.q.domain) ? "math" : "rw") + "|" + x.q.skill; bySkill[k] = bySkill[k] || { kind: k.split("|")[0], skill: x.q.skill, n: 0, diffs: [] }; bySkill[k].n++; bySkill[k].diffs.push(x.q.difficulty); });
+  const list = Object.values(bySkill).sort((a, b) => b.n - a.n);
+  const out = []; let guard = 0;
+  while (out.length < n && list.length && guard++ < 60) {
+    for (const s of list) {
+      if (out.length >= n) break;
+      const tier = DIFF_TIER[s.diffs[out.length % s.diffs.length]] || "M";
+      try {
+        const q = s.kind === "rw" ? pickUnseenRW(s.skill, tier) : genMathUnseen(s.skill, false, null, tier);
+        if (q && q.prompt) out.push({ ...q, skill: q.skill || s.skill });
+      } catch (e) {}
+    }
+  }
+  return { questions: out, skills: list.slice(0, 5).map((s) => s.skill) };
+}
+function PracticeSet({ title, subtitle, questions, onClose }) {
+  const [picked, setPicked] = useState(() => questions.map(() => null));
+  const [spr, setSpr] = useState({});
+  const [ai, setAi] = useState({});
+  const L = "ABCD";
+  const isOk = (q, v) => (q.type === "spr" ? sprOk(v, q.answer) : v === q.answer);
+  const answer = (k, v) => { if (picked[k] !== null) return; setPicked((p) => p.map((x, j) => (j === k ? v : x))); const q = questions[k]; if (!isOk(q, v)) addSaved({ ...q, mistake: true }); };
+  const done = picked.filter((x) => x !== null).length;
+  const score = picked.filter((v, k) => v !== null && isOk(questions[k], v)).length;
+  const runAi = async (k) => { setAi((a) => ({ ...a, [k]: { loading: true } })); try { const t = await fetchAiReview(questions[k], picked[k]); setAi((a) => ({ ...a, [k]: { text: t } })); } catch (e) { setAi((a) => ({ ...a, [k]: { err: "Tahlilni hozir olib bo'lmadi." } })); } };
+  return (
+    <div className="sws-app" style={{ position: "fixed", inset: 0, zIndex: 300, background: B.bg, overflowY: "auto", fontFamily: FONT, color: B.text }}>
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: "24px 18px 60px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, marginBottom: 6 }}>
+          <button onClick={onClose} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 15, fontFamily: FONT, padding: 0 }}><ChevronLeft size={16} /> Natijaga qaytish</button>
+          <span style={{ fontSize: 14, fontWeight: 800, color: B.plum, background: "#E8EFF8", padding: "6px 12px", borderRadius: 20 }}>{done}/{questions.length} · ✓ {score}</span>
+        </div>
+        <h1 style={{ fontSize: 24, fontWeight: 800, margin: "6px 0 4px" }}>{title}</h1>
+        <p style={{ fontSize: 15, color: B.muted, margin: "0 0 18px" }}>{subtitle}</p>
+        {questions.map((q, k) => { const v = picked[k], rev = v !== null, ok = rev && isOk(q, v);
+          return (
+            <div key={k} style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 20, marginBottom: 14 }}>
+              <div style={{ fontSize: 12.5, fontWeight: 800, color: B.muted, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 8 }}>{k + 1}. {[q.domain, q.skill, q.difficulty].filter(Boolean).join(" · ")}</div>
+              {q.passage && <div style={{ fontSize: 15.5, lineHeight: 1.75, marginBottom: 12, whiteSpace: "pre-line", fontFamily: BB.serif, background: B.bg, borderRadius: 10, padding: "12px 14px" }}>{q.passage}</div>}
+              {q.chart && <QChart c={q.chart} />}
+              <p style={{ fontSize: 16, fontWeight: 600, lineHeight: 1.6, whiteSpace: "pre-line", margin: "0 0 10px" }}>{mt(q.prompt)}</p>
+              {q.type === "spr" ? (
+                <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                  <input disabled={rev} value={spr[k] || ""} onChange={(e) => setSpr((s) => ({ ...s, [k]: e.target.value }))} placeholder="Javobingiz" style={{ border: `1.5px solid ${B.border}`, borderRadius: 10, padding: "10px 12px", fontSize: 15, fontFamily: FONT, width: 160 }} />
+                  {!rev && <button onClick={() => (spr[k] || "").trim() && answer(k, spr[k].trim())} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 10, padding: "10px 16px", fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>Tekshirish</button>}
+                  {rev && <span style={{ fontWeight: 800, color: ok ? B.green : "#D63B5C" }}>{ok ? "To'g'ri!" : "Noto'g'ri. To'g'ri javob: " + q.answer}</span>}
+                </div>
+              ) : q.choices.map((ch, c) => { const isC = c === q.answer, isP = c === v;
+                return <button key={c} onClick={() => answer(k, c)} style={{ display: "flex", gap: 10, alignItems: "center", width: "100%", textAlign: "left", marginBottom: 7, padding: "10px 13px", borderRadius: 12, cursor: rev ? "default" : "pointer", fontFamily: FONT, fontSize: 15, color: B.text, border: `1.5px solid ${rev && isC ? B.green : rev && isP ? "#D63B5C" : B.border}`, background: rev && isC ? "#E7F6EC" : rev && isP ? "#FDECEF" : "#fff" }}>
+                  <span style={{ width: 26, height: 26, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, border: `1.5px solid ${rev && isC ? B.green : B.border}`, color: rev && isC ? B.green : B.muted }}>{L[c]}</span>{mt(ch)}
+                </button>; })}
+              {rev && <div style={{ marginTop: 8, background: B.bg, borderRadius: 12, padding: "10px 13px", fontSize: 14.5, lineHeight: 1.6 }}><b style={{ color: ok ? B.green : "#D63B5C" }}>{ok ? "To'g'ri! " : "Noto'g'ri. "}</b>{mt(q.expl)}</div>}
+              {rev && !ai[k] && <button onClick={() => runAi(k)} style={{ marginTop: 8, background: "#fff", color: B.plum, border: `1.5px solid ${B.plum}`, borderRadius: 10, padding: "7px 13px", fontWeight: 800, fontSize: 13.5, cursor: "pointer", fontFamily: FONT }}>🤖 Yechim yo'li va nega boshqa javoblar xato</button>}
+              {ai[k] && ai[k].loading && <div style={{ marginTop: 8, fontSize: 14, color: B.muted }}>AI tahlil tayyorlanmoqda…</div>}
+              {ai[k] && ai[k].err && <div style={{ marginTop: 8, fontSize: 14, color: "#B4213F" }}>{ai[k].err}</div>}
+              {ai[k] && ai[k].text && <div style={{ marginTop: 8, border: `1px solid ${B.border}`, borderRadius: 12, padding: "10px 14px", fontSize: 14.5, lineHeight: 1.7, whiteSpace: "pre-line" }}>{mt(ai[k].text)}</div>}
+            </div>
+          ); })}
+        {done === questions.length && <div style={{ textAlign: "center", background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 22 }}><div style={{ fontSize: 36 }}>{score >= questions.length * 0.8 ? "🏆" : "💪"}</div><div style={{ fontSize: 20, fontWeight: 900 }}>Natija: {score}/{questions.length}</div><div style={{ fontSize: 14.5, color: B.muted, margin: "4px 0 12px" }}>Xatolar "Xatolar/Saqlangan" bo'limiga qo'shildi.</div><button onClick={onClose} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "11px 20px", fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>Natijaga qaytish</button></div>}
+      </div>
+    </div>
+  );
+}
+function SkillBreakdown({ items }) {
+  const agg = {};
+  items.forEach((x) => { const k = x.q.skill || x.q.domain; agg[k] = agg[k] || { d: x.q.domain, c: 0, t: 0 }; agg[k].t++; if (x.ok) agg[k].c++; });
+  const rows = Object.entries(agg).map(([s, v]) => ({ s, ...v, p: Math.round((v.c / v.t) * 100) })).sort((a, b) => a.p - b.p);
+  return (
+    <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 20, padding: 22, marginBottom: 18 }}>
+      <h3 style={{ fontSize: 17.5, fontWeight: 800, margin: "0 0 4px" }}>Ko'nikmalar bo'yicha tahlil</h3>
+      <div style={{ fontSize: 13.5, color: B.muted, marginBottom: 12 }}>Har bir savol turi alohida: eng zaiflari yuqorida.</div>
+      {rows.map((r) => (
+        <div key={r.s} style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 4, marginBottom: 10 }}>
+          <div style={{ fontSize: 14.5, fontWeight: 700 }}>{r.s} <span style={{ fontSize: 12.5, color: B.muted, fontWeight: 600 }}>· {r.d}</span></div>
+          <div style={{ fontSize: 14, fontWeight: 800, color: r.p < 60 ? "#D63B5C" : r.p < 80 ? "#B7791F" : B.green }}>{r.c}/{r.t} · {r.p}%</div>
+          <div style={{ gridColumn: "1 / -1", height: 6, background: B.bg, borderRadius: 3 }}><div style={{ height: 6, width: r.p + "%", borderRadius: 3, background: r.p < 60 ? "#D63B5C" : r.p < 80 ? B.gold : B.green }} /></div>
+        </div>
+      ))}
+    </div>
+  );
+}
+function TailoredCard({ items }) {
+  useSws();
+  const [set, setSet] = useState(null);
+  const wrong = items.filter((x) => !x.ok);
+  const skills = [...new Set(wrong.map((x) => x.q.skill))].slice(0, 4);
+  const start = () => { if (!isPremium()) { swsOpenPaywall("analysis"); return; } setSet(buildTailored(items, 10)); };
+  return (
+    <div style={{ background: "linear-gradient(135deg, #00356B, #1E5AA8)", color: "#fff", borderRadius: 20, padding: 22, marginBottom: 18 }}>
+      <div style={{ fontSize: 13, fontWeight: 800, opacity: 0.85, letterSpacing: 0.5 }}>🎯 TAILORED PRACTICE</div>
+      <div style={{ fontSize: 20, fontWeight: 900, margin: "4px 0 6px" }}>Sizga moslangan mashq — 10 ta yangi savol</div>
+      <div style={{ fontSize: 14.5, opacity: 0.9, lineHeight: 1.5, marginBottom: 12 }}>{skills.length ? <>Xato qilgan mavzularingiz: <b>{skills.join(", ")}</b>. Shu turdagi yangi savollar, xuddi shu qiyinlikda.</> : "Barcha javoblar to'g'ri! Mustahkamlash uchun aralash savollar."}</div>
+      <button onClick={start} style={{ background: B.gold, color: B.navy, border: "none", borderRadius: 12, padding: "11px 20px", fontWeight: 900, fontSize: 15, cursor: "pointer", fontFamily: FONT }}>{isPremium() ? "Mashqni boshlash →" : "💎 Premium bilan boshlash"}</button>
+      {set && <PracticeSet title="Tailored practice" subtitle={"Mavzular: " + set.skills.join(", ")} questions={set.questions} onClose={() => setSet(null)} />}
+    </div>
+  );
+}
+
 function ScoreReport({ test, report, onBack }) {
   const [share, setShare] = useState(null);
   const domains = Object.entries(report.perDomain);
@@ -2446,6 +2573,7 @@ function ScoreReport({ test, report, onBack }) {
           <div style={{ fontSize: 14.5, color: B.muted, marginBottom: 20 }}>{report.single ? "200–800 shkalasi · bitta modul bo'yicha taxminiy ball" : report.mode ? "200–800 shkalasi · faqat bitta bo'lim" : "400–1600 shkalasi"}</div>
           {!report.mode && <button onClick={() => { const nm = loadLocal("sws_name", "") || (SWS.user && SWS.user.first_name) || ""; setShare({ text: shareText("score", { total: report.total, rw: report.rwScore, math: report.mathScore }), card: { label: "Mening SAT mock natijam", big: report.total, sub: `R&W ${report.rwScore} · Math ${report.mathScore}`, name: nm, foot: test.name } }); }} style={{ background: "#229ED9", color: "#fff", border: "none", borderRadius: 10, padding: "10px 18px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT, marginBottom: 18 }}>📤 Natijani ulashish</button>}
           {share && <ShareModal card={share.card} text={share.text} onClose={() => setShare(null)} />}
+          {report.notSaved && <div style={{ background: "#FFF7E8", borderRadius: 12, padding: "10px 14px", fontSize: 14, margin: "0 0 14px", textAlign: "left" }}>⚠️ Savollarning yarmidan kamiga javob berilgan — bu urinish natijalar ro'yxatiga va reytingga qo'shilmadi.</div>}
           {!report.single && <div style={{ fontSize: 12.5, color: B.muted, margin: "-8px 0 14px" }}>Ball Bluebook tizimiga o'xshab hisoblanadi: qiyin savollar ko'proq, oson savollar kamroq ball beradi; 2-modul oson bo'lsa, bo'lim uchun maksimal ~640.</div>}
           <div style={{ display: "grid", gridTemplateColumns: report.mode ? "1fr" : "1fr 1fr", gap: 14 }}>
             {[["Reading and Writing", report.rwScore, report.rwRaw], ["Math", report.mathScore, report.mathRaw]].filter(([, sc]) => sc != null).map(([l, s, raw]) => (
@@ -2471,22 +2599,25 @@ function ScoreReport({ test, report, onBack }) {
           )}
         </div>
         </PremiumLock></div>
+        {report.items && report.items.length > 0 && <TailoredCard items={report.items} />}
+        {report.items && report.items.length > 0 && <PremiumLock title="Har bir ko'nikma bo'yicha tahlil" height={260}><SkillBreakdown items={report.items} /></PremiumLock>}
         {report.items && report.items.length > 0 && <TestReview items={report.items} />}
       </div>
     </div>
   );
 }
 
-function MockTests({ tier, history, onOpenTest, onNeedPay, onOpenPast }) {
+function MockTests({ tier, history, onOpenTest, onNeedPay, onOpenPast, onDeletePast }) {
+  const resumeS = loadLocal("sws_resume", null);
   const [query, setQuery] = useState(""); const [page, setPage] = useState(0); const per = 24;
   const filtered = TEST_LIBRARY.filter((t) => t.name.toLowerCase().includes(query.toLowerCase()));
   const slice = filtered.slice(page * per, page * per + per);
-  const done = new Set(history.map((h) => h.testId));
+  const done = new Set(history.filter((h) => !isEmptyAttempt(h)).map((h) => h.testId));
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px" }}>Mock testlar</h1>
       <p style={{ fontSize: 15.5, color: B.muted, margin: "0 0 18px" }}>Tarifingiz: <b>{tierLabel(tier)}</b> · {TIERS[tier].mockLimit} ta test ochiq{tier !== "premium" ? ` · ${TIERS.free.mockLimit + 1}–200-testlar Premium'da` : ""}. Har bir testdagi savollar oldingi testlarda takrorlanmaydi.</p>
-      {onOpenPast && <MyResults history={history} onOpen={onOpenPast} />}
+      {onOpenPast && <MyResults history={history} onOpen={onOpenPast} onDelete={onDeletePast} onResume={(t) => onOpenTest({ ...t, resume: true })} />}
       <a href="https://satsuite.collegeboard.org/digital/digital-practice-preparation/practice-tests" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 12, background: "linear-gradient(90deg, #EEF2FF, #F7F0FF)", border: `1px solid ${B.border}`, borderRadius: 14, padding: "12px 16px", marginBottom: 16, textDecoration: "none", color: B.text }}>
         <span style={{ fontSize: 24 }}>🎓</span>
         <span style={{ flex: 1, fontSize: 14.5, lineHeight: 1.5 }}><b>Rasmiy College Board practice testlari</b> — haqiqiy imtihon savollari, bepul, Bluebook ilovasida. Bizdagi mocklar bilan birga yeching: ular real darajani ko'rsatadi, biznikilar esa cheksiz yangi savol beradi.</span>
@@ -2499,7 +2630,7 @@ function MockTests({ tier, history, onOpenTest, onNeedPay, onOpenPast }) {
         {slice.map((t) => {
           const locked = !unlocked(tier, t.tier); const completed = done.has(t.id);
           return (
-            <div key={t.id} onClick={() => (locked ? onNeedPay(t.tier) : onOpenTest(t))} style={{ background: "#fff", border: `1px solid ${completed ? B.green + "55" : B.border}`, borderRadius: 16, padding: 14, cursor: "pointer", opacity: locked ? 0.7 : 1 }}>
+            <div key={t.id} onClick={() => (locked ? onNeedPay(t.tier) : onOpenTest(resumeS && resumeS.test && resumeS.test.id === t.id ? { ...t, resume: true } : t))} style={{ background: "#fff", border: `1px solid ${completed ? B.green + "55" : B.border}`, borderRadius: 16, padding: 14, cursor: "pointer", opacity: locked ? 0.7 : 1 }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
                 <div style={{ width: 30, height: 30, borderRadius: 8, background: locked ? "#F0F1F6" : "#E8EFF8", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {locked ? <Lock size={14} color={B.muted} /> : completed ? <Check size={15} color={B.green} /> : <FileText size={15} color={B.plum} />}
@@ -2510,7 +2641,7 @@ function MockTests({ tier, history, onOpenTest, onNeedPay, onOpenPast }) {
               <div style={{ fontSize: 15, fontWeight: 700 }}>Test {t.id}</div>
               <div style={{ fontSize: 12.5, color: B.muted }}>{t.difficulty} · 98 savol · 134 daq</div>
               {completed && (() => { const h = [...history].reverse().find((x) => x.testId === t.id); return h ? <div style={{ fontSize: 12.5, fontWeight: 800, color: B.green, marginTop: 3 }}>Natija: {h.total}</div> : null; })()}
-              <div style={{ marginTop: 10, textAlign: "center", borderRadius: 9, padding: "8px", fontSize: 13.5, fontWeight: 600, background: locked ? B.bg : B.plum, color: locked ? B.muted : "#fff" }}>{locked ? "Premium" : completed ? "Qayta yechish" : "Boshlash"}</div>
+              <div style={{ marginTop: 10, textAlign: "center", borderRadius: 9, padding: "8px", fontSize: 13.5, fontWeight: 600, background: locked ? B.bg : B.plum, color: locked ? B.muted : "#fff" }}>{locked ? "Premium" : resumeS && resumeS.test && resumeS.test.id === t.id ? "⏸ Davom ettirish" : completed ? "Qayta yechish" : "Boshlash"}</div>
             </div>
           );
         })}
@@ -4609,6 +4740,8 @@ function CourseLesson({ course, topic, idx, saved, onBack, onDone, onNext }) {
 
 // ---- Natijalar: eski ballarni yangi (Bluebook uslubi) hisob bo'yicha qayta hisoblash, server bilan sinxronlash ----
 const SCORE_V = 2;
+// Bo'sh (birorta ham to'g'ri javobsiz) urinishlar — tugatilmagan testlar, natijalarda ko'rsatilmaydi
+const isEmptyAttempt = (e) => !!e && (e.rwRaw || e.mathRaw) && (!e.rwRaw || !e.rwRaw.c) && (!e.mathRaw || !e.mathRaw.c);
 function rescoreOld(e) {
   if (!e || e.v >= SCORE_V) return e;
   const fix = (sc, raw, single) => {
@@ -4630,11 +4763,12 @@ function canReview(e) {
   const mods = MODULES.filter((m) => m.kind !== "break" && (!e.modeArg || e.modeArg === "full" || m.kind === e.modeArg || m.id === e.modeArg));
   return mods.every((mod) => { const basis = mod.id === "rw2" ? e.diffPath.rw1 : mod.id === "m2" ? e.diffPath.m1 : null; const b2 = mod.adaptive ? (basis || "easy") : "standard"; return !!loadLocal(`sws_qcache_v5_${e.testId}_${mod.id}_${b2}`, null); });
 }
-function MyResults({ history, onOpen, limit = 6 }) {
+function MyResults({ history, onOpen, onDelete, onResume, limit = 6 }) {
   const [all, setAll] = useState(false);
   const section = loadLocal("sws_section_history", []);
-  const list = [...history.map((h) => ({ ...h, _full: true })), ...section].filter((x) => x && x.total).sort((a, b) => (b.at || 0) - (a.at || 0));
-  if (!list.length) return null;
+  const list = [...history.map((h) => ({ ...h, _full: true, _ref: h })), ...section.map((x) => ({ ...x, _ref: x }))].filter((x) => x && x.total && !isEmptyAttempt(x)).sort((a, b) => (b.at || 0) - (a.at || 0));
+  const rs = loadLocal("sws_resume", null); const hasResume = rs && rs.test && Date.now() - (rs.at || 0) < 7 * 86400000;
+  if (!list.length && !hasResume) return null;
   const shown = all ? list : list.slice(0, limit);
   const label = (e) => (e._full || !e.mode ? "To'liq test" : e.single ? (e.mode === "rw" ? "R&W · 1 modul" : "Math · 1 modul") : e.mode === "rw" ? "Faqat R&W" : "Faqat Math");
   return (
@@ -4643,6 +4777,12 @@ function MyResults({ history, onOpen, limit = 6 }) {
         <div style={{ fontSize: 16, fontWeight: 800 }}>📋 Mening natijalarim</div>
         <span style={{ fontSize: 13, color: B.muted, fontWeight: 700 }}>{list.length} ta urinish</span>
       </div>
+      {hasResume && (
+        <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", background: "#FFF7E8", borderRadius: 12, marginBottom: 6, flexWrap: "wrap" }}>
+          <div style={{ flex: "1 1 180px" }}><div style={{ fontSize: 15, fontWeight: 800 }}>⏸ {rs.test.name || "Mock test"}</div><div style={{ fontSize: 12.5, color: B.muted, fontWeight: 600 }}>Tugallanmagan · {Object.values(rs.responses || {}).filter((v) => v !== undefined && v !== null && v !== "").length} ta javob</div></div>
+          {onResume && <button onClick={() => onResume(rs.test)} style={{ background: B.gold, color: B.navy, border: "none", borderRadius: 10, padding: "8px 14px", fontSize: 13.5, fontWeight: 900, cursor: "pointer", fontFamily: FONT }}>Davom ettirish (Resume) →</button>}
+        </div>
+      )}
       {shown.map((e, k) => { const rv = canReview(e);
         return (
           <div key={(e.at || 0) + "-" + k} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 4px", borderTop: k ? `1px solid ${B.bg}` : "none", flexWrap: "wrap" }}>
@@ -4655,6 +4795,7 @@ function MyResults({ history, onOpen, limit = 6 }) {
               <div style={{ fontSize: 12, color: B.muted }}>{e.rwScore != null ? "R&W " + e.rwScore : ""}{e.rwScore != null && e.mathScore != null ? " · " : ""}{e.mathScore != null ? "Math " + e.mathScore : ""}</div>
             </div>
             <button disabled={!rv} onClick={() => rv && onOpen(e)} title={rv ? "Savollarni ko'rib chiqish" : "Bu test boshqa qurilmada yoki eski versiyada yechilgan — faqat ball saqlangan"} style={{ background: rv ? B.plum : B.bg, color: rv ? "#fff" : B.muted, border: "none", borderRadius: 10, padding: "8px 12px", fontSize: 13, fontWeight: 800, cursor: rv ? "pointer" : "default", fontFamily: FONT }}>{rv ? "Ko'rib chiqish →" : "Faqat ball"}</button>
+            {onDelete && <button onClick={() => onDelete(e._ref || e)} title="Natijani o'chirish" style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 10, width: 36, height: 34, cursor: "pointer", fontSize: 15 }}>🗑</button>}
           </div>
         ); })}
       {list.length > limit && <button onClick={() => setAll((v) => !v)} style={{ marginTop: 6, background: "transparent", border: "none", color: B.plum, fontWeight: 800, fontSize: 14, cursor: "pointer", fontFamily: FONT }}>{all ? "Kamroq ko'rsatish" : `Hammasini ko'rsatish (${list.length})`}</button>}
@@ -4679,9 +4820,9 @@ function AppShell({ onHome }) {
   const [activeTest, setActiveTest] = useState(null);
   const [report, setReport] = useState(null);
   const [history, setHistory] = useState(() => {
-    const h = loadLocal("sws_history", []).map(rescoreOld);
-    const sec = loadLocal("sws_section_history", []); const sec2 = sec.map(rescoreOld);
-    if (sec2.some((x, i) => x !== sec[i])) saveLocal("sws_section_history", sec2);
+    const h = loadLocal("sws_history", []).map(rescoreOld).filter((x) => !isEmptyAttempt(x));
+    const sec = loadLocal("sws_section_history", []); const sec2 = sec.map(rescoreOld).filter((x) => !isEmptyAttempt(x));
+    if (sec2.length !== sec.length || sec2.some((x, i) => x !== sec[i])) saveLocal("sws_section_history", sec2);
     return h;
   });
   const [bankStats, setBankStats] = useState(() => loadLocal("sws_bank", {}));
@@ -4726,20 +4867,31 @@ function AppShell({ onHome }) {
       try {
         const d = await swsApi("/api/me?results=1");
         if (!alive || !d || !Array.isArray(d.results)) return;
-        const server = d.results.map(fromRecord).map(rescoreOld);
+        const allServer = d.results.map(fromRecord).map(rescoreOld);
+        const deleted = new Set(loadLocal("sws_deleted_results", []));
+        const junk = allServer.filter((x) => isEmptyAttempt(x) || deleted.has(x.at)).map((x) => x.at);
+        if (junk.length) swsApi("/api/me", { deleteResults: junk }).catch(() => {});
+        const server = allServer.filter((x) => !junk.includes(x.at));
         const have = new Set([...loadLocal("sws_history", []), ...loadLocal("sws_section_history", [])].map((x) => x && x.at).filter(Boolean));
         const addFull = server.filter((x) => !x.mode && !have.has(x.at));
         const addSec = server.filter((x) => x.mode && !have.has(x.at));
         if (addSec.length) saveLocal("sws_section_history", [...loadLocal("sws_section_history", []), ...addSec].sort((a, b) => a.at - b.at).slice(-100));
         if (addFull.length) setHistory((h) => [...h, ...addFull].sort((a, b) => (a.at || 0) - (b.at || 0)));
         const onServer = new Set(server.map((x) => x.at));
-        const pending = [...loadLocal("sws_history", []), ...loadLocal("sws_section_history", [])].map(rescoreOld).filter((x) => x && x.total && !onServer.has(x.at));
+        const pending = [...loadLocal("sws_history", []), ...loadLocal("sws_section_history", [])].map(rescoreOld).filter((x) => x && x.total && !isEmptyAttempt(x) && !onServer.has(x.at));
         pending.forEach((x) => { if (!x.at) x.at = Date.now() - Math.floor(Math.random() * 1e6); });
         if (pending.length) { await swsApi("/api/me", { results: pending.slice(-50).map(resultRecord) }); }
       } catch (e) {}
     })();
     return () => { alive = false; };
   }, []);
+  const deleteResult = (e) => {
+    if (!window.confirm((e.testName || "Test") + " natijasi o'chirilsinmi?")) return;
+    if (e.at) { saveLocal("sws_deleted_results", [...loadLocal("sws_deleted_results", []), e.at].slice(-200)); if (SWS.session) swsApi("/api/me", { deleteResults: [e.at] }).catch(() => {}); }
+    const same = (x) => x === e || (e.at && x.at === e.at);
+    saveLocal("sws_section_history", loadLocal("sws_section_history", []).filter((x) => !same(x)));
+    setHistory((h) => h.filter((x) => !(x === e || (e.at && x.at === e.at) || (!e.at && x.testId === e.testId && x.total === e.total && !x.at))));
+  };
   const openPast = async (e) => {
     setPreparing(true);
     try { await ensureRW(mockNeeds()); } catch (err) {}
@@ -4872,6 +5024,8 @@ function AppShell({ onHome }) {
   const navMore = nav.filter((n) => !primaryIds.includes(n.id));
   const finishTest = (responses, diffPath, mode) => {
     const { items, ...r } = gradeTest(activeTest.id, responses, diffPath, mode);
+    const answeredN = items.filter((x) => x.r != null && x.r !== "").length;
+    if (answeredN < items.length / 2) { setReport({ ...r, testId: activeTest.id, testName: activeTest.name, items, notSaved: true }); return; }
     const entry = { ...r, testId: activeTest.id, testName: activeTest.name, at: Date.now(), responses, diffPath, modeArg: mode || null, v: SCORE_V };
     if (SWS.session) swsApi("/api/me", { result: resultRecord(entry) }).then((d) => { if (d && !d.error) markSynced(entry.at); }).catch(() => {});
     // Faqat bitta bo'lim yechilsa umumiy ball tarixiga qo'shmaymiz (1600 lik grafik buzilmasin)
@@ -4976,7 +5130,7 @@ function AppShell({ onHome }) {
         )}
         <div key={page} className="sws-fade-in" style={{ padding: isMobile ? "18px 14px 120px" : "28px 28px 80px", maxWidth: isMobile ? 1000 : 1240, margin: isMobile ? 0 : "0 auto", boxSizing: "border-box" }}>
           {page === "home" && <DashHome onGo={setPage} history={history} onGoTests={() => setPage("tests")} todaySeconds={todaySeconds} goalMinutes={goalMinutes} streak={streak} onGoProfile={() => setPage("profile")} targetScore={targetScore} examDate={examDate} name={name} onResume={(t) => openTest({ ...t, resume: true })} />}
-          {page === "tests" && <MockTests tier={tier} history={history} onOpenTest={openTest} onNeedPay={() => needPay()} onOpenPast={openPast} />}
+          {page === "tests" && <MockTests tier={tier} history={history} onOpenTest={openTest} onNeedPay={() => needPay()} onOpenPast={openPast} onDeletePast={deleteResult} />}
           {page === "bank" && <QuestionBank tier={tier} bankStats={bankStats} onRecord={(d, c, t) => setBankStats((s) => ({ ...s, [d]: { c, t } }))} onNeedPay={needPay} />}
           {page === "courses" && <Courses onNeedPay={() => needPay("course")} />}
           {page === "drills" && <DrillsHome />}
@@ -4986,7 +5140,7 @@ function AppShell({ onHome }) {
           {page === "plan" && !isPremium() && <PremiumLock reason="plan" title="Shaxsiy o'quv reja" note="Haftalik reja va maqsad ballgacha yo'l — Premium'da" height={520}><StudyPlan history={history} targetScore={targetScore} examDate={examDate} onGo={() => {}} /></PremiumLock>}
           {page === "plan" && isPremium() && <StudyPlan history={history} targetScore={targetScore} examDate={examDate} onGo={setPage} />}
           {page === "tutor" && <AITutor tier={tier} />}
-          {page === "analytics" && <><MyResults history={history} onOpen={openPast} limit={20} /><Analytics history={history} /></>}
+          {page === "analytics" && <><MyResults history={history} onOpen={openPast} onDelete={deleteResult} onResume={(t) => openTest({ ...t, resume: true })} limit={20} /><Analytics history={history} /></>}
           {page === "community" && <Community name={name} />}
           {page === "top" && <Leaderboard name={name} history={history} />}
           {page === "admin" && sws.me && sws.me.isAdmin && <AdminPanel />}
