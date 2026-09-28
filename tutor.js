@@ -4,17 +4,45 @@ const SYSTEM =
   "You are a friendly, concise SAT tutor for Uzbek students on the site 'SAT with Shirinabonu'. " +
   "Answer in the language the student uses (Uzbek or English). Keep answers under 150 words unless the student asks for full working or a quiz. " +
   "Explain step by step for math. If asked to quiz the student, write 3 short multiple-choice Digital SAT-style questions (A–D) on the topic, " +
-  "and give the answers with one-line explanations only after the student replies. Stay on SAT, English, and math topics.";
+  "and give the answers with one-line explanations only after the student replies. Stay on SAT, English, and math topics. " +
+  "Write in plain text only: no Markdown symbols such as ** or #, and no LaTeX; write math simply, like 2x + 3 = 11 or x^2. " +
+  "Double-check every answer choice and calculation before replying so each quiz question has exactly one correct option.";
 
+const T = require("./_tg");
+const K = require("./_kv");
 const MODELS = [process.env.GEMINI_MODEL, "gemini-flash-latest", "gemini-2.5-flash", "gemini-2.0-flash"].filter(Boolean);
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") { res.status(405).json({ error: "method_not_allowed" }); return; }
   const key = process.env.GEMINI_API_KEY;
-  if (!key) { res.status(503).json({ error: "no_key" }); return; }
+  // Kalit bo'lmasa: bepul, kalitsiz Pollinations AI xizmati ishlatiladi
 
   let body = req.body;
   if (typeof body === "string") { try { body = JSON.parse(body); } catch (e) { body = {}; } }
+  // Test tahlili: bitta savol bo'yicha yechim yo'li va har bir noto'g'ri variant nega xato ekani (faqat Premium)
+  let reviewCacheKey = null;
+  if (body && body.review && typeof body.review === "object") {
+    const rv = body.review; const L = "ABCD";
+    const clip = (x, n) => String(x == null ? "" : x).slice(0, n);
+    const ch = Array.isArray(rv.choices) ? rv.choices.slice(0, 4).map((c, i) => L[i] + ") " + clip(c, 400)).join("\n") : "";
+    const correct = rv.spr ? clip(rv.answer, 60) : (Array.isArray(rv.choices) ? L[Number(rv.answer)] + ") " + clip(rv.choices[Number(rv.answer)], 400) : clip(rv.answer, 60));
+    const student = rv.student == null || rv.student === "" ? "no answer" : rv.spr ? clip(rv.student, 60) : L[Number(rv.student)] || clip(rv.student, 20);
+    const prompt = "Explain this Digital SAT question to an Uzbek student. Write ONLY in Uzbek (Latin script), plain text, no Markdown, no LaTeX.\n" +
+      "Structure exactly:\n1) Yechim yo'li: short numbered steps showing how to get the correct answer.\n" +
+      (rv.spr ? "2) Keng tarqalgan xatolar: 1-2 typical mistakes.\n" : "2) Nega boshqa javoblar xato: one short line for EACH wrong choice, starting with its letter.\n") +
+      "3) Maslahat: one sentence tip for similar questions.\nThe correct answer given below is final; do not contradict it. Keep it under 220 words.\n\n" +
+      (rv.passage ? "Passage:\n" + clip(rv.passage, 2500) + "\n\n" : "") + "Question: " + clip(rv.prompt, 1200) + "\n" + (ch ? "Choices:\n" + ch + "\n" : "(Student-produced response)\n") +
+      "Correct answer: " + correct + "\nStudent's answer: " + student + (rv.expl ? "\nShort official note: " + clip(rv.expl, 600) : "");
+    body = { messages: [{ role: "user", text: prompt }] };
+    if (K.kvOn() && T.token()) {
+      const uid = T.sessionUser(req);
+      if (!uid) { res.status(401).json({ error: "no_session" }); return; }
+      if ((await K.premiumUntil(uid)) <= Date.now()) { res.status(402).json({ error: "premium" }); return; }
+      reviewCacheKey = "rev:" + require("crypto").createHash("sha1").update(prompt.replace(/Student's answer:.*$/m, "")).digest("hex");
+      try { const hit = await K.kv("GET", reviewCacheKey); if (hit) { res.status(200).json({ text: hit, cached: true }); return; } } catch (e) {}
+    }
+    body.__review = true;
+  }
   const msgs = Array.isArray(body && body.messages) ? body.messages : [];
   const contents = msgs
     .filter((m) => m && typeof m.text === "string" && m.text.trim())
@@ -22,6 +50,32 @@ module.exports = async (req, res) => {
     .map((m) => ({ role: m.role === "user" ? "user" : "model", parts: [{ text: m.text.slice(0, 4000) }] }));
   while (contents.length && contents[0].role !== "user") contents.shift();
   if (!contents.length || contents[contents.length - 1].role !== "user") { res.status(400).json({ error: "bad_request" }); return; }
+
+  // Bepul tarifda kunlik AI limiti (Premium — cheksiz)
+  if (!(body && body.__review) && K.kvOn() && T.token()) {
+    const uid = T.sessionUser(req);
+    if (!uid) { res.status(401).json({ error: "no_session" }); return; }
+    try { const u = await K.consume(uid, "ai"); if (!u.ok) { res.status(402).json({ error: "limit", used: u.used, limit: u.limit }); return; } } catch (e) {}
+  }
+
+  if (!key) {
+    try {
+      const r = await fetch("https://text.pollinations.ai/openai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: process.env.AI_MODEL || "openai",
+          messages: [{ role: "system", content: SYSTEM }, ...contents.map((c) => ({ role: c.role === "user" ? "user" : "assistant", content: c.parts[0].text }))],
+        }),
+      });
+      const data = await r.json().catch(() => ({}));
+      if (r.status === 429) { res.status(429).json({ error: "rate_limited" }); return; }
+      const text = (((data.choices || [])[0] || {}).message || {}).content;
+      if (r.ok && text) { if (reviewCacheKey) { try { await K.kv("SET", reviewCacheKey, String(text).trim(), "EX", 60 * 86400); } catch (e) {} } res.status(200).json({ text: String(text).trim(), model: "free" }); return; }
+      res.status(502).json({ error: "upstream_failed", detail: "http_" + r.status });
+    } catch (e) { res.status(502).json({ error: "upstream_failed", detail: String(e && e.message || e) }); }
+    return;
+  }
 
   const payload = {
     systemInstruction: { parts: [{ text: SYSTEM }] },
@@ -32,7 +86,7 @@ module.exports = async (req, res) => {
   let lastErr = "unknown";
   for (const model of MODELS) {
     try {
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-goog-api-key": key },
         body: JSON.stringify(payload),
@@ -42,7 +96,7 @@ module.exports = async (req, res) => {
       if (r.status === 429) { res.status(429).json({ error: "rate_limited" }); return; }
       if (!r.ok) { lastErr = (data.error && data.error.message) || "http_" + r.status; continue; }
       const text = (((data.candidates || [])[0] || {}).content || {}).parts?.map((p) => p.text || "").join("").trim();
-      if (text) { res.status(200).json({ text, model }); return; }
+      if (text) { if (reviewCacheKey) { try { await K.kv("SET", reviewCacheKey, text, "EX", 60 * 86400); } catch (e) {} } res.status(200).json({ text, model }); return; }
       lastErr = "empty_response";
     } catch (e) { lastErr = String(e && e.message || e); }
   }
