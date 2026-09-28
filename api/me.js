@@ -28,6 +28,12 @@ module.exports = async (req, res) => {
       const dp = r.diffPath && typeof r.diffPath === "object" ? { rw1: r.diffPath.rw1 === "hard" ? "hard" : r.diffPath.rw1 ? "easy" : undefined, m1: r.diffPath.m1 === "hard" ? "hard" : r.diffPath.m1 ? "easy" : undefined } : null;
       return { at: num(r.at) || Date.now(), testId: num(r.testId), test: String(r.test || "").slice(0, 40), mode: String(r.mode || "full").slice(0, 10), modeArg: r.modeArg ? String(r.modeArg).slice(0, 6) : null, single: !!r.single, total: num(r.total), rw: num(r.rw), math: num(r.math), rwRaw: raw(r.rwRaw), mathRaw: raw(r.mathRaw), perDomain: pd, diffPath: dp, responses: resp, v: num(r.v) || 1 };
     };
+    if (Array.isArray(b.deleteResults) && b.deleteResults.length) {
+      const del = new Set(b.deleteResults.map(Number).filter(Number.isFinite));
+      const existing = ((await K.kv("LRANGE", "res:" + uid, "0", "49")) || []).map((x) => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean);
+      const keep = existing.filter((x) => !del.has(Number(x.at)));
+      if (keep.length !== existing.length) await K.kvPipe(keep.length ? [["DEL", "res:" + uid], ["RPUSH", "res:" + uid, ...keep.map((x) => JSON.stringify(x))]] : [["DEL", "res:" + uid]]);
+    }
     const incoming = [...(b.result && typeof b.result === "object" ? [b.result] : []), ...(Array.isArray(b.results) ? b.results.slice(0, 50) : [])].map(clean).filter((r) => r.total);
     if (incoming.length) {
       const existing = ((await K.kv("LRANGE", "res:" + uid, "0", "49")) || []).map((x) => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean);
