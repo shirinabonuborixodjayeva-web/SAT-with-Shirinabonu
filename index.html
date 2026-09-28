@@ -3762,6 +3762,7 @@ function AdminPanel() {
                   <div style={{ fontSize: 15.5, fontWeight: 800, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{title} {u.username && <span style={{ color: B.muted, fontWeight: 600, fontSize: 13.5 }}>@{u.username}</span>}</div>
                   <div style={{ fontSize: 13, color: u.online ? B.green : B.muted, fontWeight: 600 }}>{ago(u.lastSeen || u.firstSeen)} · bugun {u.minutesToday} daq · 🔥 {u.streak}</div>
                 </div>
+                {!u.lastScore && u.lbScore && <span title="Eski eng yaxshi ball (reytingdan)" style={{ background: B.bg, color: B.muted, fontSize: 12.5, fontWeight: 900, padding: "4px 9px", borderRadius: 10, whiteSpace: "nowrap" }}>📝 {u.lbScore}</span>}
                 {u.lastScore && <span title="Oxirgi to'liq mock bali" style={{ background: "#E8EFF8", color: B.plum, fontSize: 12.5, fontWeight: 900, padding: "4px 9px", borderRadius: 10, whiteSpace: "nowrap" }}>📝 {u.lastScore}</span>}
                 <span style={{ background: bbg, color: bc, fontSize: 12, fontWeight: 800, padding: "4px 9px", borderRadius: 10, whiteSpace: "nowrap" }}>{bl}</span>
                 <ChevronDown size={16} color={B.muted} style={{ transform: isOpen ? "rotate(180deg)" : "none" }} />
@@ -3780,7 +3781,7 @@ function AdminPanel() {
                   </div>
                   <div style={{ background: B.bg, borderRadius: 14, padding: "12px 14px", marginBottom: 12 }}>
                     <div style={{ fontSize: 14.5, fontWeight: 800, marginBottom: 8 }}>📝 Mock natijalari {u.bestScore ? <span style={{ fontWeight: 700, color: B.muted, fontSize: 13 }}>· eng yaxshi: {u.bestScore}</span> : null}</div>
-                    {!(u.results || []).length ? <div style={{ fontSize: 13.5, color: B.muted }}>Hali mock test yechmagan (yoki natijalar yangi versiyadan keyin saqlana boshlaydi).</div> : (
+                    {!(u.results || []).length ? <div style={{ fontSize: 13.5, color: B.muted, lineHeight: 1.55 }}>{u.lbScore ? <>Eski natija (reytingdan): eng yaxshi <b style={{ color: B.plum }}>{u.lbScore}</b>{u.lbRw && u.lbMath ? ` (R&W ${u.lbRw} · Math ${u.lbMath})` : ""}{u.mocks ? ` · ${u.mocks} ta mock` : ""}.<br />Har bir test tafsiloti va zaif tomonlari o'quvchi saytni yangi versiyada ochganda avtomatik yuklanadi va yangi hisob bo'yicha qayta hisoblanadi.</> : u.mocks ? `${u.mocks} ta mock yechgan — tafsilotlar o'quvchi saytga qayta kirganda yuklanadi.` : "Hali mock test yechmagan."}</div> : (
                       <>
                         <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 10 }}>
                           {u.results.slice(0, 8).map((r, k) => (
@@ -4832,8 +4833,10 @@ function AppShell({ onHome }) {
   const [activeTest, setActiveTest] = useState(null);
   const [report, setReport] = useState(null);
   const [history, setHistory] = useState(() => {
-    const h = loadLocal("sws_history", []).map(rescoreOld).filter((x) => !isEmptyAttempt(x));
-    const sec = loadLocal("sws_section_history", []); const sec2 = sec.map(rescoreOld).filter((x) => !isEmptyAttempt(x));
+    // Eski natijalarga doimiy ID (vaqt) beramiz — server bilan takrorlanmasdan sinxronlanishi uchun
+    const stamp = (list, base) => list.map((x, i) => (x && !x.at ? { ...x, at: base + i * 1000 + (Number(x.testId) || 0) } : x));
+    const h = stamp(loadLocal("sws_history", []), 1700000000000).map(rescoreOld).filter((x) => !isEmptyAttempt(x));
+    const sec = loadLocal("sws_section_history", []); const sec2 = stamp(sec, 1700500000000).map(rescoreOld).filter((x) => !isEmptyAttempt(x));
     if (sec2.length !== sec.length || sec2.some((x, i) => x !== sec[i])) saveLocal("sws_section_history", sec2);
     return h;
   });
@@ -4884,14 +4887,16 @@ function AppShell({ onHome }) {
         const junk = allServer.filter((x) => isEmptyAttempt(x) || deleted.has(x.at)).map((x) => x.at);
         if (junk.length) swsApi("/api/me", { deleteResults: junk }).catch(() => {});
         const server = allServer.filter((x) => !junk.includes(x.at));
-        const have = new Set([...loadLocal("sws_history", []), ...loadLocal("sws_section_history", [])].map((x) => x && x.at).filter(Boolean));
-        const addFull = server.filter((x) => !x.mode && !have.has(x.at));
-        const addSec = server.filter((x) => x.mode && !have.has(x.at));
+        const localAll = [...loadLocal("sws_history", []), ...loadLocal("sws_section_history", [])];
+        const sig = (x) => [x.testId, x.mode || "full", x.rwRaw ? x.rwRaw.c : "", x.mathRaw ? x.mathRaw.c : ""].join("|");
+        const have = new Set(localAll.map((x) => x && x.at).filter(Boolean)); const haveSig = new Set(localAll.map(sig));
+        const fresh = server.filter((x) => !have.has(x.at) && !haveSig.has(sig(x)));
+        const addFull = fresh.filter((x) => !x.mode);
+        const addSec = fresh.filter((x) => x.mode);
         if (addSec.length) saveLocal("sws_section_history", [...loadLocal("sws_section_history", []), ...addSec].sort((a, b) => a.at - b.at).slice(-100));
         if (addFull.length) setHistory((h) => [...h, ...addFull].sort((a, b) => (a.at || 0) - (b.at || 0)));
-        const onServer = new Set(server.map((x) => x.at));
-        const pending = [...loadLocal("sws_history", []), ...loadLocal("sws_section_history", [])].map(rescoreOld).filter((x) => x && x.total && !isEmptyAttempt(x) && !onServer.has(x.at));
-        pending.forEach((x) => { if (!x.at) x.at = Date.now() - Math.floor(Math.random() * 1e6); });
+        const onServer = new Set(server.map((x) => x.at)); const onServerSig = new Set(server.map(sig));
+        const pending = [...loadLocal("sws_history", []), ...loadLocal("sws_section_history", [])].map(rescoreOld).filter((x) => x && x.total && !isEmptyAttempt(x) && !onServer.has(x.at) && !onServerSig.has(sig(x)));
         if (pending.length) { await swsApi("/api/me", { results: pending.slice(-50).map(resultRecord) }); }
       } catch (e) {}
     })();
