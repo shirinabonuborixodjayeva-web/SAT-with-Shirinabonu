@@ -1027,11 +1027,22 @@ function qWeight(q, mod, path) {
   if (mod && mod.adaptive) return path === "hard" ? 1.5 : 1;
   return 1.2;
 }
-function scaleSection(sec, routedHard, single) {
+// Bluebook practice testlaridagi odatiy "to'g'ri javoblar → ball" jadvaliga yaqin egri chiziq (ulush → ball)
+const SCALE_CURVE = {
+  rw: [[0, 200], [0.185, 360], [0.278, 410], [0.37, 460], [0.463, 500], [0.556, 540], [0.648, 580], [0.741, 630], [0.833, 680], [0.926, 740], [0.963, 770], [1, 800]],
+  math: [[0, 200], [0.114, 320], [0.227, 390], [0.341, 450], [0.455, 510], [0.568, 550], [0.682, 600], [0.795, 660], [0.909, 730], [0.955, 770], [1, 800]],
+};
+function curveScore(p, kind) {
+  const c = SCALE_CURVE[kind] || SCALE_CURVE.rw; p = Math.max(0, Math.min(1, p));
+  for (let k = 1; k < c.length; k++) if (p <= c[k][0]) { const [x0, y0] = c[k - 1], [x1, y1] = c[k]; return y0 + ((p - x0) / (x1 - x0)) * (y1 - y0); }
+  return 800;
+}
+// routedHard === null: yo'nalish noma'lum (masalan, kalkulyator) — faqat jadval bo'yicha
+function scaleSection(sec, routedHard, single, kind) {
   const p = sec.w ? sec.wc / sec.w : 0;
-  const curve = Math.pow(p, 1.05);
-  const top = single || routedHard ? 800 : 640;
-  return Math.max(200, Math.min(800, Math.round((200 + curve * (top - 200)) / 10) * 10));
+  let sc = curveScore(p, kind);
+  if (!single && routedHard === false) sc = Math.min(sc, 650); // 2-modul oson bo'lsa, maksimal ~650
+  return Math.max(200, Math.min(800, Math.round(sc / 10) * 10));
 }
 function gradeTest(testId, responses, diffPath, mode) {
   const perDomain = {}; const perSection = { rw: { c: 0, t: 0, wc: 0, w: 0 }, math: { c: 0, t: 0, wc: 0, w: 0 } }; const wrong = []; const items = [];
@@ -1049,11 +1060,11 @@ function gradeTest(testId, responses, diffPath, mode) {
     });
   });
   const raw = (x) => ({ c: x.c, t: x.t });
-  const rwScore = scaleSection(perSection.rw, diffPath.rw1 === "hard");
-  const mathScore = scaleSection(perSection.math, diffPath.m1 === "hard");
+  const rwScore = scaleSection(perSection.rw, diffPath.rw1 === "hard", false, "rw");
+  const mathScore = scaleSection(perSection.math, diffPath.m1 === "hard", false, "math");
   const base = { perDomain, wrong, items };
-  if (mode === "rw1") { const s1 = scaleSection(perSection.rw, false, true); return { ...base, mode: "rw", single: true, rwScore: s1, mathScore: null, total: s1, rwRaw: raw(perSection.rw), mathRaw: null }; }
-  if (mode === "m1") { const s1 = scaleSection(perSection.math, false, true); return { ...base, mode: "math", single: true, rwScore: null, mathScore: s1, total: s1, rwRaw: null, mathRaw: raw(perSection.math) }; }
+  if (mode === "rw1") { const s1 = scaleSection(perSection.rw, false, true, "rw"); return { ...base, mode: "rw", single: true, rwScore: s1, mathScore: null, total: s1, rwRaw: raw(perSection.rw), mathRaw: null }; }
+  if (mode === "m1") { const s1 = scaleSection(perSection.math, false, true, "math"); return { ...base, mode: "math", single: true, rwScore: null, mathScore: s1, total: s1, rwRaw: null, mathRaw: raw(perSection.math) }; }
   if (mode === "rw") return { ...base, mode, rwScore, mathScore: null, total: rwScore, rwRaw: raw(perSection.rw), mathRaw: null };
   if (mode === "math") return { ...base, mode, rwScore: null, mathScore, total: mathScore, rwRaw: null, mathRaw: raw(perSection.math) };
   return { ...base, rwScore, mathScore, total: rwScore + mathScore, rwRaw: raw(perSection.rw), mathRaw: raw(perSection.math) };
@@ -2574,7 +2585,7 @@ function ScoreReport({ test, report, onBack }) {
           {!report.mode && <button onClick={() => { const nm = loadLocal("sws_name", "") || (SWS.user && SWS.user.first_name) || ""; setShare({ text: shareText("score", { total: report.total, rw: report.rwScore, math: report.mathScore }), card: { label: "Mening SAT mock natijam", big: report.total, sub: `R&W ${report.rwScore} · Math ${report.mathScore}`, name: nm, foot: test.name } }); }} style={{ background: "#229ED9", color: "#fff", border: "none", borderRadius: 10, padding: "10px 18px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT, marginBottom: 18 }}>📤 Natijani ulashish</button>}
           {share && <ShareModal card={share.card} text={share.text} onClose={() => setShare(null)} />}
           {report.notSaved && <div style={{ background: "#FFF7E8", borderRadius: 12, padding: "10px 14px", fontSize: 14, margin: "0 0 14px", textAlign: "left" }}>⚠️ Savollarning yarmidan kamiga javob berilgan — bu urinish natijalar ro'yxatiga va reytingga qo'shilmadi.</div>}
-          {!report.single && <div style={{ fontSize: 12.5, color: B.muted, margin: "-8px 0 14px" }}>Ball Bluebook tizimiga o'xshab hisoblanadi: qiyin savollar ko'proq, oson savollar kamroq ball beradi; 2-modul oson bo'lsa, bo'lim uchun maksimal ~640.</div>}
+          {!report.single && <div style={{ fontSize: 12.5, color: B.muted, margin: "-8px 0 14px" }}>Ball Bluebook tizimiga o'xshab hisoblanadi: qiyin savollar ko'proq, oson savollar kamroq ball beradi; 2-modul oson bo'lsa, bo'lim uchun maksimal ~650.</div>}
           <div style={{ display: "grid", gridTemplateColumns: report.mode ? "1fr" : "1fr 1fr", gap: 14 }}>
             {[["Reading and Writing", report.rwScore, report.rwRaw], ["Math", report.mathScore, report.mathRaw]].filter(([, sc]) => sc != null).map(([l, s, raw]) => (
               <div key={l} style={{ background: B.bg, borderRadius: 16, padding: 16 }}><div style={{ fontSize: 14, color: B.muted, marginBottom: 4 }}>{l}</div><div style={{ fontSize: 29, fontWeight: 800 }}>{s}</div><div style={{ fontSize: 12.5, color: B.muted }}>{raw.c} / {raw.t} to'g'ri</div></div>
@@ -4739,19 +4750,20 @@ function CourseLesson({ course, topic, idx, saved, onBack, onDone, onNext }) {
 }
 
 // ---- Natijalar: eski ballarni yangi (Bluebook uslubi) hisob bo'yicha qayta hisoblash, server bilan sinxronlash ----
-const SCORE_V = 2;
+const SCORE_V = 3;
 // Bo'sh (birorta ham to'g'ri javobsiz) urinishlar — tugatilmagan testlar, natijalarda ko'rsatilmaydi
 const isEmptyAttempt = (e) => !!e && (e.rwRaw || e.mathRaw) && (!e.rwRaw || !e.rwRaw.c) && (!e.mathRaw || !e.mathRaw.c);
 function rescoreOld(e) {
   if (!e || e.v >= SCORE_V) return e;
-  const fix = (sc, raw, single) => {
+  const fix = (sc, raw, single, kind) => {
     if (sc == null || !raw || !raw.t) return sc;
     const pct = raw.c / raw.t;
+    const route = e.diffPath ? e.diffPath[kind === "rw" ? "rw1" : "m1"] : null;
     const easyOld = Math.round((200 + pct * 420) / 10) * 10;
-    const wasHard = !single && Math.abs(sc - easyOld) > 10;
-    return scaleSection({ wc: raw.c, w: raw.t }, wasHard, single);
+    const wasHard = single ? false : route ? route === "hard" : (e.v >= 2 ? pct >= 0.6 : Math.abs(sc - easyOld) > 10);
+    return scaleSection({ wc: raw.c, w: raw.t }, wasHard, single, kind);
   };
-  const rw = fix(e.rwScore, e.rwRaw, e.single), math = fix(e.mathScore, e.mathRaw, e.single);
+  const rw = fix(e.rwScore, e.rwRaw, e.single, "rw"), math = fix(e.mathScore, e.mathRaw, e.single, "math");
   const total = e.mode === "rw" ? rw : e.mode === "math" ? math : (rw || 0) + (math || 0);
   return { ...e, rwScore: rw, mathScore: math, total, v: SCORE_V, oldTotal: e.total };
 }
@@ -5286,8 +5298,8 @@ function Onboarding({ onDone }) {
 function ScoreCalculator() {
   const [rwCorrect, setRwCorrect] = useState(40);
   const [mathCorrect, setMathCorrect] = useState(30);
-  const rw = scaleSection({ wc: rwCorrect, w: 54 }, rwCorrect / 54 >= 0.6);
-  const math = scaleSection({ wc: mathCorrect, w: 44 }, mathCorrect / 44 >= 0.6);
+  const rw = scaleSection({ wc: rwCorrect, w: 54 }, null, false, "rw");
+  const math = scaleSection({ wc: mathCorrect, w: 44 }, null, false, "math");
   return (
     <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 28, maxWidth: 520, margin: "0 auto" }}>
       <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>SAT ball kalkulyatori</div>
