@@ -19,6 +19,30 @@ module.exports = async (req, res) => {
 
   let body = req.body;
   if (typeof body === "string") { try { body = JSON.parse(body); } catch (e) { body = {}; } }
+  // Test tahlili: bitta savol bo'yicha yechim yo'li va har bir noto'g'ri variant nega xato ekani (faqat Premium)
+  let reviewCacheKey = null;
+  if (body && body.review && typeof body.review === "object") {
+    const rv = body.review; const L = "ABCD";
+    const clip = (x, n) => String(x == null ? "" : x).slice(0, n);
+    const ch = Array.isArray(rv.choices) ? rv.choices.slice(0, 4).map((c, i) => L[i] + ") " + clip(c, 400)).join("\n") : "";
+    const correct = rv.spr ? clip(rv.answer, 60) : (Array.isArray(rv.choices) ? L[Number(rv.answer)] + ") " + clip(rv.choices[Number(rv.answer)], 400) : clip(rv.answer, 60));
+    const student = rv.student == null || rv.student === "" ? "no answer" : rv.spr ? clip(rv.student, 60) : L[Number(rv.student)] || clip(rv.student, 20);
+    const prompt = "Explain this Digital SAT question to an Uzbek student. Write ONLY in Uzbek (Latin script), plain text, no Markdown, no LaTeX.\n" +
+      "Structure exactly:\n1) Yechim yo'li: short numbered steps showing how to get the correct answer.\n" +
+      (rv.spr ? "2) Keng tarqalgan xatolar: 1-2 typical mistakes.\n" : "2) Nega boshqa javoblar xato: one short line for EACH wrong choice, starting with its letter.\n") +
+      "3) Maslahat: one sentence tip for similar questions.\nThe correct answer given below is final; do not contradict it. Keep it under 220 words.\n\n" +
+      (rv.passage ? "Passage:\n" + clip(rv.passage, 2500) + "\n\n" : "") + "Question: " + clip(rv.prompt, 1200) + "\n" + (ch ? "Choices:\n" + ch + "\n" : "(Student-produced response)\n") +
+      "Correct answer: " + correct + "\nStudent's answer: " + student + (rv.expl ? "\nShort official note: " + clip(rv.expl, 600) : "");
+    body = { messages: [{ role: "user", text: prompt }] };
+    if (K.kvOn() && T.token()) {
+      const uid = T.sessionUser(req);
+      if (!uid) { res.status(401).json({ error: "no_session" }); return; }
+      if ((await K.premiumUntil(uid)) <= Date.now()) { res.status(402).json({ error: "premium" }); return; }
+      reviewCacheKey = "rev:" + require("crypto").createHash("sha1").update(prompt.replace(/Student's answer:.*$/m, "")).digest("hex");
+      try { const hit = await K.kv("GET", reviewCacheKey); if (hit) { res.status(200).json({ text: hit, cached: true }); return; } } catch (e) {}
+    }
+    body.__review = true;
+  }
   const msgs = Array.isArray(body && body.messages) ? body.messages : [];
   const contents = msgs
     .filter((m) => m && typeof m.text === "string" && m.text.trim())
@@ -28,7 +52,7 @@ module.exports = async (req, res) => {
   if (!contents.length || contents[contents.length - 1].role !== "user") { res.status(400).json({ error: "bad_request" }); return; }
 
   // Bepul tarifda kunlik AI limiti (Premium — cheksiz)
-  if (K.kvOn() && T.token()) {
+  if (!(body && body.__review) && K.kvOn() && T.token()) {
     const uid = T.sessionUser(req);
     if (!uid) { res.status(401).json({ error: "no_session" }); return; }
     try { const u = await K.consume(uid, "ai"); if (!u.ok) { res.status(402).json({ error: "limit", used: u.used, limit: u.limit }); return; } } catch (e) {}
@@ -47,7 +71,7 @@ module.exports = async (req, res) => {
       const data = await r.json().catch(() => ({}));
       if (r.status === 429) { res.status(429).json({ error: "rate_limited" }); return; }
       const text = (((data.choices || [])[0] || {}).message || {}).content;
-      if (r.ok && text) { res.status(200).json({ text: String(text).trim(), model: "free" }); return; }
+      if (r.ok && text) { if (reviewCacheKey) { try { await K.kv("SET", reviewCacheKey, String(text).trim(), "EX", 60 * 86400); } catch (e) {} } res.status(200).json({ text: String(text).trim(), model: "free" }); return; }
       res.status(502).json({ error: "upstream_failed", detail: "http_" + r.status });
     } catch (e) { res.status(502).json({ error: "upstream_failed", detail: String(e && e.message || e) }); }
     return;
@@ -72,7 +96,7 @@ module.exports = async (req, res) => {
       if (r.status === 429) { res.status(429).json({ error: "rate_limited" }); return; }
       if (!r.ok) { lastErr = (data.error && data.error.message) || "http_" + r.status; continue; }
       const text = (((data.candidates || [])[0] || {}).content || {}).parts?.map((p) => p.text || "").join("").trim();
-      if (text) { res.status(200).json({ text, model }); return; }
+      if (text) { if (reviewCacheKey) { try { await K.kv("SET", reviewCacheKey, text, "EX", 60 * 86400); } catch (e) {} } res.status(200).json({ text, model }); return; }
       lastErr = "empty_response";
     } catch (e) { lastErr = String(e && e.message || e); }
   }

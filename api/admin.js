@@ -17,6 +17,16 @@ async function scanIds(pattern) {
   return ids;
 }
 
+// O'quvchining mock natijalari: oxirgi ballar va zaif mavzular (barcha testlar bo'yicha domen aniqligi)
+function summarize(list) {
+  const results = (Array.isArray(list) ? list : []).map(parse).filter(Boolean);
+  const agg = {};
+  results.forEach((r) => Object.entries(r.perDomain || {}).forEach(([d, v]) => { agg[d] = agg[d] || { c: 0, t: 0 }; agg[d].c += Number(v.c) || 0; agg[d].t += Number(v.t) || 0; }));
+  const domains = Object.entries(agg).filter(([, v]) => v.t > 0).map(([d, v]) => ({ d, c: v.c, t: v.t, p: Math.round((v.c / v.t) * 100) })).sort((a, b) => a.p - b.p);
+  const full = results.filter((r) => r.mode === "full" && r.total);
+  return { results, domains, bestScore: full.length ? Math.max(...full.map((r) => r.total)) : null, lastScore: full.length ? full[0].total : null };
+}
+
 async function grant(uid, days) {
   const cur = await K.premiumUntil(uid);
   const until = Math.max(cur, Date.now()) + days * 86400000;
@@ -46,7 +56,7 @@ module.exports = async (req, res) => {
     const list = [...ids];
     const today = K.today(); const now = Date.now();
     const kinds = Object.keys(K.FREE_DAILY);
-    const F = 8 + kinds.length;
+    const F = 9 + kinds.length;
     const users = [];
     for (let i = 0; i < list.length; i += 80) {
       const chunk = list.slice(i, i + 80);
@@ -54,6 +64,7 @@ module.exports = async (req, res) => {
       chunk.forEach((id) => {
         cmds.push(["GET", "prof:" + id], ["GET", "trial:" + id], ["GET", "prem:" + id], ["GET", "paid:" + id], ["HGET", "roster", id], ["ZSCORE", "lastseen", id], ["SCARD", "seen:" + id], ["GET", "refby:" + id]);
         kinds.forEach((k) => cmds.push(["GET", "use:" + id + ":" + today + ":" + k]));
+        cmds.push(["LRANGE", "res:" + id, "0", "19"]);
       });
       const r = await K.kvPipe(cmds);
       chunk.forEach((id, j) => {
@@ -68,7 +79,7 @@ module.exports = async (req, res) => {
           firstSeen: first, lastSeen: last, online: !!last && now - last < 3 * 60000,
           premiumUntil: until || null, premium: until > now, paid: !!v[3], trial: until > now && !v[3],
           minutesToday: ros.day === today ? ros.minutesToday || 0 : 0, streak: ros.streak || 0, totalMinutes: ros.totalMinutes || 0, mocks: ros.mocks || 0,
-          questionsSeen: Number(v[6]) || 0, refBy: Number(v[7]) || null, usage,
+          questionsSeen: Number(v[6]) || 0, refBy: Number(v[7]) || null, usage, ...summarize(v[8 + kinds.length]),
         });
       });
     }

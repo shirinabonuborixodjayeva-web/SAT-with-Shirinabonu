@@ -22,10 +22,14 @@ module.exports = async (req, res) => {
         if (ok(total, 400, 1600) && ok(rw, 200, 800) && ok(math, 200, 800) && rw + math === total) {
           const old = Number(await K.kv("ZSCORE", "lb:score", id)) || 0;
           const meta = parse(await K.kv("HGET", "lbmeta", id)) || {};
-          if (total > old) { meta.rw = rw; meta.math = math; meta.at = Date.now(); }
+          // Yangi ball hisobi (v2): eski ballar bir marta qayta hisoblanib, reytingda aniq qiymat bilan almashtiriladi
+          const rescore = Number(b.score.rescore) >= 2 && Number(meta.sv || 1) < Number(b.score.rescore);
+          if (total > old || rescore) { meta.rw = rw; meta.math = math; meta.at = Date.now(); }
+          if (rescore) meta.sv = Number(b.score.rescore);
           meta.tests = Math.max(meta.tests || 0, L.clamp(b.score.tests, 0, 10000));
           await K.kv("HSET", "lbmeta", id, JSON.stringify(meta));
-          await L.update(id, { score: total }, b.name);
+          if (rescore) { await K.kv("ZADD", "lb:score", String(total), id); if (b.name) await K.kv("HSET", "lbname", id, String(b.name).slice(0, 40)); }
+          else await L.update(id, { score: total }, b.name);
         }
       }
       if (typeof b.hidden === "boolean") { if (b.hidden) await K.kv("HSET", "lbhide", id, "1"); else await K.kv("HDEL", "lbhide", id); }
