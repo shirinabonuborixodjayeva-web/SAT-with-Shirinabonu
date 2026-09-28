@@ -20,7 +20,9 @@ async function scanIds(pattern) {
 // O'quvchining mock natijalari: oxirgi ballar va zaif mavzular (barcha testlar bo'yicha domen aniqligi)
 function summarize(list) {
   const empty = (r) => (r.rwRaw || r.mathRaw) && (!r.rwRaw || !r.rwRaw.c) && (!r.mathRaw || !r.mathRaw.c);
-  const results = (Array.isArray(list) ? list : []).map(parse).filter((r) => r && !empty(r)).sort((a, b) => (b.at || 0) - (a.at || 0));
+  const seenSig = new Set();
+  const results = (Array.isArray(list) ? list : []).map(parse).filter((r) => r && !empty(r)).sort((a, b) => (b.at || 0) - (a.at || 0))
+    .filter((r) => { const k = [r.testId, r.mode, r.rwRaw && r.rwRaw.c, r.mathRaw && r.mathRaw.c, r.total].join("|"); if (seenSig.has(k)) return false; seenSig.add(k); return true; });
   const agg = {};
   results.forEach((r) => Object.entries(r.perDomain || {}).forEach(([d, v]) => { agg[d] = agg[d] || { c: 0, t: 0 }; agg[d].c += Number(v.c) || 0; agg[d].t += Number(v.t) || 0; }));
   const domains = Object.entries(agg).filter(([, v]) => v.t > 0).map(([d, v]) => ({ d, c: v.c, t: v.t, p: Math.round((v.c / v.t) * 100) })).sort((a, b) => a.p - b.p);
@@ -57,7 +59,7 @@ module.exports = async (req, res) => {
     const list = [...ids];
     const today = K.today(); const now = Date.now();
     const kinds = Object.keys(K.FREE_DAILY);
-    const F = 9 + kinds.length;
+    const F = 11 + kinds.length;
     const users = [];
     for (let i = 0; i < list.length; i += 80) {
       const chunk = list.slice(i, i + 80);
@@ -66,6 +68,7 @@ module.exports = async (req, res) => {
         cmds.push(["GET", "prof:" + id], ["GET", "trial:" + id], ["GET", "prem:" + id], ["GET", "paid:" + id], ["HGET", "roster", id], ["ZSCORE", "lastseen", id], ["SCARD", "seen:" + id], ["GET", "refby:" + id]);
         kinds.forEach((k) => cmds.push(["GET", "use:" + id + ":" + today + ":" + k]));
         cmds.push(["LRANGE", "res:" + id, "0", "19"]);
+        cmds.push(["ZSCORE", "lb:score", id], ["HGET", "lbmeta", id]);
       });
       const r = await K.kvPipe(cmds);
       chunk.forEach((id, j) => {
@@ -80,7 +83,7 @@ module.exports = async (req, res) => {
           firstSeen: first, lastSeen: last, online: !!last && now - last < 3 * 60000,
           premiumUntil: until || null, premium: until > now, paid: !!v[3], trial: until > now && !v[3],
           minutesToday: ros.day === today ? ros.minutesToday || 0 : 0, streak: ros.streak || 0, totalMinutes: ros.totalMinutes || 0, mocks: ros.mocks || 0,
-          questionsSeen: Number(v[6]) || 0, refBy: Number(v[7]) || null, usage, ...summarize(v[8 + kinds.length]),
+          questionsSeen: Number(v[6]) || 0, refBy: Number(v[7]) || null, usage, ...summarize(v[8 + kinds.length]), lbScore: Number(v[9 + kinds.length]) || null, lbRw: (parse(v[10 + kinds.length]) || {}).rw || null, lbMath: (parse(v[10 + kinds.length]) || {}).math || null,
         });
       });
     }
