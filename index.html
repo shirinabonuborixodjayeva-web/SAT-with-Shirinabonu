@@ -390,8 +390,10 @@ function pickUnseenRW(skill, tier) {
   let fresh = rwAll(skill).filter((q) => !st.has(qid(q)));
   if (tier && fresh.length) {
     // Avval kerakli qiyinlikdagi savol, bo'lmasa eng yaqin darajadagisi
-    const order = { E: ["Easy", "Medium", "Hard"], M: ["Medium", "Hard", "Easy"], H: ["Hard", "Medium", "Easy"] }[tier];
-    const pro = tier === "H" ? fresh.filter((q) => q.pro) : [];
+    const order = { E: ["Easy", "Medium", "Hard"], M: ["Medium", "Hard", "Easy"], MH: ["Hard", "Medium", "Easy"], H: ["Hard", "Medium", "Easy"] }[tier];
+    let pro = tier === "H" ? fresh.filter((q) => q.pro) : [];
+    // Qiyin darajadagi miqdoriy savollarda grafik/jadvalli savollar birinchi
+    if (pro.length && skill === "Command of Evidence (Quantitative)") { const ch = pro.filter((q) => q.chart); if (ch.length) pro = ch; }
     if (pro.length) fresh = pro;
     else for (const d of order) { const f = fresh.filter((q) => (q.difficulty || "Medium") === d); if (f.length) { fresh = f; break; } }
   }
@@ -947,9 +949,9 @@ const MATH_SKILL_MAP = {
 // Savollar tartibi haqiqiy SAT'dagidek: Craft & Structure → Information & Ideas → Standard English Conventions → Expression of Ideas.
 const RW_BLUEPRINT = [
   ...Array(4).fill(["Craft and Structure", "Words in Context"]), ...Array(2).fill(["Craft and Structure", "Text Structure and Purpose"]), ...Array(1).fill(["Craft and Structure", "Cross-Text Connections"]),
-  ...Array(2).fill(["Information and Ideas", "Central Ideas and Details"]), ...Array(2).fill(["Information and Ideas", "Command of Evidence (Textual)"]), ...Array(1).fill(["Information and Ideas", "Command of Evidence (Quantitative)"]), ...Array(2).fill(["Information and Ideas", "Inferences"]),
+  ...Array(2).fill(["Information and Ideas", "Central Ideas and Details"]), ...Array(2).fill(["Information and Ideas", "Command of Evidence (Textual)"]), ...Array(2).fill(["Information and Ideas", "Command of Evidence (Quantitative)"]), ...Array(2).fill(["Information and Ideas", "Inferences"]),
   ...Array(4).fill(["Standard English Conventions", "Boundaries"]), ...Array(3).fill(["Standard English Conventions", "Form, Structure, and Sense"]),
-  ...Array(3).fill(["Expression of Ideas", "Transitions"]), ...Array(3).fill(["Expression of Ideas", "Rhetorical Synthesis"]),
+  ...Array(3).fill(["Expression of Ideas", "Transitions"]), ...Array(2).fill(["Expression of Ideas", "Rhetorical Synthesis"]),
 ];
 const MATH_BLUEPRINT = [
   ...Array(7).fill(["Algebra", "Linear equations & systems"]), ...Array(7).fill(["Advanced Math", "Nonlinear functions"]),
@@ -963,7 +965,7 @@ const MODULES = [
   { id: "m2", section: "Math", label: "Section 2, Module 2", minutes: 35, kind: "math", adaptive: true },
 ];
 // Modul qiyinligi: 1-modul aralash; 2-modul 1-modul natijasiga qarab qiyin yoki osonroq (adaptiv)
-const TIER_MIX = { standard: [0.3, 0.4, 0.3], hard: [0.1, 0.35, 0.55], easy: [0.45, 0.4, 0.15] };
+const TIER_MIX = { standard: [0.25, 0.4, 0.35], hard: [0.04, 0.3, 0.66], easy: [0.45, 0.4, 0.15] };
 function tierList(n, basis) {
   const [e, m] = TIER_MIX[basis] || TIER_MIX.standard;
   const ne = Math.round(n * e), nm = Math.round(n * m);
@@ -990,7 +992,8 @@ function buildModule(mod, testId, diffPath) {
     if (i === RW_BLUEPRINT.length || RW_BLUEPRINT[i][1] !== RW_BLUEPRINT[start][1]) { const part = tiers.slice(start, i).sort((a, b) => rank[a] - rank[b]); tiers.splice(start, part.length, ...part); start = i; }
   }
   return balanceAnswers(RW_BLUEPRINT.map(([domain, skill], i) => {
-    const v = pickUnseenRW(skill, tiers[i]);
+    // Qiyin 2-modulda o'rta darajadagi o'rinlar ham qiyin savollardan olinadi (uzun matn, yaqin variantlar)
+    const v = pickUnseenRW(skill, basis === "hard" && tiers[i] === "M" ? "MH" : tiers[i]);
     return { n: i + 1, domain, skill, type: "mc", difficulty: v.difficulty || TIER_NAME[tiers[i]], passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl, ...(v.chart ? { chart: v.chart } : {}) };
   }));
 }
