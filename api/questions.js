@@ -6,7 +6,7 @@ const K = require("./_kv");
 const SKILLS = {
   "Words in Context": "Blank in a 40-90 word academic passage; prompt 'Which choice completes the text with the most logical and precise word or phrase?'; 4 single-word choices of the same part of speech.",
   "Text Structure and Purpose": "60-130 word passage; prompt asks for the main purpose or overall structure; choices start with 'To ...' or describe structure.",
-  "Cross-Text Connections": "Passage has 'Text 1\\n...\\n\\nText 2\\n...' (each 40-70 words); prompt asks how the author of Text 2 would respond to Text 1.",
+  "Cross-Text Connections": "Passage has 'Text 1\\n...\\n\\nText 2\\n...' (each 90-140 words, dense academic prose, Text 2 responds to a specific claim in Text 1); prompt asks how the author of Text 2 would respond to Text 1.",
   "Central Ideas and Details": "60-130 word passage; prompt 'Which choice best states the main idea of the text?' or a detail question.",
   "Command of Evidence (Textual)": "60-110 word passage presenting a hypothesis; prompt 'Which finding, if true, would most directly support the hypothesis?'.",
   "Command of Evidence (Quantitative)": "Passage includes a small plain-text data table (use \\n line breaks) and a claim; prompt 'Which choice most effectively uses data from the table to complete the text?'. Verify numbers.",
@@ -22,7 +22,14 @@ function body(req) { let b = req.body; if (typeof b === "string") { try { b = JS
 function valid(q) {
   return q && typeof q.passage === "string" && q.passage.length > 20 && typeof q.prompt === "string" && Array.isArray(q.choices) &&
     q.choices.length === 4 && q.choices.every((c) => typeof c === "string" && c.trim()) && new Set(q.choices).size === 4 &&
-    Number.isInteger(q.answer) && q.answer >= 0 && q.answer < 4;
+    Number.isInteger(q.answer) && q.answer >= 0 && q.answer < 4 && balanced(q);
+}
+// To'g'ri javob boshqalardan sezilarli uzun bo'lmasin (uzunlik bo'yicha topib bo'lmasin)
+function balanced(q) {
+  const L = q.choices.map((c) => c.length); const avg = L.reduce((a, b) => a + b, 0) / 4;
+  if (avg < 25) return true;
+  const maxWrong = Math.max(...L.filter((_, i) => i !== q.answer));
+  return L[q.answer] <= maxWrong * 1.08 && Math.min(...L) >= Math.max(...L) * 0.7;
 }
 
 async function llm(prompt) {
@@ -50,7 +57,7 @@ async function generate(skill, n) {
     " Topics (one per question): " + pick + ". Exactly one choice must be clearly correct; distractors plausible. Vary which index is correct. " +
     "Match the real College Board Digital SAT difficulty (Bluebook practice tests), and make at least half of the questions Hard. Hard questions use dense academic prose or literary excerpts ('The following text is adapted from a 1908 novel...'), " +
     "and every wrong choice must be tempting: true but irrelevant to the question, too broad or too narrow in scope, overstated, reversing a relationship, or supported by only part of the text. " +
-    "The correct choice must NOT be the longest or the only nuanced one; avoid giveaway words like 'always', 'never', 'no effect' appearing only in wrong choices. " +
+    "All four choices must have nearly the same length (within 15% of each other) and the correct choice must NOT be the longest or the only nuanced one — at least one wrong choice should be slightly longer than the correct one; avoid giveaway words like 'always', 'never', 'no effect' appearing only in wrong choices. " +
     "Return JSON: {\"questions\":[{\"passage\":\"...\",\"prompt\":\"...\",\"choices\":[\"...\",\"...\",\"...\",\"...\"],\"answer\":0,\"expl\":\"1-2 sentence explanation in Uzbek (Latin script)\",\"difficulty\":\"Easy|Medium|Hard\"}]}";
   const text = await llm(prompt);
   let parsed = null;
@@ -77,8 +84,8 @@ module.exports = async (req, res) => {
       if (fresh.length) { await K.kv("RPUSH", key, ...fresh.map((q) => JSON.stringify(q))); len += fresh.length; }
     }
     const raw = (await K.kv("LRANGE", key, from, from + n - 1)) || [];
-    const qs = raw.map((s) => { try { return JSON.parse(s); } catch (e) { return null; } }).filter(Boolean);
-    res.status(200).json({ questions: qs, next: from + qs.length, total: len, shared: true });
+    const qs = raw.map((s) => { try { return JSON.parse(s); } catch (e) { return null; } }).filter((q) => q && valid(q));
+    res.status(200).json({ questions: qs, next: from + raw.length, total: len, shared: true });
   } catch (e) {
     res.status(502).json({ error: "generate_failed", detail: String(e && e.message || e) });
   }
