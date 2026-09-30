@@ -362,7 +362,15 @@ function loadRwBank() {
   }).catch(() => {});
   return __rwBankPromise;
 }
-const rwAll = (skill) => [...(RW_POOL[skill] || []), ...(RW_EXTRA[skill] || [])];
+// To'g'ri javob boshqa variantlardan sezilarli uzun bo'lsa (uzunligidan topib olinadigan) — bunday savollar ishlatilmaydi
+function lenBiased(q) {
+  if (!q || !Array.isArray(q.choices) || q.choices.length !== 4 || typeof q.answer !== "number") return false;
+  const L = q.choices.map((c) => String(c).length); const avg = L.reduce((a, b) => a + b, 0) / 4;
+  if (avg < 25) return false;
+  return L[q.answer] > Math.max(...L.filter((_, i) => i !== q.answer)) * 1.1;
+}
+// Bank yuklangach eski qisqa ichki to'plam ishlatilmaydi (uzun matnli, muvozanatli savollar ustun)
+const rwAll = (skill) => { const ex = (RW_EXTRA[skill] || []).filter((q) => !lenBiased(q)); return ex.length >= 20 ? ex : [...(RW_POOL[skill] || []), ...(RW_EXTRA[skill] || [])]; };
 function rwQueue() { return loadLocal("sws_rwq", {}); }
 function unseenCount(skill) { const st = seenSet(); return rwAll(skill).filter((q) => !st.has(qid(q))).length + ((rwQueue()[skill] || []).length); }
 // Kerakli miqdorda yangi savol borligini ta'minlash (kerak bo'lsa serverdan olib keladi)
@@ -385,6 +393,37 @@ async function ensureRW(needs) {
   });
   await Promise.all(tasks);
 }
+// Matn ichidagi jadvallarni ("A — B — C" yoki bo'shliq bilan tekislangan qatorlar) haqiqiy jadvalga aylantirish
+// Matn: "Text 1"/"Text 2" sarlavhalari Bluebook'dagidek qalin va alohida ko'rsatiladi
+function PassageText({ text }) {
+  const t = String(text || "");
+  if (!/(^|\n)Text [12]\b/.test(t)) return t;
+  const parts = t.split(/(?:^|\n+)(?=Text [12]\b)/).filter((p) => p.trim());
+  return parts.map((p, i) => {
+    const m = p.match(/^(Text [12])[:.]?\s*([\s\S]*)$/);
+    if (!m) return <div key={i} style={{ marginBottom: 12 }}>{p.trim()}</div>;
+    return <div key={i} style={{ marginBottom: i < parts.length - 1 ? 16 : 0 }}><div style={{ fontWeight: 700, fontFamily: "inherit", marginBottom: 4 }}>{m[1]}</div><div>{m[2].trim()}</div></div>;
+  });
+}
+function extractTextTable(q) {
+  if (!q || q.chart || !q.passage || q.passage.indexOf("\n") < 0) return q;
+  const lines = q.passage.split("\n");
+  const split = (l) => { const t = l.trim(); if (t.indexOf(" — ") >= 0) { const p = t.split(/\s+—\s+/); return p.length >= 2 ? p : null; } const p = t.split(/\s{2,}|\t+/); return p.length >= 2 ? p : null; };
+  let best = null;
+  for (let a = 0; a < lines.length; a++) {
+    const first = split(lines[a]); if (!first) continue;
+    let b = a + 1; while (b < lines.length && split(lines[b]) && split(lines[b]).length === first.length) b++;
+    if (b - a >= 3 && (!best || b - a > best[1] - best[0])) best = [a, b];
+  }
+  if (!best) return q;
+  const [a, b] = best; const rows = lines.slice(a, b).map(split);
+  let title = null, start = a;
+  const prev = a > 0 ? lines[a - 1].trim() : "";
+  if (prev && prev.length < 90 && !/[.:?!]$/.test(prev)) { title = prev; start = a - 1; }
+  const passage = [...lines.slice(0, start), ...lines.slice(b)].join("\n").replace(/\n{3,}/g, "\n\n").trim();
+  const hasHead = rows[0].slice(1).every((c) => !/\d/.test(c));
+  return { ...q, passage, chart: { type: "table", title, head: hasHead ? rows[0] : null, rows: hasHead ? rows.slice(1) : rows } };
+}
 function pickUnseenRW(skill, tier) {
   const st = seenSet();
   let fresh = rwAll(skill).filter((q) => !st.has(qid(q)));
@@ -401,16 +440,16 @@ function pickUnseenRW(skill, tier) {
   if (fresh.length) src = fresh[Math.floor(Math.random() * fresh.length)];
   else {
     const qq = rwQueue(); const list = qq[skill] || [];
-    while (list.length && !src) { const c = list.shift(); if (!st.has(qid(c))) src = c; }
+    while (list.length && !src) { const c = list.shift(); if (!st.has(qid(c)) && !lenBiased(c)) src = c; }
     qq[skill] = list; saveLocal("sws_rwq", qq);
     if (!src) { const all = rwAll(skill); src = all[Math.floor(Math.random() * all.length)]; ensureRW({ [skill]: 6 }); }
   }
   markSeen(qid(src));
-  if (src.fixed || src.ai) return { ...src }; // bu savollarda javoblar oldindan aralashtirilgan
+  if (src.fixed || src.ai) return extractTextTable({ ...src }); // bu savollarda javoblar oldindan aralashtirilgan
   // Javob variantlarini aralashtiramiz — to'g'ri javob har safar boshqa harfda (A/B/C/D) chiqadi
   const order = src.choices.map((_, k) => k);
   for (let k = order.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [order[k], order[j]] = [order[j], order[k]]; }
-  return { ...src, choices: order.map((k) => src.choices[k]), answer: order.indexOf(src.answer) };
+  return extractTextTable({ ...src, choices: order.map((k) => src.choices[k]), answer: order.indexOf(src.answer) });
 }
 // Math: har safar yangi raqamlar; ko'rilgan savol chiqsa qayta yaratamiz
 function genMathUnseen(skill, isSPR, forceT, tier) {
@@ -2425,7 +2464,7 @@ function TestReview({ items }) {
             <div style={{ fontSize: 12.5, fontWeight: 800, color: B.muted, textTransform: "uppercase", letterSpacing: 0.4 }}>{cur.m} · {cur.n}-savol · {cur.q.domain}{cur.q.skill ? " · " + cur.q.skill : ""}{cur.q.difficulty ? " · " + cur.q.difficulty : ""}</div>
             <span style={{ fontSize: 13, fontWeight: 800, padding: "4px 10px", borderRadius: 20, background: box(cur).bg, color: box(cur).fg }}>{cur.ok ? "✓ To'g'ri" : cur.r == null || cur.r === "" ? "Javob berilmagan" : "✗ Xato"}</span>
           </div>
-          {cur.q.passage && <div style={{ fontSize: 16, lineHeight: 1.75, marginBottom: 14, whiteSpace: "pre-line", fontFamily: BB.serif, background: B.bg, borderRadius: 12, padding: "12px 14px" }}>{cur.q.passage}</div>}
+          {cur.q.passage && <div style={{ fontSize: 16, lineHeight: 1.75, marginBottom: 14, whiteSpace: "pre-line", fontFamily: BB.serif, background: B.bg, borderRadius: 12, padding: "12px 14px" }}><PassageText text={cur.q.passage} /></div>}
           {cur.q.chart && <QChart c={cur.q.chart} />}
           <p style={{ fontSize: 16.5, fontWeight: 600, lineHeight: 1.6, whiteSpace: "pre-line", margin: "0 0 12px" }}>{mt(cur.q.prompt)}</p>
           {cur.q.type === "spr" ? (
@@ -2513,7 +2552,7 @@ function PracticeSet({ title, subtitle, questions, onClose }) {
           return (
             <div key={k} style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 20, marginBottom: 14 }}>
               <div style={{ fontSize: 12.5, fontWeight: 800, color: B.muted, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 8 }}>{k + 1}. {[q.domain, q.skill, q.difficulty].filter(Boolean).join(" · ")}</div>
-              {q.passage && <div style={{ fontSize: 15.5, lineHeight: 1.75, marginBottom: 12, whiteSpace: "pre-line", fontFamily: BB.serif, background: B.bg, borderRadius: 10, padding: "12px 14px" }}>{q.passage}</div>}
+              {q.passage && <div style={{ fontSize: 15.5, lineHeight: 1.75, marginBottom: 12, whiteSpace: "pre-line", fontFamily: BB.serif, background: B.bg, borderRadius: 10, padding: "12px 14px" }}><PassageText text={q.passage} /></div>}
               {q.chart && <QChart c={q.chart} />}
               <p style={{ fontSize: 16, fontWeight: 600, lineHeight: 1.6, whiteSpace: "pre-line", margin: "0 0 10px" }}>{mt(q.prompt)}</p>
               {q.type === "spr" ? (
@@ -2732,6 +2771,9 @@ function mt(s) {
   }
   out.push(s.slice(last)); return out;
 }
+// Uzun yozuvlarni qatorlarga bo'lish (grafik o'qidagi yorliqlar bir-birini bosmasin)
+function wrapLabel(t, max) { const w = String(t).split(" "); const out = []; let cur = ""; w.forEach((x) => { if (cur && (cur + " " + x).length > max) { out.push(cur); cur = x; } else cur = cur ? cur + " " + x : x; }); if (cur) out.push(cur); return out; }
+const chartTitle = (t) => t ? <div style={{ fontSize: 14.5, fontWeight: 700, textAlign: "center", margin: "0 auto 4px", maxWidth: 560, fontFamily: "Arial, sans-serif", color: "#222", lineHeight: 1.35 }}>{t}</div> : null;
 function QChart({ c }) {
   if (!c) return null;
   const W = 380, H = 270, L = 48, R = 14, T = 14, Bm = 40;
@@ -2752,11 +2794,11 @@ function QChart({ c }) {
   }
   if (c.type === "table") {
     return (
-      <div style={{ margin: "0 auto 16px", maxWidth: 460, overflowX: "auto" }}>
-        {c.title && <div style={{ fontSize: 13.5, fontWeight: 700, textAlign: "center", marginBottom: 6 }}>{c.title}</div>}
-        <table style={{ borderCollapse: "collapse", width: "100%", fontSize: 14, fontFamily: "Georgia, 'Times New Roman', serif" }}>
-          <thead><tr>{c.head.map((h, i) => <th key={i} style={{ border: "1px solid #444", padding: "6px 10px", background: "#F1F3F6", fontWeight: 700 }}>{h}</th>)}</tr></thead>
-          <tbody>{c.rows.map((r, i) => <tr key={i}>{r.map((v, j) => <td key={j} style={{ border: "1px solid #444", padding: "6px 10px", textAlign: j === 0 ? "left" : "center", fontWeight: j === 0 ? 600 : 400 }}>{v}</td>)}</tr>)}</tbody>
+      <div style={{ margin: "0 auto 18px", maxWidth: 620, overflowX: "auto" }}>
+        {c.title && <div style={{ fontSize: 15, fontWeight: 700, textAlign: "center", marginBottom: 8, fontFamily: "Georgia, 'Times New Roman', serif" }}>{c.title}</div>}
+        <table style={{ borderCollapse: "collapse", width: "100%", fontSize: 16, fontFamily: "Georgia, 'Times New Roman', serif" }}>
+          {c.head && <thead><tr>{c.head.map((h, i) => <th key={i} style={{ border: "1px solid #444", padding: "9px 14px", background: "#F1F3F6", fontWeight: 700 }}>{h}</th>)}</tr></thead>}
+          <tbody>{c.rows.map((r, i) => <tr key={i}>{r.map((v, j) => <td key={j} style={{ border: "1px solid #444", padding: "9px 14px", textAlign: j === 0 ? "left" : "center", fontWeight: j === 0 ? 600 : 400 }}>{v}</td>)}</tr>)}</tbody>
         </table>
       </div>
     );
@@ -2767,8 +2809,8 @@ function QChart({ c }) {
     const cols = ["#3B5BDB", "#E8547C", "#1C9A5B"], shapes = ["circle", "square", "tri"];
     const ticksY = []; for (let v = yMin0; v <= maxV + 1e-9; v += step) ticksY.push(Math.round(v * 100) / 100);
     return (
-      <svg viewBox={`0 0 ${W} ${H + 18}`} style={{ width: "100%", maxWidth: 440, display: "block", margin: "0 auto 16px", fontFamily: "Arial, sans-serif" }}>
-        {c.title && <text x={W / 2} y={11} textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#222">{c.title}</text>}
+      <div style={{ margin: "0 auto 16px" }}>{chartTitle(c.title)}
+      <svg viewBox={`0 0 ${W} ${H + 18}`} style={{ width: "100%", maxWidth: 580, display: "block", margin: "0 auto", fontFamily: "Arial, sans-serif" }}>
         {ticksY.map((v) => <g key={v}><line x1={L} x2={W - R} y1={Y(v)} y2={Y(v)} stroke="#E3E3E3" /><text x={L - 6} y={Y(v) + 4} fontSize="10" textAnchor="end" fill="#444">{v}</text></g>)}
         <line x1={L} x2={L} y1={T} y2={T + ph} stroke="#333" /><line x1={L} x2={W - R} y1={T + ph} y2={T + ph} stroke="#333" />
         {c.labels.map((lab, i) => <text key={lab} x={X(i)} y={T + ph + 14} fontSize="10" textAnchor="middle" fill="#333">{lab}</text>)}
@@ -2781,7 +2823,7 @@ function QChart({ c }) {
         {c.xLabel && <text x={L + pw / 2} y={H - 6} fontSize="10.5" textAnchor="middle" fill="#222">{c.xLabel}</text>}
         {c.yLabel && <text transform={`translate(12 ${T + ph / 2}) rotate(-90)`} fontSize="10.5" textAnchor="middle" fill="#222">{c.yLabel}</text>}
         {series.map((s, k) => <g key={"l" + k}><rect x={L + k * 150} y={H + 4} width="10" height="10" fill={cols[k]} /><text x={L + 14 + k * 150} y={H + 13} fontSize="10.5" fill="#222">{s.name}</text></g>)}
-      </svg>
+      </svg></div>
     );
   }
   if (c.type === "bar") {
@@ -2791,9 +2833,12 @@ function QChart({ c }) {
     const n = c.labels.length, gw = pw / n, bw = Math.min(34, (gw * 0.7) / series.length);
     const Y = (v) => T + ph - (v / maxV) * ph;
     const cols = ["#3B5BDB", "#E8547C", "#1C9A5B"];
+    const labs = c.labels.map((l) => wrapLabel(l, Math.max(6, Math.floor(gw / 5.6))));
+    const extra = (Math.max(...labs.map((x) => x.length)) - 1) * 12;
+    const legY = H + extra;
     return (
-      <svg viewBox={`0 0 ${W} ${H + (series.length > 1 ? 18 : 0)}`} style={{ width: "100%", maxWidth: 440, display: "block", margin: "0 auto 16px", fontFamily: "Arial, sans-serif" }}>
-        {c.title && <text x={W / 2} y={11} textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#222">{c.title}</text>}
+      <div style={{ margin: "0 auto 16px" }}>{chartTitle(c.title)}
+      <svg viewBox={`0 0 ${W} ${H + extra + (series.length > 1 ? 18 : 0)}`} style={{ width: "100%", maxWidth: 580, display: "block", margin: "0 auto", fontFamily: "Arial, sans-serif" }}>
         {Array.from({ length: Math.floor(maxV / step) + 1 }, (_, i) => i * step).map((v) => (
           <g key={v}><line x1={L} x2={W - R} y1={Y(v)} y2={Y(v)} stroke="#E3E3E3" /><text x={L - 6} y={Y(v) + 4} fontSize="10" textAnchor="end" fill="#444">{v}</text></g>
         ))}
@@ -2801,13 +2846,13 @@ function QChart({ c }) {
         {c.labels.map((lab, i) => (
           <g key={lab}>
             {series.map((s, k) => { const x = L + gw * i + (gw - bw * series.length) / 2 + k * bw; return <rect key={k} x={x} y={Y(s.values[i])} width={bw - 2} height={T + ph - Y(s.values[i])} fill={cols[k]} />; })}
-            <text x={L + gw * i + gw / 2} y={T + ph + 14} fontSize="10" textAnchor="middle" fill="#333">{lab}</text>
+            <text x={L + gw * i + gw / 2} y={T + ph + 14} fontSize="10" textAnchor="middle" fill="#333">{labs[i].map((ln, j) => <tspan key={j} x={L + gw * i + gw / 2} dy={j ? 12 : 0}>{ln}</tspan>)}</text>
           </g>
         ))}
-        {c.xLabel && <text x={L + pw / 2} y={H - 6} fontSize="10.5" textAnchor="middle" fill="#222">{c.xLabel}</text>}
+        {c.xLabel && <text x={L + pw / 2} y={H + extra - 6} fontSize="10.5" textAnchor="middle" fill="#222">{c.xLabel}</text>}
         {c.yLabel && <text transform={`translate(12 ${T + ph / 2}) rotate(-90)`} fontSize="10.5" textAnchor="middle" fill="#222">{c.yLabel}</text>}
-        {series.length > 1 && series.map((s, k) => <g key={k}><rect x={L + k * 130} y={H + 4} width="10" height="10" fill={cols[k]} /><text x={L + 14 + k * 130} y={H + 13} fontSize="10.5" fill="#222">{s.name}</text></g>)}
-      </svg>
+        {series.length > 1 && series.map((s, k) => <g key={k}><rect x={L + k * 130} y={legY + 4} width="10" height="10" fill={cols[k]} /><text x={L + 14 + k * 130} y={legY + 13} fontSize="10.5" fill="#222">{s.name}</text></g>)}
+      </svg></div>
     );
   }
   const { xMin, xMax, yMin, yMax } = c; const xs = c.xStep || 1, ys = c.yStep || 1;
@@ -2816,9 +2861,9 @@ function QChart({ c }) {
   const clip = "qc" + Math.round(Math.random() * 1e9);
   const ax = yMin <= 0 && yMax >= 0 ? Y(0) : T + ph, ay = xMin <= 0 && xMax >= 0 ? X(0) : L;
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", maxWidth: 440, display: "block", margin: "0 auto 16px", fontFamily: "Arial, sans-serif" }}>
+    <div style={{ margin: "0 auto 16px" }}>{chartTitle(c.title)}
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", maxWidth: 580, display: "block", margin: "0 auto", fontFamily: "Arial, sans-serif" }}>
       <defs><clipPath id={clip}><rect x={L} y={T} width={pw} height={ph} /></clipPath></defs>
-      {c.title && <text x={W / 2} y={11} textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#222">{c.title}</text>}
       {ticks(xMin, xMax, xs).map((v) => <line key={"gx" + v} x1={X(v)} x2={X(v)} y1={T} y2={T + ph} stroke="#E6E6E6" />)}
       {ticks(yMin, yMax, ys).map((v) => <line key={"gy" + v} x1={L} x2={W - R} y1={Y(v)} y2={Y(v)} stroke="#E6E6E6" />)}
       <line x1={L} x2={W - R} y1={ax} y2={ax} stroke="#333" /><line x1={ay} x2={ay} y1={T} y2={T + ph} stroke="#333" />
@@ -2831,7 +2876,7 @@ function QChart({ c }) {
       {(c.marks || []).map(([x, y], i) => <circle key={"m" + i} cx={X(x)} cy={Y(y)} r="3.6" fill="#fff" stroke="#1F3FB8" strokeWidth="2" />)}
       {c.xLabel && <text x={L + pw / 2} y={H - 6} fontSize="10.5" textAnchor="middle" fill="#222">{c.xLabel}</text>}
       {c.yLabel && <text transform={`translate(12 ${T + ph / 2}) rotate(-90)`} fontSize="10.5" textAnchor="middle" fill="#222">{c.yLabel}</text>}
-    </svg>
+    </svg></div>
   );
 }
 const sampleFn = (f, a, b, n = 120) => Array.from({ length: n + 1 }, (_, i) => { const x = a + ((b - a) * i) / n; return [x, f(x)]; });
@@ -2891,7 +2936,7 @@ function PracticeSession({ selection, count, timed, onExit, onRecord }) {
               <span style={{ fontSize: 13, color: B.muted }}>{x.sec}s</span>
             </summary>
             <div style={{ marginTop: 10, fontSize: 14.5, lineHeight: 1.6 }}>
-              {x.q.passage && <div style={{ whiteSpace: "pre-line", color: B.muted, marginBottom: 8 }}>{x.q.passage}</div>}
+              {x.q.passage && <div style={{ whiteSpace: "pre-line", color: B.muted, marginBottom: 8 }}><PassageText text={x.q.passage} /></div>}
               {x.q.chart && <QChart c={x.q.chart} />}
               <div style={{ whiteSpace: "pre-line", marginBottom: 6 }}>{mt(x.q.prompt)}</div>
               <div>To'g'ri javob: <b>{x.q.type === "spr" ? x.q.answer : `${String.fromCharCode(65 + x.q.answer)}) ${x.q.choices[x.q.answer]}`}</b>{!x.ok && <span style={{ color: B.rose }}> · Sizning javobingiz: {x.q.type === "spr" ? String(x.picked) : String.fromCharCode(65 + x.picked)}</span>}</div>
@@ -2925,7 +2970,7 @@ function PracticeSession({ selection, count, timed, onExit, onRecord }) {
           <span style={{ fontSize: 11.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.4, background: B.bg, color: B.muted, padding: "4px 9px", borderRadius: 7 }}>{q.skill}</span>
           <span style={{ fontSize: 11.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.4, background: diffColor + "22", color: diffColor, padding: "4px 9px", borderRadius: 7 }}>{q.difficulty}</span>
         </div>
-        {q.passage && <div style={{ fontSize: 16, lineHeight: 1.75, marginBottom: 18, whiteSpace: "pre-line", paddingBottom: 16, borderBottom: `1px solid ${B.bg}`, fontFamily: BB.serif }}>{q.passage}</div>}
+        {q.passage && <div style={{ fontSize: 16, lineHeight: 1.75, marginBottom: 18, whiteSpace: "pre-line", paddingBottom: 16, borderBottom: `1px solid ${B.bg}`, fontFamily: BB.serif }}><PassageText text={q.passage} /></div>}
         {q.chart && <QChart c={q.chart} />}
         <p style={{ fontSize: 16.5, marginBottom: 18, lineHeight: 1.6, whiteSpace: "pre-line", fontWeight: 600 }}>{mt(q.prompt)}</p>
         {q.type === "spr" ? (
@@ -3956,7 +4001,7 @@ function SavedPage() {
         <button onClick={() => setActive(null)} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 15.5, marginBottom: 14, fontFamily: FONT }}><ChevronLeft size={16} /> Ro'yxatga qaytish</button>
         <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 24 }}>
           <div style={{ fontSize: 11.5, color: B.muted, marginBottom: 12, textTransform: "uppercase" }}>{active.domain} {active.skill ? `· ${active.skill}` : ""}</div>
-          {active.passage && <div style={{ fontSize: 16, lineHeight: 1.7, marginBottom: 18, whiteSpace: "pre-line", paddingBottom: 16, borderBottom: `1px solid ${B.bg}` }}>{active.passage}</div>}
+          {active.passage && <div style={{ fontSize: 16, lineHeight: 1.7, marginBottom: 18, whiteSpace: "pre-line", paddingBottom: 16, borderBottom: `1px solid ${B.bg}` }}><PassageText text={active.passage} /></div>}
           {active.chart && <QChart c={active.chart} />}
           <p style={{ fontSize: 16.5, marginBottom: 18, whiteSpace: "pre-line" }}>{mt(active.prompt)}</p>
           {active.choices ? active.choices.map((c, idx) => (
@@ -4084,7 +4129,7 @@ function Drill({ mode, onExit }) {
           <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: 0.5, textTransform: "uppercase", color: m.grad[0], background: m.grad[0] + "14", padding: "5px 10px", borderRadius: 8 }}>{q.skill}</span>
           <span style={{ fontSize: 14, fontWeight: 800, color: B.muted }}>{i + 1} / {questions.length}</span>
         </div>
-        {q.passage && <div style={{ fontSize: 16, lineHeight: 1.75, marginBottom: 16, whiteSpace: "pre-line", fontFamily: BB.serif, color: "#232842" }}>{q.passage}</div>}
+        {q.passage && <div style={{ fontSize: 16, lineHeight: 1.75, marginBottom: 16, whiteSpace: "pre-line", fontFamily: BB.serif, color: "#232842" }}><PassageText text={q.passage} /></div>}
         {q.chart && <QChart c={q.chart} />}
         <p style={{ fontSize: 17, marginBottom: 18, whiteSpace: "pre-line", fontWeight: 700, lineHeight: 1.5 }}>{mt(q.prompt)}</p>
         {q.choices ? q.choices.map((c, idx) => {
@@ -4211,7 +4256,7 @@ function DailyTest() {
       <div style={{ height: 6, background: B.border, borderRadius: 6, marginBottom: 16 }}><div style={{ height: 6, width: `${(i / qs.length) * 100}%`, background: `linear-gradient(90deg, ${B.plum}, ${B.rose})`, borderRadius: 6, transition: "width .3s" }} /></div>
       <div style={card}>
         <div style={{ fontSize: 12.5, fontWeight: 800, color: B.muted, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 10 }}>{q.domain} · {q.skill}{q.difficulty ? " · " + q.difficulty : ""}</div>
-        {q.passage && <div style={{ fontSize: 16, lineHeight: 1.75, marginBottom: 16, whiteSpace: "pre-line", fontFamily: BB.serif }}>{q.passage}</div>}
+        {q.passage && <div style={{ fontSize: 16, lineHeight: 1.75, marginBottom: 16, whiteSpace: "pre-line", fontFamily: BB.serif }}><PassageText text={q.passage} /></div>}
         {q.chart && <QChart c={q.chart} />}
         <p style={{ fontSize: 16.5, marginBottom: 16, lineHeight: 1.6, whiteSpace: "pre-line", fontWeight: 600 }}>{mt(q.prompt)}</p>
         {q.choices.map((ch, k) => { const isC = k === q.answer, isP = k === picked;
@@ -4727,7 +4772,7 @@ function CourseLesson({ course, topic, idx, saved, onBack, onDone, onNext }) {
         {topic.practice.map((q, k) => { const pk = picked[k], rev = pk !== null;
           return (
             <div key={k} style={{ paddingBottom: 16, marginBottom: 16, borderBottom: k < topic.practice.length - 1 ? `1px solid ${B.border}` : "none" }}>
-              {q.passage && <div style={{ fontSize: 15.5, lineHeight: 1.75, marginBottom: 10, whiteSpace: "pre-line", fontFamily: BB.serif, background: B.bg, borderRadius: 10, padding: "12px 14px" }}>{q.passage}</div>}
+              {q.passage && <div style={{ fontSize: 15.5, lineHeight: 1.75, marginBottom: 10, whiteSpace: "pre-line", fontFamily: BB.serif, background: B.bg, borderRadius: 10, padding: "12px 14px" }}><PassageText text={q.passage} /></div>}
               <p style={{ fontSize: 16, fontWeight: 700, lineHeight: 1.6, margin: "0 0 10px" }}>{k + 1}. {mt(q.q)}</p>
               {q.choices.map((ch, c) => { const isC = c === q.answer, isP = c === pk;
                 return <button key={c} onClick={() => choose(k, c)} style={{ display: "flex", gap: 10, alignItems: "center", width: "100%", textAlign: "left", marginBottom: 7, padding: "10px 13px", borderRadius: 12, cursor: rev ? "default" : "pointer", fontFamily: FONT, fontSize: 15, color: B.text, border: `1.5px solid ${rev && isC ? B.green : rev && isP ? B.rose : B.border}`, background: rev && isC ? "#E7F6EC" : rev && isP ? "#FDECF1" : "#fff" }}>

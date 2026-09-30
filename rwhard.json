@@ -219,7 +219,7 @@
 "prompt": "Which choice best describes the overall structure of the text?",
 "choices": [
 "It presents a long-held view, introduces evidence that challenges that view, and then offers a qualified revision of it.",
-"It describes a historical event, explains the cause of that event, and then predicts the results of future research.",
+"It describes a historical event, explains the cause of that event in detail, and then predicts the results of future research.",
 "It introduces a scientific method, evaluates its limitations, and then recommends an alternative method.",
 "It summarizes two competing explanations for an event and then argues that neither is supported by evidence."
 ],
@@ -243,9 +243,9 @@
 "prompt": "Which choice best describes the function of the last sentence in the overall structure of the text?",
 "choices": [
 "It acknowledges a limitation on how broadly the study's findings can be applied.",
-"It offers an explanation for why lottery winners in Sweden kept working.",
-"It presents evidence that contradicts the economists' assumption.",
-"It suggests that the researchers' methods were flawed."
+"It offers an explanation for why lottery winners in Sweden continued working after winning.",
+"It presents additional evidence that contradicts the economists' assumption about windfalls.",
+"It suggests that the methods the researchers used to study lottery winners were flawed."
 ],
 "answer": 0,
 "expl": "Oxirgi gap natijalar katta summalarga tatbiq etilmasligi mumkinligini aytadi — ya'ni cheklovni tan oladi. U usulni noto'g'ri demaydi."
@@ -255,9 +255,9 @@
 "prompt": "Which choice best states the main purpose of the text?",
 "choices": [
 "To present a researcher's objection to a proposed solution and her alternative to it",
-"To explain why coyotes have become common in urban areas",
-"To argue that urban coyotes pose no threat to pets",
-"To compare the effectiveness of several programs for removing coyotes"
+"To explain why coyotes have become increasingly common in urban areas in recent decades",
+"To argue that urban coyotes pose no real threat to pets and should be left entirely alone",
+"To compare the effectiveness of several programs that cities have used to remove coyotes"
 ],
 "answer": 0,
 "expl": "Matn olib tashlash taklifini, Reyesning e'tirozini va uning muqobil yechimini ko'rsatadi. Reyes xavf yo'q demaydi — faqat olib tashlash samarasiz deydi."
@@ -267,9 +267,9 @@
 "prompt": "Which choice best describes the overall structure of the text?",
 "choices": [
 "It describes an established method, reports a finding that seems to undermine that method, and then explains how the method's significance should be reinterpreted.",
-"It introduces a type of pollution, identifies its sources, and then proposes a way of reducing it.",
-"It compares two methods of measuring air quality and then argues that one is more accurate than the other.",
-"It presents a scientific hypothesis, describes an experiment designed to test it, and then reports that the hypothesis was confirmed."
+"It introduces a type of air pollution, identifies the main sources of that pollution, and then proposes a practical way of reducing it in cities.",
+"It compares two established methods of measuring air quality and then argues that one of them is considerably more accurate than the other.",
+"It presents a scientific hypothesis about lichens and sulfur dioxide, describes an experiment designed to test it in London, and then reports that the hypothesis was confirmed."
 ],
 "answer": 0,
 "expl": "Avval an'anaviy usul (lishayniklar toza havo belgisi), keyin unga zid ko'ringan topilma, oxirida usulning ma'nosi qayta talqin qilinadi. Usul rad etilmaydi."
@@ -279,9 +279,9 @@
 "prompt": "Which choice best states the main purpose of the text?",
 "choices": [
 "To convey Cora's conflicted feelings as she watches her students depart",
-"To illustrate the students' eagerness to begin working at the mill",
-"To suggest that Cora is disappointed in her students' behavior",
-"To describe the landscape surrounding Cora's school"
+"To illustrate the students' eagerness to leave school and begin working at the mill",
+"To suggest that Cora is disappointed in how her students behaved during the year",
+"To describe the fields and hills surrounding the small school where Cora teaches"
 ],
 "answer": 0,
 "expl": "Cora o'ziga 'xursandman' deydi, lekin eshik oldida uzoq turadi — ichki ikkilanish. U bolalarning xatti-harakatidan norozi emas ('that was how it ought to be')."
@@ -291,9 +291,9 @@
 "prompt": "Which choice best describes the overall structure of the text?",
 "choices": [
 "It presents a character's long-established routine, describes news that threatens that routine, and then depicts the character's quiet response.",
-"It describes a character's decision to leave his job and then explains the events that led to that decision.",
-"It contrasts a character's feelings about his job with the feelings of the people who hired him.",
-"It explains how a lighthouse functions and then describes the technology that will replace it."
+"It describes a character's decision to leave his long-held job at the lighthouse and then explains in detail the events that led him to make that decision.",
+"It contrasts a character's quiet devotion to his job with the indifference of the officials who hired him many years earlier.",
+"It explains how a lighthouse lamp functions and then describes the new automated technology that is about to replace it."
 ],
 "answer": 0,
 "expl": "Avval 30 yillik odat, keyin xat (avtomatlashtirish), oxirida jim munosabat (tong otguncha qolishi)."
@@ -315,9 +315,9 @@
 "prompt": "Which choice best states the main purpose of the text?",
 "choices": [
 "To show how an architect adapted a traditional material to create a building that performs well in its environment",
-"To argue that clay is superior to concrete for all types of modern construction",
-"To describe the criticism that an architect faced from other architects in Burkina Faso",
-"To explain why air conditioning is unavailable in rural areas of Burkina Faso"
+"To argue that clay is a better building material than concrete for all modern construction projects, whatever the local climate",
+"To describe the criticism that an architect faced from other architects in Burkina Faso for using clay",
+"To explain why air conditioning remains unavailable in most rural schools and homes in Burkina Faso"
 ],
 "answer": 0,
 "expl": "Matn Kéré an'anaviy loyni qanday moslashtirib, issiq iqlimda yaxshi ishlaydigan bino qurganini ko'rsatadi. 'Barcha qurilishlar uchun' — haddan tashqari umumlashtirish."
@@ -327,9 +327,9 @@
 "prompt": "Which choice best describes the function of the underlined sentence \"Her report forced researchers to reconsider how they defined humans\" in the text as a whole?",
 "choices": [
 "It explains the significance of the observation described in the previous sentence.",
-"It describes a method that Goodall used to study chimpanzees.",
-"It introduces a criticism of Goodall's research.",
-"It identifies a species that uses tools in a way similar to chimpanzees."
+"It describes the method that Goodall used to observe chimpanzees in the wild.",
+"It introduces a criticism of Goodall's research made by other scientists.",
+"It identifies another species that uses tools in ways similar to Goodall's chimpanzee."
 ],
 "answer": 0,
 "expl": "Oldingi gapda kuzatuv, bu gap esa uning ahamiyatini tushuntiradi (inson ta'rifini qayta ko'rib chiqish).",
@@ -340,9 +340,9 @@
 "prompt": "Which choice best describes the overall structure of the text?",
 "choices": [
 "It describes an apparent act of yielding and then reveals the powerful effect of that behavior over time.",
-"It describes a conflict between two forces and then declares one of them the loser.",
-"It praises the strength of a stone and then laments its destruction.",
-"It compares a river to a mountain and then concludes that they are equally powerful."
+"It describes a conflict between a river and a stone and then declares that the river has finally lost that conflict.",
+"It praises the strength and permanence of a stone and then laments its eventual destruction.",
+"It compares a river to a mountain and then concludes that the two are equally powerful."
 ],
 "answer": 0,
 "expl": "Daryo 'bahslashmaydi', egiladi (bo'ysunish) — lekin oxirida tog'ni zarra-zarra olib ketadi (vaqt o'tib kuchli ta'sir).",
@@ -355,10 +355,10 @@
 "It establishes that Marit's hopeful view of the prairie is unprecedented, setting up the final description of how the land seems to respond to her.",
 "It describes the geological origins of the prairie in order to explain why the land had long resisted cultivation by Marit's father.",
 "It suggests that Marit's father never understood the land, a judgment that Marit herself comes to share by the end of the text.",
-"It introduces a tension between Marit's hopes and the land's indifference, a tension that remains unresolved at the end of the text."
+"It introduces a tension between Marit's hopes and the land's indifference to them, a tension that remains unresolved and even deepens by the end of the text."
 ],
 "answer": 0,
-"expl": "1-gap: Marit yerga birinchi marta 'to'siq emas, va'da' deb qaraydi; oxirgi gap yer 'nihoyat uning nigohi ostida tinchlandi' deydi — 1-gap shu javobga zamin. B: geologiya faqat fon. C: otasi yerni noto'g'ri tushungan deyilmaydi; yer unga 'qarshilik qilgan'. D: yer befarq emas, aksincha javob beradi — ziddiyat hal bo'ladi.",
+"expl": "Birinchi gap: kimdir prairiega birinchi marta 'not as an obstacle but as a promise' deb qaraydi — bu ilgari bo'lmagan qarash. Oxirgi gapda yer 'at last' Maritning nigohi ostida tinchlanadi, ya'ni 1-gap shu yakunga zamin. Geologik kelib chiqish faqat fon, otasining qiyinchiligini tushuntirmaydi. 'Yer befarq, ziddiyat chuqurlashadi' degan variant teskari — yer javob beradi; otasi yerni tushunmagan degan fikr ham matnda yo'q.",
 "difficulty": "Hard"
 },
 {
@@ -367,11 +367,11 @@
 "choices": [
 "It identifies a common research approach, presents findings that complicate it, and proposes a reframing of the question that approach asks.",
 "It describes a debate between two groups of researchers and then explains why one group's methods are more reliable.",
-"It presents a hypothesis about lemur intelligence, describes an experiment that confirms it, and considers applications to other species.",
+"It presents a hypothesis about lemur intelligence, describes an experiment that confirms it, and then considers its possible applications to other species.",
 "It summarizes the history of animal cognition research and argues that recent experiments have made earlier studies obsolete."
 ],
 "answer": 0,
-"expl": "Tuzilma: (1) keng tarqalgan yondashuv — alohida hayvonni sinash; (2) Kulahci natijalari uni murakkablashtiradi; (3) savolni qayta qo'yish — 'kim kimdan o'rganadi'. B: ikki guruh bahsi yo'q. C: gipoteza tasdiqlanmaydi, aksincha yondashuv shubha ostiga olinadi; boshqa turlar muhokama qilinmaydi. D: tarix va 'eskirgan' degan da'vo haddan tashqari kuchli.",
+"expl": "Tuzilma: (1) keng tarqalgan yondashuv — alohida hayvon jumboqni yecha oladimi; (2) Kulahci natijalari buni murakkablashtiradi; (3) savol qayta qo'yiladi — 'kim kimdan o'rganadi'. Ikki guruh olimlar bahsi matnda yo'q. Gipoteza tasdiqlanib, boshqa turlarga qo'llanadi degan variant xato — aksincha yondashuv shubha ostiga olinadi; 'oldingi tadqiqotlar eskirdi' degan variant esa haddan tashqari kuchli.",
 "difficulty": "Hard"
 },
 {
@@ -379,12 +379,12 @@
 "prompt": "Which choice best states the main purpose of the text?",
 "choices": [
 "To refine a common claim about the origins of a building feature by distinguishing what was actually new about its modernist use",
-"To argue that modernist designers deliberately copied building techniques from North Africa and the American Southwest",
-"To explain why flat roofs are more practical than sloped roofs in regions with little rainfall",
-"To criticize architectural historians for overlooking the role of asphalt in the development of modernism"
+"To argue that modernist designers deliberately copied the flat-roof techniques of builders in North Africa and the American Southwest",
+"To explain why flat roofs are more practical than sloped roofs in regions that receive little rainfall each year",
+"To criticize architectural historians for overlooking the role that asphalt played in the development of modernism"
 ],
 "answer": 0,
-"expl": "Matn keng tarqalgan da'voni ('modernistlar yassi tomni kiritgan') aniqlashtiradi: yangi narsa tomning o'zi emas, uni yomg'irli iqlimda ishlatish edi. B: ataylab ko'chirish haqida dalil yo'q. C: amaliylik taqqoslanmaydi. D: tanqid — haddan tashqari; asfalt faqat tafsilot.",
+"expl": "Matn keng tarqalgan da'voni ('modernistlar yassi tomni kiritgan') aniqlashtiradi: yangi narsa tomning o'zi emas, uni yomg'irli iqlimda ishlatish edi. Modernistlar ataylab ko'chirgan degan variantga dalil yo'q. Yassi va nishab tomlar amaliyligi taqqoslanmaydi; tarixchilarni asfalt uchun tanqid qilish degan variant haddan tashqari — asfalt faqat tafsilot.",
 "difficulty": "Hard"
 },
 {
@@ -405,12 +405,12 @@
 "prompt": "Which choice best describes the main purpose of the text?",
 "choices": [
 "To suggest that Mrs. Todd's value to her visitors lies partly in the attention she gives them rather than solely in her herbal remedies",
-"To suggest that the narrator increasingly doubts whether Mrs. Todd's herbal remedies are as effective as the townspeople claim",
+"To suggest that the narrator increasingly doubts whether Mrs. Todd's herbal remedies are as effective as the townspeople who visit her claim",
 "To describe the coastal landscape and the rhythms of the tide that make the town appealing to summer visitors like the narrator",
 "To contrast the visitors who bring Mrs. Todd genuine complaints with those who only pretend to be ill in order to visit her"
 ],
 "answer": 0,
-"expl": "Oxirgi gap: ba'zilari asosan gaplashgani keladi, Todd xonim tinglaydi — 'dorilar' barg-ildizdan ko'ra sabr bilan bog'liq. Demak uning qadri qisman e'tiborida. B: hikoyachi aksincha ishona boshlaydi. C: manzara faqat kirish. D: 'o'zini kasal qilib ko'rsatish' matnda yo'q — ular shunchaki gaplashgani keladi.",
+"expl": "Oxirgi gap: ba'zilar asosan gaplashgani keladi, Todd xonim tinglaydi va 'dorilar' barg-ildizdan ko'ra sabr bilan bog'liq — uning qadri qisman e'tiborida. 'Hikoyachi shubhalanib boradi' degan variant teskari — u aksincha 'began to believe it'. Qirg'oq manzarasi faqat kirish; o'zini kasal qilib ko'rsatganlar degan variant ham xato — ular shunchaki gaplashgani keladi.",
 "difficulty": "Hard"
 },
 {
@@ -418,42 +418,42 @@
 "prompt": "Which choice best describes the function of the third sentence ('Interestingly...') in the text as a whole?",
 "choices": [
 "It notes a feature of the more accurate estimates that helps support the researchers' explanation of a common error.",
-"It introduces a finding that contradicts the researchers' conclusion about the benefits of detailed planning.",
+"It introduces a finding that contradicts the researchers' conclusion about the benefits of breaking tasks into smaller steps.",
 "It suggests that participants who broke tasks into steps worked more slowly than other participants did.",
 "It explains why the researchers chose to compare two groups of participants rather than one."
 ],
 "answer": 0,
-"expl": "Aniqroq baholar uzunroq ham bo'lgan — bu tadqiqotchilar tushuntirishini (bosqichlarga bo'lish e'tibordan chetda qolgan ishni ko'rsatadi, odamlar odatda kam baholaydi) qo'llaydi. B: zid emas, qo'llaydi. C: ish tezligi o'lchanmagan. D: tadqiqot dizayni sababi aytilmaydi.",
+"expl": "Aniqroq baholar uzunroq ham bo'lgan — bu tadqiqotchilar tushuntirishini qo'llaydi: bosqichlarga bo'lish e'tibordan chetda qolgan ishni ko'rsatadi, odamlar esa odatda vaqtni kam baholaydi. 'Xulosaga zid topilma' degan variant xato — u xulosani qo'llaydi. Ishtirokchilar sekinroq ishlagani o'lchanmagan; ikki guruhni tanlash sababi ham aytilmaydi.",
 "difficulty": "Hard"
 }
 ],
 "Cross-Text Connections": [
 {
-"passage": "Text 1\nPaleontologists have long interpreted the tall bony plates along the back of Stegosaurus as defensive armor. Positioned along the spine, the plates would have made the animal difficult for a predator to bite from above, and their size would have made Stegosaurus appear larger and more formidable.\n\nText 2\nThin sections of Stegosaurus plates reveal that they were riddled with channels for blood vessels and were too fragile to withstand a serious bite. Researcher Ines Carvalho concludes that the plates more likely served for display, allowing individuals to recognize members of their own species, though she allows that looking larger may have deterred some predators.",
+"passage": "Text 1\nSince the first nearly complete Stegosaurus skeletons were described in the late nineteenth century, paleontologists have long interpreted the tall bony plates along the animal's back as defensive armor. The reasoning is straightforward. Positioned in two staggered rows along the spine, the plates would have made the animal difficult for a predator such as Allosaurus to bite from above, shielding the neck and back. Their considerable size, moreover, would have made Stegosaurus appear larger and more formidable when seen from the side, perhaps discouraging an attack before one began. On this view, the plates functioned much like the shells of turtles or the bony scutes of modern crocodiles: as physical protection.\n\nText 2\nMicroscopic analysis complicates this picture. Examining thin sections cut from several Stegosaurus plates under polarized light, researcher Ines Carvalho found the bone riddled with channels that once held blood vessels, and she noted that the plates' interior was thin and porous rather than dense, making them too fragile to withstand a serious bite. Carvalho also observed that plate shape varied considerably among specimens from different sites. She concludes that the plates more likely served for display, allowing individuals to recognize members of their own species. She does not entirely dismiss a defensive role, however: she allows that looking larger may have deterred some predators, even if the plates offered no real physical protection.",
 "prompt": "Based on the texts, how would Carvalho (Text 2) most likely respond to the interpretation presented in Text 1?",
 "choices": [
 "She would reject the idea that the plates protected Stegosaurus physically but accept that their size may have discouraged some predators.",
-"She would agree that the plates were primarily defensive but argue that they also regulated body temperature.",
-"She would argue that the plates were too small to make Stegosaurus appear larger to predators.",
-"She would reject the interpretation entirely, since there is no evidence that Stegosaurus had predators."
+"She would agree that the plates served primarily as defensive armor but argue that they also helped members of a species recognize one another.",
+"She would argue that the plates were too small to make Stegosaurus look noticeably larger or more formidable to its predators.",
+"She would reject the interpretation entirely, since there is no fossil evidence that Stegosaurus had predators."
 ],
 "answer": 0,
 "expl": "Carvalho plastinkalar tishlashga chidamsiz deydi (jismoniy himoyani rad etadi), lekin 'kattaroq ko'rinish' ba'zi yirtqichlarni qo'rqitgan bo'lishi mumkinligini tan oladi."
 },
 {
-"passage": "Text 1\nThe rise of remote work has led some urban economists to predict a long decline for downtown business districts. If companies no longer need large central offices, they argue, the restaurants, shops, and transit systems that depend on office workers will shrink as well.\n\nText 2\nEconomist Farida Nazarova studied downtown districts in twelve cities after the shift to remote work. Districts that consisted almost entirely of office towers did lose foot traffic, but districts with a mix of housing, cultural venues, and offices recovered within two years, as residents and visitors replaced some commuters.",
+"passage": "Text 1\nThe rise of remote work since 2020 has led some urban economists to predict a long decline for downtown business districts. Their reasoning rests on a chain of dependencies. If companies no longer need large central offices, firms will let leases expire and consolidate into smaller spaces, and the daily population of office workers will fall accordingly. The restaurants, shops, and transit systems that depend on those workers' spending and fares will then shrink as well, reducing the tax revenue that cities use to maintain downtown services. Once begun, these economists argue, such a cycle of vacancy and disinvestment may be very difficult for a city to reverse.\n\nText 2\nEconomist Farida Nazarova tested this prediction by studying downtown districts in twelve cities in the years after the shift to remote work. Using anonymized mobile-phone location data, she tracked weekday and weekend foot traffic in each district and compared it with levels recorded before the shift. Districts that consisted almost entirely of office towers did lose foot traffic, and many had not recovered by the end of her study. But districts with a mix of housing, cultural venues, and offices recovered within two years, as residents and visitors replaced some commuters. Nazarova cautions that her sample is modest, yet she maintains that a district's mix of uses strongly shaped how it fared.",
 "prompt": "Based on the texts, how would Nazarova (Text 2) most likely respond to the prediction in Text 1?",
 "choices": [
 "She would say that it may hold for districts dominated by offices but overlooks districts with more varied uses.",
-"She would say that remote work has had no measurable effect on downtown districts.",
-"She would agree with it and add that mixed-use districts suffered the greatest losses.",
-"She would argue that the prediction is based on an inaccurate count of remote workers."
+"She would say that remote work has had little measurable effect on most downtown business districts, even office-heavy ones.",
+"She would agree with it and add that mixed-use districts have suffered the greatest losses of all.",
+"She would argue that the prediction relies on an inaccurate count of how many people work remotely."
 ],
 "answer": 0,
 "expl": "Nazarova faqat ofis tumanlari yo'qotganini, aralash tumanlar esa tiklanganini topdi — ya'ni bashorat qisman to'g'ri, lekin hamma tumanga tegishli emas."
 },
 {
-"passage": "Text 1\nMany literary scholars read the poet Selim Arun's late sonnets as a retreat from politics: after years of writing about labor strikes and elections, Arun turned to gardens, seasons, and the domestic life of his village.\n\nText 2\nScholar Leyla Kasimova argues that Arun's late sonnets remain political in a subtler register. The gardens in these poems are frequently described as \"borrowed\" or \"leased,\" and the seasons are measured by rent days—details that, in Kasimova's reading, keep questions of land ownership and economic power at the center of the work.",
+"passage": "Text 1\nFor much of his career, the poet Selim Arun was known for verse that engaged directly with public life: his early collections addressed labor strikes, contested elections, and the speeches of party officials, often in a declamatory style meant to be read aloud at gatherings. Many literary scholars therefore read the late sonnets, composed during the final decade of his life, as a retreat from politics. In these poems, Arun turned instead to gardens, seasons, and the domestic life of his village, adopting a quieter and more intimate voice. For these scholars, the change of subject marks a poet withdrawing from the public sphere into private contemplation.\n\nText 2\nScholar Leyla Kasimova argues that Arun's late sonnets remain political, though in a subtler register than his early work. Rather than surveying the poems' themes broadly, Kasimova traced recurring words across all of the late sonnets and compared them with the vocabulary of Arun's earlier collections. She found that the gardens in these poems are frequently described as \"borrowed\" or \"leased,\" and that the seasons are measured not by harvests or festivals but by rent days. Such details, in Kasimova's reading, keep questions of land ownership and economic power at the center of the work. The move to domestic subjects, she suggests, changed where Arun looked, not what he was looking for.",
 "prompt": "Based on the texts, how would Kasimova (Text 2) most likely respond to the scholars' reading in Text 1?",
 "choices": [
 "She would argue that the scholars mistake a change in subject matter for an abandonment of political concerns.",
@@ -465,19 +465,19 @@
 "expl": "Kasimova mavzu (bog'lar, fasllar) o'zgarganini inkor qilmaydi, lekin siyosiy mazmun saqlanganini aytadi — ya'ni olimlar mavzu o'zgarishini siyosatdan voz kechish deb adashadi."
 },
 {
-"passage": "Text 1\nIn laboratory tests, honeybees exposed to low doses of a common pesticide made more errors when navigating back to their hives. Some researchers have concluded that the pesticide is a major cause of recent declines in wild bee colonies.\n\nText 2\nEntomologist Dario Vance notes that laboratory doses, though described as low, often exceed what bees encounter in actual fields, and that colony declines have also been linked to parasites and habitat loss. Vance does not dismiss the laboratory findings but calls for field studies that measure realistic exposure alongside these other factors.",
+"passage": "Text 1\nIn a series of laboratory tests, researchers fed honeybees sugar syrup containing low doses of a common pesticide and then placed the bees in a maze that led back to a hive entrance, recording each attempt to return. Compared with untreated bees, the exposed bees made more errors when navigating back to their hives, and a larger share failed to return at all. Because foragers that cannot find their way home deprive a colony of both food and workers, some researchers have concluded from these results that the pesticide is a major cause of recent declines in wild bee colonies, and they have called for restrictions on its use.\n\nText 2\nEntomologist Dario Vance does not dispute that the exposed bees performed worse, but he questions what the results can show. Laboratory doses, though described as low, often exceed what bees encounter in actual fields, where pesticide residues in pollen and nectar vary with weather, crop type, and the timing of application. Colony declines, moreover, have also been linked to parasites and to habitat loss, which reduces the variety of flowers available to foragers. Vance does not dismiss the laboratory findings; he considers them a reasonable basis for further inquiry. But he calls for field studies that measure realistic exposure alongside these other factors before any single cause is identified.",
 "prompt": "Based on the texts, how would Vance (Text 2) most likely characterize the conclusion described in Text 1?",
 "choices": [
 "As premature, because it rests on conditions that may not reflect bees' real exposure and does not account for other possible causes",
-"As correct, because laboratory studies are more reliable than field studies",
-"As irrelevant, because pesticides have no effect on bee navigation",
-"As plausible only for honeybees kept in hives rather than for wild bees"
+"As correct, because carefully controlled laboratory studies are generally more reliable than the field studies that other researchers conduct",
+"As irrelevant, because the pesticides studied have little effect on how bees navigate back to their hives",
+"As plausible only for honeybees kept in managed hives rather than for the wild bees that live in nearby fields and forests"
 ],
 "answer": 0,
 "expl": "Vance laboratoriya natijalarini rad etmaydi, lekin doza real emas va boshqa sabablar hisobga olinmagan deydi — ya'ni xulosa shoshilinch."
 },
 {
-"passage": "Text 1\nMany historians argue that the collapse of the Western Roman Empire in the fifth century CE was driven primarily by external pressure. Waves of migrating groups, they contend, overwhelmed frontier defenses that had held for centuries.\n\nText 2\nHistorian Marta Lindqvist acknowledges that migrations strained Rome's frontiers but notes that the empire had absorbed similar pressures before. What had changed by the fifth century, she argues, was the empire's fiscal capacity: decades of civil war and tax evasion had left it unable to pay the armies that previously repelled such incursions. External pressure, in her view, proved decisive only because of this prior internal weakening.",
+"passage": "Text 1\nMany historians argue that the collapse of the Western Roman Empire in the fifth century CE was driven primarily by external pressure. They point to a rapid sequence of events: the crossing of the Rhine by several migrating groups in 406, the sack of Rome itself in 410, and the gradual loss of provinces in Gaul, Spain, and North Africa over the following decades. Waves of migrating groups, these historians contend, overwhelmed frontier defenses that had held for centuries. On this account, the empire fell chiefly because of forces from beyond its borders, which arrived in numbers and with a persistence that no premodern state could have withstood.\n\nText 2\nHistorian Marta Lindqvist acknowledges that migrations strained Rome's frontiers but notes that the empire had absorbed similar pressures before, repeatedly defeating or settling invading groups during the third and fourth centuries. Drawing on surviving tax records and imperial legislation, Lindqvist traces what had changed by the fifth century: the empire's fiscal capacity. Decades of civil war and widespread tax evasion by wealthy landowners had left the state unable to pay and supply the armies that previously repelled such incursions. External pressure, in her view, proved decisive only because of this prior internal weakening; the same migrations, she suggests, would likely have been contained by the better-funded empire of earlier centuries.",
 "prompt": "Based on the texts, how would Lindqvist (Text 2) most likely respond to the historians' argument in Text 1?",
 "choices": [
 "She would argue that it identifies a genuine factor but mistakes a proximate cause for the fundamental one.",
@@ -489,7 +489,7 @@
 "expl": "Lindqvist tashqi bosimni inkor qilmaydi, lekin u faqat ichki zaiflik tufayli hal qiluvchi bo'lgan deydi — ya'ni yaqin sababni asosiy sabab deb adashishgan."
 },
 {
-"passage": "Text 1\nThe composer Hiroshi Tanaka's late string quartets are often described as austere. Built from short, repeated motifs and long silences, they lack the lush harmonies of his early orchestral works, and some critics hear in them a composer whose creative energy had waned.\n\nText 2\nMusicologist Priya Raman contends that the sparseness of Tanaka's late quartets reflects not exhaustion but a deliberate turn toward the aesthetics of traditional Japanese court music, in which silence is treated as a structural element equal to sound. Tanaka's sketchbooks from this period, she notes, contain detailed notes on court music performances.",
+"passage": "Text 1\nThe composer Hiroshi Tanaka first won international recognition for his orchestral works of the 1960s, which were admired for their dense, shimmering textures and lush harmonies. His late string quartets, completed in the final years of his life, are often described as austere by comparison. Built from short, repeated motifs and long silences, some lasting nearly a minute, the quartets lack the rich sonorities that had made his name. Some critics hear in them a composer whose creative energy had waned, arguing that the reduction of musical material reflects diminished invention rather than any new artistic purpose. The late quartets, in their view, are the work of a tired composer.\n\nText 2\nMusicologist Priya Raman contends that the sparseness of Tanaka's late quartets reflects not exhaustion but a deliberate turn toward the aesthetics of traditional Japanese court music, in which silence is treated as a structural element equal to sound. Tanaka's sketchbooks from this period, she notes, contain detailed notes on court music performances, including diagrams recording the length of pauses between phrases. Raman also observes that the silences in the quartets are precisely measured in the scores rather than left to the performers' discretion. Such exactness, she argues, is difficult to reconcile with a composer whose powers were fading; it points instead to careful design rather than to a lack of ideas.",
 "prompt": "Based on the texts, how would Raman (Text 2) most likely respond to the critics' interpretation described in Text 1?",
 "choices": [
 "By arguing that the feature the critics treat as a sign of decline was instead an intentional artistic choice",
@@ -501,134 +501,134 @@
 "expl": "Raman quartetlardagi siyraklikni inkor qilmaydi; u buni charchoq emas, ataylab qilingan tanlov deb izohlaydi (eskiz daftarlari dalili bilan)."
 },
 {
-"passage": "Text 1\nThe dramatic decline of honeybee colonies in North America in the early 2000s prompted many researchers to focus on a single culprit: neonicotinoid pesticides. These chemicals, absorbed into the pollen and nectar of treated crops, have been shown in laboratory studies to impair bees' ability to navigate back to their hives.\n\nText 2\nEntomologist Dennis vanEngelsdorp argues that the search for one cause is misguided. Colonies in his surveys were typically stressed by several factors at once: parasitic mites, viral infections, poor nutrition from single-crop landscapes, and pesticide exposure. A colony weakened by mites, he notes, may be far more vulnerable to a pesticide dose that a healthy colony would survive.",
+"passage": "Text 1\nThe dramatic decline of honeybee colonies in North America in the early 2000s, when beekeepers reported unusually high winter losses and hives abruptly abandoned by their workers, prompted many researchers to focus on a single culprit: neonicotinoid pesticides. Introduced in the 1990s and soon applied widely to the seeds of crops such as corn and canola, these chemicals are absorbed into the pollen and nectar of treated plants. Laboratory studies have shown that exposure to them impairs bees' ability to navigate back to their hives. For researchers focused on this link, the spread of the pesticides and the timing of the losses seemed too closely matched to be coincidental.\n\nText 2\nYet the picture that emerges from inspections of hives in the field is considerably less tidy than laboratory results alone might suggest. Entomologist Dennis vanEngelsdorp argues that the search for one cause is misguided. Colonies in his surveys were typically stressed by several factors at once: parasitic mites, viral infections, poor nutrition from single-crop landscapes, and pesticide exposure. These pressures do not simply act side by side. A colony weakened by mites, he notes, may be far more vulnerable to a pesticide dose that a healthy colony would survive. From this perspective, asking which single stress is responsible for the losses obscures how the stresses combine.",
 "prompt": "Based on the texts, how would vanEngelsdorp (Text 2) most likely respond to the researchers described in Text 1?",
 "choices": [
 "He would argue that pesticides may contribute to colony decline but that focusing on them alone overlooks how multiple stresses interact.",
-"He would agree that neonicotinoids are the primary cause of colony decline but question the laboratory methods used to study them.",
-"He would argue that pesticides play no role in colony decline, since mites are the true cause.",
-"He would suggest that the decline of honeybee colonies has been exaggerated by researchers."
+"He would agree that neonicotinoids are the primary cause of colony decline but question the laboratory methods researchers used to study their effects.",
+"He would argue that pesticides play little role in colony decline, since parasitic mites are the main cause of the losses.",
+"He would suggest that the decline of honeybee colonies has been exaggerated by researchers who focus on pesticides."
 ],
 "answer": 0,
 "expl": "U pestitsidlarni inkor etmaydi (ro'yxatda bor), lekin 'bitta sabab' izlashni noto'g'ri deydi — omillar o'zaro ta'sir qiladi."
 },
 {
-"passage": "Text 1\nMany linguists have argued that the language we speak shapes how we perceive the world. For example, speakers of languages that use distinct words for light blue and dark blue, such as Russian, distinguish between those shades slightly faster in laboratory tests than English speakers do. Such findings suggest that vocabulary can influence perception itself.\n\nText 2\nPsychologist Lera Boroditsky's research is often cited as evidence of language shaping thought, but other researchers caution against overstating it. The speed advantages in color experiments are measured in milliseconds, and they disappear when participants perform a simultaneous verbal task that occupies their language faculties. This suggests that language may affect how quickly people categorize what they see, rather than altering what they actually perceive.",
+"passage": "Text 1\nThe idea that the language we speak shapes how we perceive the world, often called linguistic relativity, has attracted renewed attention from linguists in recent decades, and many have argued that experimental evidence now supports it. Russian, for example, uses distinct basic words for light blue and dark blue, whereas English treats both as shades of a single color. In laboratory tests in which participants must quickly indicate which of two colored squares matches a third, Russian speakers distinguish between those shades slightly faster than English speakers do when the shades fall on opposite sides of the Russian boundary. Such findings suggest that vocabulary can influence perception itself.\n\nText 2\nPsychologist Lera Boroditsky's research is often cited as evidence of language shaping thought, but other researchers caution against overstating what such experiments show. They do not dispute that the effect is real. The speed advantages in the color experiments, however, are measured in milliseconds, and they disappear when participants perform a simultaneous verbal task, such as silently rehearsing a string of digits, that occupies their language faculties. If the advantage depends on language being actively available during the task, these researchers reason, then words are probably helping people sort colors into categories as they respond. This suggests that language may affect how quickly people categorize what they see, rather than altering what they actually perceive.",
 "prompt": "Based on the texts, how would the researchers mentioned in Text 2 most likely respond to the conclusion in Text 1's final sentence?",
 "choices": [
 "They would argue that the evidence better supports an effect of language on categorization than on perception itself.",
-"They would argue that the color experiments were poorly designed and should be discarded entirely.",
-"They would agree that vocabulary alters perception but argue that the effect is limited to color.",
-"They would argue that Russian speakers perceive colors differently for reasons unrelated to language."
+"They would argue that the color experiments were poorly designed and that their results should be set aside.",
+"They would agree that vocabulary alters perception itself but argue that the effect is limited to color.",
+"They would argue that Russian speakers perceive colors differently for reasons that have nothing to do with language."
 ],
 "answer": 0,
 "expl": "Text 2: tezlik farqi kichik va og'zaki vazifa bilan yo'qoladi — demak til idrokni emas, toifalashni tezlashtiradi."
 },
 {
-"passage": "Text 1\nThe spread of remote work has been celebrated as a boon for productivity. Freed from long commutes and office distractions, workers in several large surveys reported completing more tasks per day at home than they had in the office.\n\nText 2\nEconomists Nicholas Bloom and colleagues found that fully remote employees at one company did complete slightly more routine work, but they were also less likely to be promoted and generated fewer new ideas in collaboration with colleagues. Self-reported surveys, the researchers note, capture how busy workers feel, not necessarily the long-term value of their work.",
+"passage": "Text 1\nThe spread of remote work has been celebrated by many commentators as a boon for productivity. Freed from long commutes, crowded open-plan offices, and frequent interruptions from colleagues, workers in several large surveys reported completing more tasks per day at home than they had in the office. Many respondents also said they were able to concentrate for longer stretches and to arrange their work around the hours when they felt most alert. For advocates of remote work, these results offer strong evidence that the traditional office, far from being essential, may actually have held workers back, and that employers who embrace working from home stand to benefit.\n\nText 2\nNot all research on the question relies on workers' own accounts, however. Economists Nicholas Bloom and colleagues examined the performance of employees at one company and found that fully remote employees did complete slightly more routine work than their office-based counterparts. But those same employees were also less likely to be promoted, and they generated fewer new ideas in collaboration with colleagues. Self-reported surveys, the researchers note, capture how busy workers feel, not necessarily the long-term value of their work. Measures that seem to favor remote work in the short run, in other words, may not reflect the full range of its consequences for workers and the firms that employ them.",
 "prompt": "Based on the texts, how would Bloom and colleagues (Text 2) most likely respond to the surveys described in Text 1?",
 "choices": [
 "They would caution that the surveys may measure short-term task completion while missing other important effects of remote work.",
-"They would argue that the surveys prove remote work reduces productivity.",
-"They would agree with the surveys and recommend that all companies adopt fully remote work.",
-"They would claim that workers in the surveys were dishonest about the number of tasks they completed."
+"They would argue that the surveys show that remote work tends to reduce the productivity of most workers.",
+"They would agree with the surveys and recommend that most companies allow their employees to work remotely full-time to boost productivity.",
+"They would claim that workers in the surveys exaggerated the number of routine tasks they completed each day at home."
 ],
 "answer": 0,
 "expl": "Ular kundalik ish biroz ko'payganini tan oladi, lekin so'rovnomalar uzoq muddatli qiymatni (lavozim, g'oyalar) o'lchamasligini aytadi.",
 "difficulty": "Medium"
 },
 {
-"passage": "Text 1\nThe discovery of water ice in permanently shadowed craters near the Moon's south pole has led some planners to envision a lunar base supplied by local resources. The ice could be melted for drinking water or split into hydrogen and oxygen for rocket fuel, greatly reducing the cost of launching supplies from Earth.\n\nText 2\nPlanetary scientist Paul Hayne notes that estimates of lunar ice vary widely. Some craters may contain thick deposits, but others may hold ice only as a thin frost mixed into the soil, which would be far more expensive to extract. Until robotic missions measure the deposits directly, he argues, plans that depend on lunar ice rest on uncertain assumptions.",
+"passage": "Text 1\nThe discovery of water ice in permanently shadowed craters near the Moon's south pole has led some planners to envision a lunar base supplied largely by local resources. Because sunlight never reaches the floors of these craters, temperatures there remain below -200 degrees Celsius, cold enough to preserve ice over very long periods. The ice could be melted for drinking water or split into hydrogen and oxygen for rocket fuel and breathable air. Since every kilogram of material launched from Earth is costly, planners argue that drawing on such deposits would greatly reduce the cost of launching supplies from Earth and could even make the base a refueling point for more distant missions.\n\nText 2\nMost current estimates of lunar ice, however, are derived indirectly, from instruments on orbiting spacecraft that detect hydrogen or measure how crater surfaces reflect light, rather than from samples collected on the ground. Planetary scientist Paul Hayne notes that estimates of lunar ice vary widely. Some craters may contain thick deposits, but others may hold ice only as a thin frost mixed into the soil, which would be far more expensive to extract. The difference matters: an operation designed around a thick deposit could prove impractical if the ice is thinly scattered. Until robotic missions measure the deposits directly, Hayne argues, plans that depend on lunar ice rest on uncertain assumptions.",
 "prompt": "Based on the texts, how would Hayne (Text 2) most likely view the plans described in Text 1?",
 "choices": [
 "As premature, because the amount and accessibility of the ice have not yet been confirmed",
-"As unrealistic, because water ice cannot be converted into rocket fuel",
-"As well supported, because thick ice deposits have been measured in most craters",
-"As unnecessary, because launching supplies from Earth is becoming less expensive"
+"As unrealistic, because the water ice found in craters cannot be converted into rocket fuel",
+"As well supported, because thick ice deposits have already been measured in most polar craters",
+"As unnecessary, because launching supplies from Earth is quickly becoming less expensive"
 ],
 "answer": 0,
 "expl": "Hayne: muz miqdori noaniq, to'g'ridan-to'g'ri o'lchanmagan — rejalar hali erta (premature).",
 "difficulty": "Medium"
 },
 {
-"passage": "Text 1\nIn her study of eighteenth-century women writers, literary historian Ana Ruiz argues that anonymous publication was usually a strategy of necessity: women concealed their names to avoid public criticism in a culture that considered authorship unfeminine.\n\nText 2\nLiterary scholar Marcus Hale observes that anonymity was also extremely common among male writers of the period, including many who were already famous. He suggests that anonymous publication often served commercial purposes, allowing publishers to create curiosity about a book's author and generate sales.",
+"passage": "Text 1\nIn her study of eighteenth-century women writers, literary historian Ana Ruiz argues that anonymous publication was usually a strategy of necessity. Surveying hundreds of novels, poems, and conduct books published by women between 1700 and 1800, Ruiz found that a large majority first appeared without the author's name, often with title pages identifying the writer only as \"a Lady.\" She connects this pattern to the period's prevailing attitudes: in a culture that considered authorship, and especially writing for money, unfeminine, women concealed their names to avoid public criticism. Anonymity, in Ruiz's account, was therefore less a free choice than a form of protection that women adopted under social pressure.\n\nText 2\nLiterary scholar Marcus Hale observes that anonymity was also extremely common among male writers of the period, including many who were already famous and had little reason to fear for their reputations. Examining publishers' letters and advertisements, Hale found that booksellers frequently encouraged anonymous publication and then promoted new titles by inviting readers to guess who had written them. He suggests that anonymous publication often served such commercial purposes, allowing publishers to create curiosity about a book's author and generate sales. Hale does not deny that some women writers sought anonymity for protection, but he maintains that the practice was too widespread among authors of both sexes to be explained by that motive alone.",
 "prompt": "Based on the texts, how would Hale (Text 2) most likely respond to Ruiz's argument (Text 1)?",
 "choices": [
 "He would suggest that Ruiz's explanation may be incomplete, since anonymity was widespread for reasons that did not depend on the author's gender.",
-"He would agree with Ruiz and add that male writers also feared public criticism for writing.",
-"He would argue that women writers of the period never published anonymously.",
-"He would argue that anonymous books sold fewer copies than books published under an author's name."
+"He would agree with Ruiz and add that male writers of the period also concealed their names because they feared public criticism for writing popular novels.",
+"He would argue that women writers of the period rarely published their work anonymously, contrary to Ruiz's claim about their strategy.",
+"He would argue that anonymous books sold fewer copies than books that were published under an author's name."
 ],
 "answer": 0,
 "expl": "Hale erkaklar ham anonim nashr qilganini va tijoriy sabablarni ko'rsatadi — Ruizning izohi to'liq emas bo'lishi mumkin."
 },
 {
-"passage": "Text 1\nMany ecologists argue that reintroducing wolves to Yellowstone National Park in 1995 set off a 'trophic cascade': wolves reduced the number of elk, elk browsed less on young willow and aspen trees, and those trees rebounded along streams. This story has become a textbook example of how top predators shape entire ecosystems.\n\nText 2\nEcologist Thomas Hobbs and colleagues fenced off plots along Yellowstone streams so that elk could not reach them. Even with browsing eliminated, many willows in these plots failed to grow tall. Hobbs notes that decades of heavy elk browsing before 1995 had driven beavers from these streams, and without beaver dams to raise the water table, the soil had become too dry for willows to thrive.",
+"passage": "Text 1\nMany ecologists argue that reintroducing wolves to Yellowstone National Park in 1995, after an absence of roughly seventy years, set off a 'trophic cascade.' In this account, wolves reduced the number of elk on the park's northern range and made the surviving elk warier of lingering in open valleys. Elk therefore browsed less on young willow and aspen trees, and those trees rebounded along streams, stabilizing banks and providing habitat for songbirds. Popularized in documentaries and reproduced in many introductory biology courses, this story has become a textbook example of how top predators, by regulating their prey, can shape the structure of entire ecosystems.\n\nText 2\nEcologist Thomas Hobbs and colleagues fenced off plots along Yellowstone streams so that elk could not reach them, creating conditions in which browsing was not merely reduced but eliminated. Even with browsing eliminated, many willows in these plots failed to grow tall. Hobbs notes that decades of heavy elk browsing before 1995 had driven beavers from these streams, and without beaver dams to raise the water table, the soil had become too dry for willows to thrive. The fenced plots thus pose a difficulty for the familiar account: if willows struggle even when fully protected from elk, a decline in browsing cannot by itself return the streams to their earlier condition.",
 "prompt": "Based on the texts, how would Hobbs and colleagues (Text 2) most likely respond to the ecologists' account in Text 1?",
 "choices": [
 "By arguing that reduced browsing alone may not be sufficient to restore willows because other conditions changed during the period of heavy browsing",
-"By asserting that wolves did not substantially reduce the size of Yellowstone's elk population after they were reintroduced in 1995",
+"By asserting that wolves did not substantially reduce the size of Yellowstone's elk population in the two decades after they were reintroduced to the park in 1995",
 "By agreeing that the recovery of willows along streams offers strong support for the idea that top predators control ecosystems",
-"By suggesting that beavers, rather than elk, were primarily responsible for the decline of willows along Yellowstone's streams"
+"By suggesting that beavers, rather than elk, were primarily responsible for the decline of willows along Yellowstone's streams before 1995"
 ],
 "answer": 0,
-"expl": "Text 2: elk kira olmagan joyda ham tol o'smagan — chunki qunduzlar yo'qolib, tuproq qurigan. Demak faqat browsingni kamaytirish yetarli emas. B: bo'rilar elk soniga ta'sir qilmagan degan gap yo'q. C: Text 2 bunga shubha qiladi. D: qunduzlar tollarni yo'qotmagan; aksincha ularning yo'qligi muammo, ular esa elk tufayli yo'qolgan.",
+"expl": "Text 2: elk kira olmaydigan joyda ham tollar o'smagan — qunduzlar ketib, tuproq qurigan. Demak faqat browsingni kamaytirish yetarli emas. Bo'rilar elk sonini kamaytirmagan degan gap Text 2 da yo'q. 'Qunduzlar tollarni yo'qotgan' degan variant xato: muammo qunduzlarning yo'qligi, ular esa elk tufayli ketgan; tollar tiklanishini kuchli dalil degan variantga esa Text 2 shubha bildiradi.",
 "difficulty": "Hard"
 },
 {
-"passage": "Text 1\nThe rise of streaming services has been a boon for musicians, some commentators argue. Artists no longer need a record label to reach a global audience; they can upload their work directly and be discovered by listeners anywhere in the world. The number of artists earning at least some income from recorded music has never been higher.\n\nText 2\nIt is true that more musicians than ever receive streaming payments. But economist Will Page points out that these payments are distributed extremely unevenly: in a recent year, the top 1 percent of artists received the vast majority of streaming revenue, while most artists earned only a few dollars. Access to a global audience, Page suggests, is not the same as access to a living.",
+"passage": "Text 1\nThe rise of streaming services has been a boon for musicians, some commentators argue. In earlier decades, an artist who hoped to reach listeners beyond a local scene typically needed a record label to finance recording, manufacture albums, and secure placement in stores and on radio. Today, artists no longer need a record label to reach a global audience; they can upload their work directly to streaming platforms and be discovered by listeners anywhere in the world, sometimes through automatically generated playlists. As a result, the commentators point out, the number of artists earning at least some income from recorded music has never been higher.\n\nText 2\nIt is true that more musicians than ever receive streaming payments. But economist Will Page points out that these payments are distributed extremely unevenly: in a recent year, the top 1 percent of artists received the vast majority of streaming revenue, while most artists earned only a few dollars. Such figures reflect the way most services pay out: money from subscriptions and advertising is pooled and then divided according to each artist's share of total streams, so that a small number of very popular performers capture much of it. For an artist whose songs draw only a few thousand plays, the payments are negligible. Access to a global audience, Page suggests, is not the same as access to a living.",
 "prompt": "Based on the texts, how would the author of Text 2 most likely respond to the commentators' argument in Text 1?",
 "choices": [
 "By accepting a fact the commentators cite while disputing that it shows streaming has substantially benefited most musicians",
-"By rejecting the commentators' claim that more artists earn income from recorded music than in the past",
+"By rejecting the commentators' claim that more artists earn at least some income from recorded music than at any time in the past",
 "By arguing that record labels distribute income more evenly among artists than streaming services do",
 "By agreeing that the ability to reach global audiences outweighs concerns about how revenue is distributed"
 ],
 "answer": 0,
-"expl": "Text 2 'It is true...' — daromad oluvchilar ko'payganini tan oladi, lekin taqsimot notekis ekanini ko'rsatib, bu ko'pchilikka foyda degani emasligini aytadi. B: bu faktni rad etmaydi. C: leybllar bilan taqqoslash yo'q. D: aksincha, auditoriya ≠ tirikchilik.",
+"expl": "Text 2 'It is true...' deb daromad oluvchilar ko'payganini tan oladi, lekin pul juda notekis taqsimlanganini ko'rsatib, bu ko'pchilik musiqachilarga foyda degani emasligini aytadi. Bu faktni rad etgan variant xato — Text 2 uni qabul qiladi. Leybllar bilan taqqoslash matnda yo'q; 'global auditoriya muhimroq' degan variant esa Text 2 ga teskari: auditoriya hali tirikchilik degani emas.",
 "difficulty": "Hard"
 },
 {
-"passage": "Text 1\nIn 1929, astronomer Edwin Hubble reported that distant galaxies are moving away from us at speeds proportional to their distance. Because this relationship implies an expanding universe, Hubble is widely credited with discovering cosmic expansion.\n\nText 2\nTwo years before Hubble's paper, Belgian physicist Georges Lemaître published an article deriving the same proportional relationship from Einstein's equations and estimating its value from existing observations. Lemaître's paper, written in French in a little-read journal, attracted scant notice until it was translated in 1931. In 2018, the International Astronomical Union voted to rename the relationship the Hubble–Lemaître law.",
+"passage": "Text 1\nIn 1929, astronomer Edwin Hubble, working at the Mount Wilson Observatory in California, reported that distant galaxies are moving away from us at speeds proportional to their distance. To reach this conclusion, Hubble combined distance estimates for about two dozen galaxies, based largely on the brightness of stars within them, with measurements of how far each galaxy's light had been shifted toward the red end of the spectrum, an indication of its speed. Because this relationship implies an expanding universe, Hubble is widely credited with discovering cosmic expansion, and for decades the relationship between distance and speed was known simply as Hubble's law.\n\nText 2\nTwo years before Hubble's paper, however, Belgian physicist Georges Lemaître published an article deriving the same proportional relationship from Einstein's equations of general relativity and estimating its value from existing observations of galaxies' distances and speeds. Lemaître's paper, written in French in a little-read Belgian journal, attracted scant notice until it was translated into English in 1931, and even the translated version omitted the passage containing his numerical estimate. As a result, many astronomers long remained unaware of how fully Lemaître had anticipated Hubble's result. In 2018, the International Astronomical Union voted to recommend that the relationship be renamed the Hubble–Lemaître law.",
 "prompt": "Based on the texts, the author of Text 2 would most likely characterize the view described in Text 1 as",
 "choices": [
 "incomplete, because it overlooks a researcher whose earlier work anticipated Hubble's finding.",
-"mistaken, because Hubble's observations of galaxies were later shown to be inaccurate.",
+"mistaken, because Hubble's observations of distant galaxies were later shown to be highly inaccurate.",
 "reasonable, because Lemaître's work was based only on theory and not on observations.",
 "outdated, because astronomers no longer believe that the universe is expanding."
 ],
 "answer": 0,
-"expl": "Text 2 Lemaître ikki yil oldin xuddi shu munosabatni chiqarganini aytadi — Text 1 dagi 'faqat Hubble' qarashi to'liq emas. B: Hubble kuzatuvlari xato deyilmagan. C: Lemaître mavjud kuzatuvlardan ham foydalangan — 'faqat nazariya' noto'g'ri. D: kengayish rad etilmagan.",
+"expl": "Text 2 Lemaître ikki yil oldin xuddi shu munosabatni chiqarganini aytadi — demak 'faqat Hubble kashf etgan' qarashi to'liq emas. Hubble kuzatuvlari xato bo'lgan degan gap yo'q. 'Lemaître faqat nazariyaga tayangan' degan variant ham xato — u mavjud kuzatuvlardan qiymatni hisoblagan; koinot kengayishi esa rad etilmagan.",
 "difficulty": "Hard"
 },
 {
-"passage": "Text 1\nDoes writing notes by hand help students learn more than typing them? In a widely cited 2014 study, Pam Mueller and Daniel Oppenheimer found that students who took notes on laptops tended to transcribe lectures word for word, while students writing by hand summarized in their own words, and the handwriters performed better on conceptual questions.\n\nText 2\nWhen researchers Kayla Morehead, John Dunlosky, and Katherine Rawson repeated Mueller and Oppenheimer's experiments with larger samples, they found that the differences between laptop and handwritten note-takers on conceptual questions were small and not statistically reliable. They caution that the original results, though intriguing, may not justify policies banning laptops from classrooms.",
+"passage": "Text 1\nDoes writing notes by hand help students learn more than typing them? In a widely cited 2014 study, Pam Mueller and Daniel Oppenheimer had college students watch recorded lectures while taking notes either on laptops or by hand, and then tested them on the material. Students who took notes on laptops tended to transcribe lectures word for word, while students writing by hand summarized in their own words, and the handwriters performed better on conceptual questions. The study received extensive media coverage, and its findings were soon invoked by instructors and commentators who argued that laptops interfere with the kind of mental processing that deep learning requires.\n\nText 2\nReplication is a routine safeguard in psychology: an effect observed in a single set of experiments with modest numbers of participants may shrink or vanish when the procedure is repeated with more people. When researchers Kayla Morehead, John Dunlosky, and Katherine Rawson repeated Mueller and Oppenheimer's experiments with larger samples, they found that the differences between laptop and handwritten note-takers on conceptual questions were small and not statistically reliable. Such a result does not show that the original effect is absent, only that it is less certain than it first appeared. The researchers caution that the original results, though intriguing, may not justify policies banning laptops from classrooms.",
 "prompt": "Based on the texts, how would Morehead, Dunlosky, and Rawson (Text 2) most likely respond to the findings described in Text 1?",
 "choices": [
 "They would argue that the findings did not hold up clearly enough in follow-up research to support firm conclusions.",
-"They would argue that the findings show laptops should be banned from classrooms.",
-"They would argue that students who transcribe lectures word for word perform better than students who summarize.",
-"They would argue that the original study failed to measure students' performance on conceptual questions."
+"They would argue that the findings show that laptops should be removed from classrooms to improve students' learning.",
+"They would argue that students who transcribe lectures word for word tend to perform better than students who summarize.",
+"They would argue that the original study did not measure how students performed on conceptual questions at all."
 ],
 "answer": 0,
-"expl": "Text 2: kattaroq namunada farq kichik va ishonchsiz — asl natijalar qat'iy xulosa uchun yetarli emas. B: aksincha, taqiqlashni oqlamaydi deyishadi. C: bunday da'vo qilinmaydi. D: asl tadqiqot konseptual savollarni o'lchagan.",
+"expl": "Text 2: katta namunada farq kichik va statistik ishonchsiz chiqqan — asl natijalar qat'iy xulosa uchun yetarli emas. Noutbuklarni sinfdan olib tashlash kerak degan variant teskari — ular aynan bunday taqiqni oqlamaydi deyishadi. So'zma-so'z yozganlar yaxshiroq degan da'vo yo'q, asl tadqiqot esa konseptual savollarni o'lchagan.",
 "difficulty": "Hard"
 },
 {
-"passage": "Text 1\nThe shift from foraging to farming roughly 10,000 years ago is usually portrayed as a triumph: agriculture produced food surpluses that allowed populations to grow and complex societies to emerge. From this perspective, early farmers were better off than the hunter-gatherers who came before them.\n\nText 2\nSkeletal remains tell a more complicated story. Anthropologists have found that in many regions, the transition to farming coincided with a decline in average height and an increase in dental cavities and signs of nutritional stress. Farming may have supported larger populations, but individual farmers often ate less varied diets and worked longer hours than their foraging ancestors.",
+"passage": "Text 1\nThe shift from foraging to farming, which began roughly 10,000 years ago in Southwest Asia and arose independently in several other regions, is usually portrayed as a triumph of human ingenuity. By domesticating plants such as wheat, rice, and maize and animals such as goats and cattle, early farmers produced food surpluses that allowed populations to grow, permanent villages to form, and eventually complex societies, with their specialized crafts, writing, and cities, to emerge. From this perspective, early farmers were better off than the hunter-gatherers who came before them, having traded an uncertain life of constant movement for a more secure and settled existence.\n\nText 2\nSkeletal remains tell a more complicated story. By comparing bones and teeth from burial sites dated to just before and just after the local adoption of agriculture, anthropologists have found that in many regions the transition to farming coincided with a decline in average height and an increase in dental cavities and signs of nutritional stress, such as defects in tooth enamel that form during periods of childhood hunger. Farming may have supported larger populations, but individual farmers often ate less varied diets, heavy in starchy grains, and worked longer hours than their foraging ancestors. A growing population, in other words, is not the same as a population of healthier individuals.",
 "prompt": "Based on the texts, how would the author of Text 2 most likely respond to the perspective described in Text 1?",
 "choices": [
 "By acknowledging that agriculture enabled population growth while questioning whether it improved the well-being of individual farmers",
-"By denying that the adoption of agriculture produced the food surpluses that allowed complex societies to emerge",
+"By denying that the adoption of agriculture ever produced the food surpluses that allowed larger populations and complex societies to emerge",
 "By arguing that populations of hunter-gatherers grew more rapidly than early farming populations did in most regions",
 "By suggesting that the decline in average height among early farmers resulted from factors unrelated to their diets"
 ],
 "answer": 0,
-"expl": "Text 2: 'Farming may have supported larger populations' — o'sishni tan oladi, lekin suyak dalillari ayrim dehqonlarning ahvoli yomonlashganini ko'rsatadi. B: ortiqcha oziq-ovqatni inkor etmaydi. C: bunday taqqoslash yo'q. D: aksincha, ovqat kamroq xilma-xil bo'lgan.",
+"expl": "Text 2 'Farming may have supported larger populations' deb o'sishni tan oladi, lekin suyak dalillari alohida dehqonlar ahvoli yomonlashganini ko'rsatadi. Ortiqcha oziq-ovqatni butunlay inkor etgan variant xato. Bo'y pasayishi ovqatga bog'liq emas degan variant ham teskari — Text 2 aynan ovqat kamroq xilma-xil bo'lganini aytadi; ovchilar aholisi tezroq o'sgani haqida esa gap yo'q.",
 "difficulty": "Hard"
 },
 {
-"passage": "Text 1\nScholars have often read the Renaissance painter Sofonisba Anguissola's many self-portraits as expressions of personal vanity or as simple practice pieces produced because she lacked access to other models.\n\nText 2\nArt historian Mary Garrard argues that Anguissola's self-portraits were a deliberate professional strategy. As a woman, Anguissola could not easily obtain public commissions, so she used self-portraits, which were collected by aristocrats as curiosities, to circulate her image and demonstrate her skill to potential patrons. In several of them she depicts herself painting or playing an instrument, emphasizing her accomplishments rather than her appearance.",
+"passage": "Text 1\nSofonisba Anguissola, born in Cremona around 1532, was among the first women painters of the Italian Renaissance to achieve international fame. She is also notable for the unusual number of self-portraits she produced over her long career, ranging from small miniatures to larger canvases. Scholars have often read these works dismissively: either as expressions of personal vanity or as simple practice pieces produced because she lacked access to other models, such as the hired sitters that male artists of the period routinely studied in workshops. On either reading, the self-portraits reveal little about Anguissola's ambitions as a professional artist and deserve less attention than her other works.\n\nText 2\nArt historian Mary Garrard argues that Anguissola's self-portraits were a deliberate professional strategy. As a woman, Anguissola could not easily obtain public commissions, so she used self-portraits, which were collected by aristocrats as curiosities, to circulate her image and demonstrate her skill to potential patrons. A small portrait could travel far beyond Cremona, passing among courts and collectors who might never meet the painter herself. In several of the self-portraits she depicts herself painting or playing an instrument, emphasizing her accomplishments rather than her appearance. Details that might seem incidental thus become, on this reading, elements of a carefully managed public identity designed to attract the patronage her career depended on.",
 "prompt": "Based on the texts, how would Garrard (Text 2) most likely respond to the scholars' interpretation in Text 1?",
 "choices": [
 "By arguing that it overlooks how the self-portraits served Anguissola's efforts to advance her career",
@@ -647,9 +647,9 @@
 "prompt": "Which choice best states the main idea of the text?",
 "choices": [
 "Hester is troubled less by the size of the city than by the way its residents ignore one another.",
-"Hester regrets leaving the countryside because she misses her mother.",
-"Hester is frightened by the crowds she encounters on her way to work.",
-"Hester enjoys the anonymity of city life after the constant attention of her village."
+"Hester regrets leaving the countryside because she misses her mother and her friends in the village.",
+"Hester is frightened by the large crowds she encounters each morning on her way to work.",
+"Hester enjoys the anonymity of city life after the constant attention she received in her village."
 ],
 "answer": 0,
 "expl": "Matn aniq aytadi: shahar uni qo'rqitmadi, uni odamlarning bir-biriga qaramasligi bezovta qildi. 'Enjoys' varianti 'unsettled' ga zid."
@@ -659,9 +659,9 @@
 "prompt": "According to the text, what did Tursunov's research reveal?",
 "choices": [
 "Some major climate shifts in the region occurred more rapidly than had been previously thought.",
-"The chemistry of flowstones varies little from one layer to the next.",
-"The region's climate has been dry for most of the past 40,000 years.",
-"Earlier climate models of the region relied on data from flowstones."
+"The chemistry of the flowstones varies little from one layer to the next over thousands of years.",
+"The region's climate has remained dry for most of the past 40,000 years, with few major changes.",
+"Earlier climate models of the region relied mainly on data collected from similar flowstones."
 ],
 "answer": 0,
 "expl": "Oxirgi gap: ba'zi o'zgarishlar 100 yildan kam vaqtda bo'lgan — avvalgi modellar taxmin qilganidan tezroq."
@@ -683,8 +683,8 @@
 "prompt": "Based on the text, what is true about the proprietor?",
 "choices": [
 "He has a detailed knowledge of his shop's disorganized collection.",
-"He has recently created a catalogue of the books in his shop.",
-"He specializes in selling books about beekeeping.",
+"He has recently created a detailed catalogue of the books in his shop.",
+"He specializes in selling old and rare books about beekeeping.",
 "He is reluctant to help customers who ask for particular books."
 ],
 "answer": 0,
@@ -695,9 +695,9 @@
 "prompt": "Which choice best states the main idea of the text?",
 "choices": [
 "Research suggests that a moderate level of disturbance may help maintain coral diversity on reefs.",
-"Coral reefs around Tonga are more diverse than rainforests are.",
-"Frequent severe storms are the main threat to coral reefs around Tonga.",
-"Fast-growing coral species are more resistant to storm damage than other species are."
+"Coral reefs around Tonga contain a greater variety of species than most tropical rainforests do.",
+"Frequent severe storms are the main threat to the survival of coral reefs and their species around Tonga.",
+"Fast-growing coral species are more resistant to storm damage than other coral species are."
 ],
 "answer": 0,
 "expl": "Asosiy g'oya: o'rtacha bezovtalik tur xilma-xilligini saqlaydi. Kuchli bo'ronlar tafsilot, asosiy fikr emas."
@@ -707,9 +707,9 @@
 "prompt": "Based on the text, how does the grandfather's view of the tractor differ from the father's?",
 "choices": [
 "The grandfather believes that truly owning the tractor requires understanding how it works, whereas the father sees that effort as unnecessary.",
-"The grandfather believes the tractor is poorly made, whereas the father thinks it is reliable.",
-"The grandfather wants to sell the tractor, whereas the father wants to keep it.",
-"The grandfather prefers to farm by hand, whereas the father prefers to use machines."
+"The grandfather believes the tractor is poorly made and unreliable, whereas the father thinks it will last for many years.",
+"The grandfather wants to sell the old tractor to a neighbor, whereas the father wants to keep it and use it on the farm.",
+"The grandfather prefers to do most of the farm work by hand, whereas the father prefers to rely on modern machines such as the family's new tractor."
 ],
 "answer": 0,
 "expl": "Bobo mashinani to'liq tushunishni 'yagona halol egalik' deb biladi; ota esa buni yozni isrof qilish deb hisoblaydi."
@@ -719,9 +719,9 @@
 "prompt": "Which choice best states the main idea of the text?",
 "choices": [
 "Leila comes to see that her grandfather's habit of saving things, which she once dismissed, has real value.",
-"Leila's grandfather regrets keeping so many useless items in his shed.",
-"The storm caused the town's hardware store to close permanently.",
-"Leila's neighbors resent her grandfather for refusing to share his tools."
+"Leila's grandfather regrets having kept so many useless items in his shed over the years, even after the storm.",
+"The storm caused the town's only hardware store to close permanently, leaving residents without supplies.",
+"Leila's neighbors resent her grandfather for refusing to lend them any of the tools he has saved."
 ],
 "answer": 0,
 "expl": "Avval Leyla buni tartibsizlik deb o'ylagan; bo'rondan keyin bobosining odati foydali ekanini ko'radi."
@@ -731,9 +731,9 @@
 "prompt": "According to the text, what did the 2018 genetic study reveal?",
 "choices": [
 "The horses associated with the Botai people are not the ancestors of today's domestic horses.",
-"The Botai people did not keep horses or consume mare's milk.",
-"Przewalski's horses descend from modern domestic horses that escaped into the wild.",
-"Horse domestication began in Kazakhstan more recently than 4,200 years ago."
+"The Botai people did not keep horses themselves but hunted wild horses and drank mare's milk.",
+"Przewalski's horses are descended from modern domestic horses that escaped and became wild.",
+"Horse domestication began in Kazakhstan considerably more recently than 4,200 years ago."
 ],
 "answer": 0,
 "expl": "Tadqiqot: Botai otlari zamonaviy uy otlarining emas, Prjevalskiy otlarining ajdodi. Boshqa variantlar matnga zid."
@@ -743,9 +743,9 @@
 "prompt": "Which choice best states the main idea of the text?",
 "choices": [
 "Jacobs argued that streets should be judged by how well they support varied human activity rather than by traffic flow.",
-"Jacobs believed that cars should be banned from all city streets.",
-"Urban planners in the 1960s were mainly concerned with public safety.",
-"Jacobs found that office workers were the most important users of city streets."
+"Jacobs believed that cars should be banned from city streets so that pedestrians could use them freely at all times of day.",
+"Urban planners in the 1960s were mainly concerned with making city streets safer for pedestrians.",
+"Jacobs found that office workers were the most important users of city streets in most neighborhoods."
 ],
 "answer": 0,
 "expl": "Jacobs mashinalar tezligi o'rniga ko'chaning turli odamlar tomonidan ishlatilishini muvaffaqiyat mezoni deb bilgan.",
@@ -756,9 +756,9 @@
 "prompt": "Based on the text, which choice best describes how an octopus controls its arms?",
 "choices": [
 "The brain gives broad instructions, and the arms handle many specifics of movement themselves.",
-"The brain controls every movement of each arm directly.",
-"The arms act entirely on their own and ignore signals from the brain.",
-"Each arm contains a separate brain that is larger than the central brain."
+"The brain controls every movement of each arm directly, even the smallest ones.",
+"The arms act on their own and largely ignore the signals they receive from the brain.",
+"Each arm contains a separate brain that is larger and more complex than the central brain of the octopus."
 ],
 "answer": 0,
 "expl": "Miya umumiy buyruq beradi, qo'llar tafsilotlarni o'zi hal qiladi.",
@@ -769,9 +769,9 @@
 "prompt": "Which choice best states the main idea of the text?",
 "choices": [
 "Claims about lacking time really reflect choices about priorities, which people should examine honestly.",
-"People who say they have no time to read are usually being dishonest.",
-"Reading is the most valuable way for people to spend their free time.",
-"Most people waste their time on activities they do not enjoy."
+"People who say they have no time to read are usually being dishonest with others about how they spend their day.",
+"Reading is the most valuable way for people to spend their free time, so it should take priority over other activities.",
+"Most people waste much of their time on activities that they do not actually enjoy or find useful."
 ],
 "answer": 0,
 "expl": "Vaqt 'topilmaydi', bir ishdan olinib boshqasiga beriladi — asosiy savol: vaqt biz tanlagan joyga ketdimi."
@@ -781,12 +781,12 @@
 "prompt": "Which choice best states the main idea of the text?",
 "choices": [
 "Because debris-covered glaciers can lose substantial ice without retreating much, the position of a glacier's front may be an unreliable measure of its response to warming.",
-"Because rock debris shields glacial ice from sunlight, debris-covered glaciers in the Himalayas are largely protected from the effects of rising temperatures.",
-"Satellite measurements of glacier thickness are less reliable than ground-based observations of where a glacier's front is located.",
+"Because rock debris shields glacial ice from sunlight, debris-covered glaciers in the Himalayas are largely protected from the effects of rising temperatures and lose little ice overall.",
+"Satellite measurements of glacier thickness are less reliable than ground-based observations of where a glacier's front is located each year.",
 "Rock debris absorbs heat from the sun and therefore causes Himalayan glaciers to thin more quickly than they would if they were bare."
 ],
 "answer": 0,
-"expl": "Asosiy g'oya: qoplangan muzliklar sekin chekinadi, lekin deyarli bir xil tezlikda yupqalashadi — demak chekinish ko'rsatkichi aldamchi. B: 'chidamliroq' — yupqalanish buni rad etadi. C: usullar aniqligi taqqoslanmaydi. D: qoplama yupqalanishni tezlashtirmaydi; 'almost as quickly'.",
+"expl": "Asosiy g'oya: qoplangan muzliklar sekin chekinadi, lekin deyarli bir xil tezlikda yupqalashadi — demak muzlik chetining joylashuvi isishni o'lchashda ishonchsiz ko'rsatkich. 'Qoplama muzni himoya qiladi, kam muz yo'qotiladi' degan variantni yupqalanish rad etadi. 'Qoplama yupqalanishni tezlashtiradi' degan variant ham xato — matn 'almost as quickly' deydi; usullar aniqligi esa umuman taqqoslanmaydi.",
 "difficulty": "Hard"
 },
 {
@@ -833,12 +833,12 @@
 "prompt": "Which choice best states the main idea of the text?",
 "choices": [
 "The climate importance of a mature rainforest lies mainly in the carbon it holds rather than in any net removal of carbon from the air.",
-"Because mature rainforests release more carbon dioxide than they absorb, they contribute to rather than slow climate change.",
+"Because mature rainforests release more carbon dioxide than they absorb through photosynthesis, they contribute to rather than slow climate change.",
 "Rainforests produce most of the oxygen that animals depend on, which is why they are often called the lungs of the planet.",
 "Because mature rainforests absorb little carbon on balance, clearing them would have little effect on atmospheric carbon."
 ],
 "answer": 0,
-"expl": "Malhi: yetuk o'rmon yutgan va chiqargan CO2 taxminan teng; qadri — saqlangan uglerodda. B: 'more than' — noto'g'ri, 'roughly as much'. C: kislorod haqida 'o'pka' tasvirini rad etadi. D: teskari — kesilsa uglerod chiqadi.",
+"expl": "Malhi: yetuk o'rmon yutgan va chiqargan CO2 taxminan teng ('roughly as much'), qadri esa daraxt va tuproqda saqlangan uglerodda. 'Yutganidan ko'p chiqaradi' degan variant matnga zid. 'Kesish kam ta'sir qiladi' degan variant teskari — kesilsa saqlangan uglerod chiqadi; kislorod haqidagi variant esa matn rad etgan 'o'pka' tasvirini takrorlaydi.",
 "difficulty": "Hard"
 },
 {
@@ -846,12 +846,12 @@
 "prompt": "According to the text, why did acquaintances prove especially useful to job seekers?",
 "choices": [
 "They had access to information that differed from what job seekers' close contacts could provide.",
-"They were more willing than close friends to recommend job seekers to employers.",
+"They were more willing than close friends and family members to personally recommend job seekers to employers.",
 "They were more likely than family members to work in the industries job seekers wanted to enter.",
 "They saw job seekers only occasionally and therefore had fewer obligations to other people."
 ],
 "answer": 0,
-"expl": "Tanishlar boshqa ijtimoiy doiralarda — shuning uchun yaqinlar bilmagan ma'lumotni beradi. B: tavsiya qilishga tayyorlik aytilmagan. C: soha haqida gap yo'q. D: majburiyatlar tilga olinmagan.",
+"expl": "Tanishlar boshqa ijtimoiy doiralarda yuradi, shuning uchun yaqinlar bilmagan yangi ma'lumotni yetkazadi. Ish beruvchiga tavsiya qilishga tayyorlik yoki kerakli sohada ishlash haqida matnda gap yo'q. 'Kam uchrashgani uchun majburiyatlari kam' degan variant ham matnda aytilmagan sabab.",
 "difficulty": "Hard"
 }
 ],
@@ -861,9 +861,9 @@
 "prompt": "Which finding, if true, would most directly support Okafor's hypothesis?",
 "choices": [
 "Three years after bleaching, the open sections had significantly more young coral colonies than the caged sections did.",
-"The caged sections contained more species of fish than the open sections did.",
-"Parrotfish were observed feeding more often on healthy coral than on bleached coral.",
-"Algae covered a similar proportion of the caged and open sections three years after bleaching."
+"Three years after bleaching, the caged sections had significantly more young coral colonies than the open sections did.",
+"Parrotfish were seen scraping algae more often on healthy reef sections than on reef sections that had been bleached.",
+"Three years after bleaching, the open and caged sections had about the same number of young coral colonies."
 ],
 "answer": 0,
 "expl": "Gipoteza: parrotfish joy ochib, yangi korallar o'sishiga yordam beradi. Ochiq qismda yosh korallar ko'proq bo'lsa — to'g'ridan-to'g'ri tasdiq. Suv o'tlari bir xil bo'lsa, aksincha gipotezani zaiflashtiradi."
@@ -873,9 +873,9 @@
 "prompt": "Which finding, if true, would most directly support Nair's claim?",
 "choices": [
 "Diaries kept by agricultural laborers in the 1820s describe their workdays mainly in terms of completed chores and sunrise and sunset, rarely mentioning clock times.",
-"Clockmakers in eighteenth-century London sold more clocks each decade than they had in the previous decade.",
-"Factory owners in the eighteenth century frequently fined workers for arriving late.",
-"Eighteenth-century clocks were often inaccurate by as much as fifteen minutes a day."
+"Diaries kept by agricultural laborers in the 1760s describe their workdays mainly in terms of clock times, often noting the exact hour at which each task began.",
+"Records show that clocks became common in the homes of wealthy families in eighteenth-century England, often placed in the entrance hall where guests could see them.",
+"Factory owners in the 1780s posted rules requiring workers to arrive at a set hour, and they fined workers who arrived even a few minutes after the bell had rung."
 ],
 "answer": 0,
 "expl": "Nair: qishloq ishchilari XIX asrgacha vazifa va kun yorug'ligi bo'yicha yashagan. 1820-yillardagi kundaliklar aynan shuni ko'rsatadi. Zavod jarimalari esa aksincha soatga e'tiborni ko'rsatadi."
@@ -885,9 +885,9 @@
 "prompt": "Which finding from Lin's study, if true, would most strongly support her hypothesis?",
 "choices": [
 "Participants who explained the passage to a silent listener recalled substantially more of it than did participants who reread it.",
-"Participants who reread the passage spent more total time studying than did participants who explained it.",
-"Participants in both groups rated the passage as equally difficult.",
-"Participants who explained the passage said they enjoyed the task more than did those who reread it."
+"Participants who reread the passage recalled about as much of it as did participants who explained it aloud to a silent listener in the study.",
+"Participants who explained the passage to a listener who asked questions recalled more than those whose listener stayed silent.",
+"Participants who explained the passage to a silent listener said the task felt harder and more tiring than simply rereading it."
 ],
 "answer": 0,
 "expl": "Gipoteza eslab qolish haqida — tushuntirgan guruh ko'proq eslab qolgani bevosita tasdiqlaydi. Yoqtirish yoki vaqt esa eslab qolishni o'lchamaydi."
@@ -909,9 +909,9 @@
 "prompt": "Which finding, if true, would most directly weaken Moreno's hypothesis?",
 "choices": [
 "Speakers of languages with evidential markers and speakers of languages without them recalled how they had learned about events with similar accuracy.",
-"Speakers of languages with evidential markers recalled the events in the clips more accurately than speakers of other languages did.",
-"Some languages with evidential markers distinguish among more than two sources of information.",
-"Participants in both groups found some video clips more memorable than others."
+"Speakers of languages with evidential markers recalled how they had learned about events more accurately than did speakers of languages without them.",
+"Speakers of languages with evidential markers used those markers more often when describing events they had witnessed than when describing hearsay.",
+"Speakers of languages with and without evidential markers recalled the events themselves with similar accuracy, though neither was asked about sources."
 ],
 "answer": 0,
 "expl": "Gipoteza: evidentsial tillar egalari manbaga ko'proq e'tibor beradi. Agar ikki guruh manbani bir xil aniqlikda eslasa — gipoteza zaiflashadi."
@@ -921,9 +921,9 @@
 "prompt": "Which finding, if true, would most directly challenge the second team's conclusion?",
 "choices": [
 "The study by Okafor and Lindgren received lower ratings for both transparency and comparability than the study by Vasquez and colleagues did.",
-"The study by Okafor and Lindgren received high ratings for both transparency and comparability.",
-"The study by Vasquez and colleagues was published more recently than the study by Okafor and Lindgren.",
-"Research team A rated more than a dozen studies of urban heat."
+"The study by Okafor and Lindgren received higher ratings for both transparency and comparability than the study by Vasquez and colleagues did.",
+"The study by Vasquez and colleagues was published several years more recently than the study by Okafor and Lindgren and used a larger data set.",
+"Research team A rated more than a dozen studies of urban heat, and most of them received similar ratings for transparency and comparability."
 ],
 "answer": 0,
 "expl": "Ikkinchi jamoa xulosasi reytinglarga asoslangan. Agar Okafor va Lindgren ikkala reytingda ham pastroq bo'lsa, xulosa bevosita shubha ostida qoladi."
@@ -933,9 +933,9 @@
 "prompt": "Which finding, if true, would most directly support Reppert's hypothesis?",
 "choices": [
 "Monarchs whose antennae were painted to block light cues flew in random directions, while monarchs with clear-painted antennae flew in the correct direction.",
-"Monarchs that were kept in darkness for several days lost weight more quickly than monarchs kept in normal light.",
-"Monarchs can detect the scent of milkweed plants from a distance of several meters using their antennae.",
-"Monarchs migrate farther in years when temperatures along their route are higher than average."
+"Monarchs whose antennae were painted to block light cues flew in the correct direction just as reliably as did the monarchs whose antennae had been painted with clear paint.",
+"Monarchs that were kept in darkness for several days lost weight more quickly than monarchs kept under a normal daily cycle of light and dark.",
+"Monarchs can detect the scent of milkweed plants from a distance of several meters using sensitive receptors located along their antennae."
 ],
 "answer": 0,
 "expl": "Gipoteza: vaqtni mo'ylovlardagi soat kuzatadi. Mo'ylovlarga yorug'lik tushmasa yo'nalish buziladi — to'g'ridan-to'g'ri dalil. Qolganlari vaqt/yo'nalish bilan bog'liq emas."
@@ -945,24 +945,24 @@
 "prompt": "Which quotation from \"The Silent Orchard\" most effectively illustrates the claim?",
 "choices": [
 "\"Pavel told everyone that he no longer cared what the old man thought of his work, yet each evening he lingered by the gate until his father had walked the rows and nodded.\"",
-"\"Pavel rose before dawn and worked until the light failed, pruning the trees his grandfather had planted.\"",
-"\"Pavel's father had never praised any of his children, believing that praise made them lazy.\"",
-"\"The orchard produced more apples that year than it had in a decade, though no one in the family could say why.\""
+"\"Pavel rose before dawn and worked until the light failed, pruning the trees his grandfather had planted, and he never once stopped to ask his father's opinion.\"",
+"\"Pavel's father had never praised any of his children, believing that praise made young people lazy, and he said as much to any neighbor at the Sunday market who would listen.\"",
+"\"The orchard produced more apples that year than it had in a decade, though no one in the family, not even Pavel's father, could say exactly why it had done so.\""
 ],
 "answer": 0,
-"expl": "Da'vo: tan olmaydi (\"no longer cared\" deydi), lekin otasining roziligini qadrlaydi (bosh irg'ashini kutadi). Faqat A ikkalasini ko'rsatadi."
+"expl": "Da'vo: Pavel tan olmaydi, lekin otasining roziligini qadrlaydi. To'g'ri iqtibosda u 'no longer cared' deydi, ammo har kechqurun otasi qatorlarni aylanib bosh irg'amaguncha darvoza oldida kutadi — ikkala qism ham bor. Otasidan hech qachon fikr so'ramagani haqidagi iqtibos aksincha befarqlikni ko'rsatadi; otasi maqtamasligi yoki hosil haqidagi iqtiboslar Pavelning his-tuyg'usini ko'rsatmaydi."
 },
 {
 "passage": "Anthropologist Polly Wiessner recorded conversations among the Ju/'hoan people of southern Africa and compared talk during the day with talk around evening fires. She claims that firelight conversation served a distinctive social function, helping to transmit cultural knowledge and strengthen bonds across large groups.",
 "prompt": "Which finding from Wiessner's study, if true, would most directly support her claim?",
 "choices": [
 "Daytime talk mostly concerned practical matters such as land and food, while about 80% of firelight talk consisted of stories about people, many of whom were not present.",
-"The Ju/'hoan people spent more hours in conversation during the day than at night.",
-"Fires were used by the Ju/'hoan people for cooking as well as for warmth.",
-"Some Ju/'hoan communities had stopped building evening fires by the time of the study."
+"Firelight talk mostly concerned practical matters such as land and food, while daytime talk consisted largely of stories about other people, many of whom were not present.",
+"Conversations around evening fires lasted longer and included more participants than daytime conversations did, and they often continued well past midnight.",
+"About 80% of daytime talk and about 80% of firelight talk consisted of stories about people, many of whom were not present at the time the stories were told."
 ],
 "answer": 0,
-"expl": "Da'vo: olov atrofidagi suhbat alohida ijtimoiy vazifaga ega. A kunduzgi va kechki suhbat mazmunini solishtirib, kechqurun hikoyalar (madaniy bilim) ustunligini ko'rsatadi.",
+"expl": "Da'vo: olov atrofidagi suhbat alohida ijtimoiy vazifaga ega. To'g'ri variant kunduzgi (amaliy: yer, ovqat) va kechki (80% hikoyalar) suhbatni solishtirib, kechqurun madaniy bilim uzatilishini ko'rsatadi. Mazmunni teskari bergan variant kunduzgi suhbatni alohida qilib qo'yadi; 'ikkalasida ham 80% hikoya' degan variant esa farq yo'qligini ko'rsatadi. Faqat davomiylik va ishtirokchilar soni mazmun haqida gapirmaydi.",
 "difficulty": "Medium"
 },
 {
@@ -970,12 +970,12 @@
 "prompt": "Which finding, if true, would most strongly support the researchers' claim?",
 "choices": [
 "After otters returned to a stretch of coast where they had been absent, urchin numbers there fell sharply and kelp cover increased within a few years.",
-"Sea otters spend a large portion of each day grooming their fur to stay warm in cold water.",
-"Kelp forests grow fastest in water that is cold and rich in nutrients.",
-"Sea urchins are eaten by several species of fish as well as by sea otters."
+"After otters returned to a stretch of coast where they had been absent, urchin numbers there stayed about the same, but kelp cover increased within a few years.",
+"Otters along the California coast were observed eating crabs, clams, and snails far more often than they ate sea urchins, especially during the winter months.",
+"Kelp forests along stretches of coast with no otters were thinner than those with otters, and the water in those areas was also warmer in most summers."
 ],
 "answer": 0,
-"expl": "Sabab zanjiri: otter → kirpilar kamayadi → kelp ko'payadi. A aynan shu ketma-ketlikni ko'rsatadi.",
+"expl": "Sabab zanjiri: otter qaytadi → dengiz kirpilari kamayadi → kelp ko'payadi. To'g'ri variant aynan shu ketma-ketlikni ko'rsatadi. Kirpilar soni o'zgarmay kelp ko'paygan degan variant zanjirning o'rta bo'g'inini uzadi. Otterlar asosan qisqichbaqa va mollyuska yegani yoki iliqroq suv haqidagi variant boshqa sababga ishora qiladi.",
 "difficulty": "Medium"
 },
 {
@@ -983,37 +983,37 @@
 "prompt": "Which finding, if true, would most directly support Dittmar's contention?",
 "choices": [
 "Cities that were important trade hubs were significantly more likely to have printing presses by 1500 than cities of similar size that were important religious centers but lacked major trade routes.",
-"Many of the earliest printed books were copies of the Bible and prayer books.",
-"The cost of producing a book by hand was far higher than the cost of producing it with a press.",
-"Printing spread more slowly in regions where fewer people could read."
+"Cities that were important religious centers were significantly more likely to have printing presses by 1500 than were cities of similar size that were important hubs of trade.",
+"Most of the books printed in Europe before 1500 were religious texts, such as Bibles, psalters, and prayer books, and many of those books were ordered directly by churches, monasteries, and bishops across the continent.",
+"Printing presses spread faster in the fifteenth century than any earlier technology for producing books had spread, reaching more than two hundred European cities within about fifty years."
 ],
 "answer": 0,
-"expl": "Dittmar: savdo talabi muhimroq. A savdo shaharlarini diniy markazlar bilan solishtirib, savdo ustunligini ko'rsatadi. B aksincha diniy qarashni qo'llaydi."
+"expl": "Dittmar: savdo talabi muhimroq. To'g'ri variant savdo markazlarini o'xshash kattalikdagi diniy markazlar bilan solishtirib, 1500-yilgacha pres savdo shaharlarida ko'proq bo'lganini ko'rsatadi. 'Diniy markazlarda ko'proq' degan variant aksincha raqib qarashni qo'llaydi; diniy kitoblar ko'p bosilgani ham Cherkov qarashiga mos. Pres qanchalik tez tarqalgani esa sababni ko'rsatmaydi."
 },
 {
 "passage": "Linguist Vera Lindqvist studied how speakers of German decide whether to use a formal or informal form of 'you' when addressing strangers online. She hypothesizes that the choice depends less on the age of the person being addressed than on the norms of the particular website, with speakers adopting whichever form other users of the site already favor.",
 "prompt": "Which finding, if true, would most directly support Lindqvist's hypothesis?",
 "choices": [
 "Users who addressed older strangers informally on a gaming forum addressed people of the same age formally on a news site where formal address predominated.",
-"Users on most of the websites studied addressed older strangers formally more often than they addressed younger strangers formally.",
+"Users on most of the websites studied addressed older strangers formally more often than they addressed younger strangers formally, whatever the site's usual norms.",
 "Users who had belonged to a website for many years were more likely to use the informal form than users who had recently joined.",
 "Users on websites where the informal form predominated tended, on average, to be younger than users on the other websites studied."
 ],
 "answer": 0,
-"expl": "Gipoteza: tanlov yoshga emas, sayt me'yoriga bog'liq. A: bir xil yoshdagi odamlarga turli saytlarda turlicha murojaat — yosh o'zgarmay, me'yor o'zgarsa tanlov o'zgaradi. B: yosh muhim ekanini ko'rsatadi — zaiflashtiradi. C: a'zolik muddati gipotezaga aloqasiz. D: foydalanuvchilar yoshi farqi — yoshni sabab qilib qo'yishi mumkin.",
+"expl": "Gipoteza: tanlov yoshga emas, sayt me'yoriga bog'liq. To'g'ri variantda bir xil yoshdagi odamlarga o'yin forumida norasmiy, rasmiy murojaat ustun yangiliklar saytida esa rasmiy murojaat qilingan — yosh o'zgarmagan, me'yor o'zgargan va tanlov ham o'zgargan. 'Sayt me'yoridan qat'i nazar kattalarga rasmiy' degan variant yosh muhimligini ko'rsatib, zaiflashtiradi. Norasmiy saytlarda foydalanuvchilar yoshroq degan variant esa yoshni sabab qilib qo'yishi mumkin.",
 "difficulty": "Hard"
 },
 {
 "passage": "The Glass Ballroom is a 1908 novel by Eleanor Whitcombe. In the novel, the socialite Lily Marsh, who depends on wealthy friends for invitations and support, is portrayed as someone who is keenly aware that her position in society is fragile and must be constantly maintained: ______",
 "prompt": "Which quotation from The Glass Ballroom most effectively illustrates the claim?",
 "choices": [
-"\"Her friends admired her gowns and her wit, and a stranger watching her laugh at the head of the table would have thought her the most secure woman in the room.\"",
+"\"Her friends admired her gowns and her wit, and a stranger watching her laugh at the head of the table would have thought her the most secure woman in the room, and perhaps the happiest.\"",
 "\"Lily counted her invitations each morning as a sailor sounds the depth of the water, knowing that a single careless word at dinner could leave her aground for a season.\"",
 "\"She had been bored all afternoon by Mr. Gray, whose voice droned on about railway shares until the very clock seemed to slow.\"",
 "\"The sunlight lay on the lawn and the gravel walks, and Lily, pausing on the terrace, felt the charm of the scene.\""
 ],
 "answer": 1,
-"expl": "Da'vo: Lily mavqei mo'rt ekanini aniq biladi va uni doim saqlab turishi kerak. B: har kuni taklifnomalarni sanaydi (doimiy nazorat) va bitta noto'g'ri so'z uni 'quruqlikda qoldirishi' mumkinligini biladi — ikkala qism ham bor. A: aksincha, u xavfsiz ko'rinadi — va bu begona odamning qarashi. C va D mavqe haqida emas.",
+"expl": "Da'vo: Lily mavqei mo'rt ekanini biladi va uni doim saqlab turishi kerak. To'g'ri iqtibosda u har kuni taklifnomalarini sanaydi (doimiy nazorat) va bitta ehtiyotsiz so'z uni butun mavsumga 'aground' qoldirishi mumkinligini biladi. 'The most secure woman in the room' iqtibosi aksincha xotirjam ko'rinishni, u ham begona nigohidan beradi. Zerikarli suhbat yoki maysazor manzarasi mavqe haqida emas.",
 "difficulty": "Hard"
 },
 {
@@ -1021,12 +1021,12 @@
 "prompt": "Which finding from the study, if true, would most directly support the researchers' proposal?",
 "choices": [
 "Volunteers who paused between bites ate less and reported feeling as full at the end of the meal as volunteers who ate at their normal speed.",
-"Volunteers who paused between bites reported enjoying their meal less than volunteers who ate at their normal speed.",
+"Volunteers who paused between bites reported enjoying their meal less and feeling hungrier afterward than volunteers who ate at their normal speed.",
 "Volunteers who normally ate quickly reported eating more snacks between meals than volunteers who normally ate slowly.",
 "Volunteers in both groups ate the same amount of food, but those who paused between bites took longer to finish."
 ],
 "answer": 0,
-"expl": "Taklif: to'qlik signali vaqt oladi, sekin yeganlar kamroq yeydi. A: kamroq yeb, xuddi shunday to'q his qilgan — mexanizmni to'g'ridan-to'g'ri qo'llaydi. B: lazzat — aloqasiz. C: yeguliklar oralig'ida — tajriba o'lchamagan. D: bir xil miqdor — taklifni zaiflashtiradi.",
+"expl": "Taklif: to'qlik signali vaqt oladi, shuning uchun sekin yeganlar kamroq yeydi. To'g'ri variantda to'xtab yeganlar kamroq yeb, xuddi shunday to'q his qilgan — mexanizmni bevosita qo'llaydi. 'Ikkala guruh bir xil miqdorda yegan' degan variant taklifni zaiflashtiradi. Lazzat kamligi yoki ovqatlar orasidagi gazaklar esa bu tajribada tekshirilgan narsa emas.",
 "difficulty": "Hard"
 },
 {
@@ -1034,12 +1034,12 @@
 "prompt": "Which finding, if true, would most directly support Rediker's argument?",
 "choices": [
 "Records show that sailors on multinational crews frequently joined together in strikes and mutinies against their officers regardless of the sailors' countries of origin.",
-"Records show that most eighteenth-century sailors served on ships whose officers and merchants came from the same country as the sailors themselves.",
+"Records show that most eighteenth-century sailors served on ships whose officers and merchants came from the same country as the sailors themselves, and rarely sailed with foreign crews.",
 "Records show that English sailors were routinely paid higher wages than sailors from other countries who served alongside them on the same ships.",
 "Records show that eighteenth-century merchants often hired sailors from many different countries in order to reduce their labor costs."
 ],
 "answer": 0,
-"expl": "Da'vo: dengizchilar millatidan qat'i nazar o'zaro birdamlik his qilgan, ofitserlarga qarshi. A: turli millatdagi dengizchilar birgalikda ofitserlarga qarshi chiqqan — bevosita dalil. B: birdamlikni ko'rsatmaydi. C: ish haqi farqi aksincha bo'linishni ko'rsatishi mumkin. D: savdogarlar sababi — dengizchilar hissiyoti haqida emas.",
+"expl": "Da'vo: dengizchilar millatidan qat'i nazar o'zaro birdam bo'lgan, o'z ofitserlariga qarshi. Turli millatdagi dengizchilar birgalikda ofitserlarga qarshi ish tashlash va isyon qilgani — bevosita dalil. Ingliz dengizchilarga ko'proq maosh to'langani aksincha bo'linishga ishora qilishi mumkin. Savdogarlar arzon ishchi uchun yollagani dengizchilar hissiyoti haqida emas, ko'pchilik o'z yurtdoshlari bilan suzgani esa birdamlikni ko'rsatmaydi.",
 "difficulty": "Hard"
 },
 {
@@ -1047,12 +1047,12 @@
 "prompt": "Which finding, if true, would most directly support the team's claim?",
 "choices": [
 "The device detected a fly weighing about 20 milligrams landing on its surface and continued to function normally after being folded thousands of times.",
-"The device was thinner and lighter than any previously developed electronic skin and could be attached easily to curved surfaces.",
+"The device was thinner and lighter than any previously developed electronic skin and could be attached easily to curved surfaces such as the joints of a robotic hand.",
 "The device detected the pressure of a person's fingertip pressing on it and could be manufactured at a relatively low cost.",
 "The device reliably detected light pressure at first but stopped doing so after being bent several hundred times."
 ],
 "answer": 0,
-"expl": "Da'voning ikki qismi bor: (1) hasharot og'irligini sezadi, (2) ko'p marta bukilishga chidaydi. Faqat A ikkalasini ham tasdiqlaydi. B: sezgirlik/chidamlilik haqida emas. C: barmoq bosimi — hasharotdan ancha katta. D: chidamlilikni rad etadi.",
+"expl": "Da'voning ikki qismi bor: hasharot og'irligini sezadi va ko'p marta bukilishga chidaydi. To'g'ri variant 20 mg lik pashshani sezgani va minglab marta bukilgandan keyin ham ishlaganini aytadi — ikkalasi ham bor. Bir necha yuz marta bukilgach ishlamay qolgan variant chidamlilikni rad etadi; barmoq bosimi esa hasharotdan ancha katta, sezgirlikni isbotlamaydi.",
 "difficulty": "Hard"
 },
 {
@@ -1060,12 +1060,12 @@
 "prompt": "Which finding, if true, would most directly weaken the researchers' suggestion?",
 "choices": [
 "Reindeer body weight declined just as much on islands where rain-on-snow events became less frequent as on islands where such events became more frequent.",
-"Reindeer body weight was lowest following winters in which rain fell on snow and froze into thick layers of ice on the ground.",
+"Reindeer body weight was lowest following winters in which rain fell on snow and froze into thick layers of ice that sealed off the plants growing on the ground below.",
 "The number of reindeer living on the islands increased substantially during the decades in which average body weight declined.",
 "Plants beneath the snow were more abundant in years with warmer winters than in years with colder winters on the islands."
 ],
 "answer": 0,
-"expl": "Taklif: yomg'ir-muz qatlami vazn kamayishiga sabab. A: bunday hodisalar kamaygan orollarda ham vazn xuddi shunday kamaygan — sabab boshqa bo'lishi kerak, zaiflashtiradi. B: aksincha qo'llaydi. C: son oshgani boshqa sabab (raqobat)ni taklif qiladi, lekin muz gipotezasini bevosita rad etmaydi. D: o'simliklar ko'pligi muz to'sig'ini rad etmaydi.",
+"expl": "Taklif: yomg'irdan hosil bo'lgan muz qatlami vazn kamayishiga sabab. Bunday hodisalar kamaygan orollarda ham vazn xuddi shunday kamaygani sabab boshqa ekanini ko'rsatadi — taklifni zaiflashtiradi. Qalin muzdan keyin vazn eng past bo'lgan degan variant aksincha qo'llaydi. Bug'ular soni oshgani boshqa sababga ishora qiladi, lekin muz gipotezasini bevosita rad etmaydi.",
 "difficulty": "Hard"
 }
 ],
@@ -1075,9 +1075,9 @@
 "prompt": "Which choice most effectively uses data from the table to complete the example?",
 "choices": [
 "the percentage of farms using drip irrigation rose by 26 percentage points in the East but by only 3 percentage points in the West.",
-"the South had the highest percentage of farms using drip irrigation in 2010.",
-"the North and the East both had fewer than 15% of farms using drip irrigation in 2010.",
-"in 2020, more than 20% of farms in every region used drip irrigation."
+"the percentage of farms using drip irrigation rose by 26 percentage points in the West but by only 3 percentage points in the East.",
+"the South had the highest percentage of farms using drip irrigation in 2010, at 25%, and the East had the lowest, at 8%.",
+"in 2020, more than 20% of farms in every region used drip irrigation, with the East reaching the highest level, 34%."
 ],
 "answer": 0,
 "expl": "'Change was far from uniform' uchun o'zgarishlarni solishtirish kerak: Sharq +26, G'arb +3. Boshqa variantlar to'g'ri ma'lumot, lekin o'zgarish farqini ko'rsatmaydi."
@@ -1087,21 +1087,21 @@
 "prompt": "Which choice most effectively uses data from the table to support the researchers' conclusion?",
 "choices": [
 "Students in group C averaged 8.1 hours of sleep and a score of 84, while students in group D averaged more sleep, 9.2 hours, but scored slightly lower, 83.",
-"Students in group A averaged the least sleep, 5.8 hours, and the lowest score, 71.",
-"Students in group B averaged 6.9 hours of sleep and a score of 78.",
-"Students in groups A and B averaged fewer than 7 hours of sleep."
+"Students in group A averaged the least sleep, 5.8 hours, and the lowest score, 71, while students in group B averaged 6.9 hours and scored 78.",
+"Students in group D averaged 9.2 hours of sleep and a score of 84, while students in group C averaged less sleep, 8.1 hours, but scored slightly lower, 83.",
+"Students in groups A and B averaged fewer than 7 hours of sleep, while students in groups C and D averaged more than 8 hours and scored above 80."
 ],
 "answer": 0,
-"expl": "Xulosaning muhim qismi: ko'p uyqu natijani yaxshilamadi. C va D ni solishtirish aynan shuni ko'rsatadi (9.2 soat, lekin 83 < 84)."
+"expl": "Xulosaning muhim qismi — eng ko'p uyqu natijani yaxshilamagan. 8.1 soat uxlagan guruh 84 ball, ko'proq (9.2 soat) uxlagan guruh esa 83 ball olgan — aynan shu. Raqamlarni almashtirib, 9.2 soatga 84 ball bergan variant jadvalga zid. Eng kam uxlagan ikki guruhni solishtirgan variant faqat o'sishni ko'rsatadi, to'xtashni emas."
 },
 {
 "passage": "Share of Electricity Generated from Wind, Selected Countries\nCountry   2012   2022\nP          4%     11%\nQ         18%     19%\nR          2%     15%\nS          9%     24%\n\nA student claims that, among the four countries, the one that relied most on wind in 2012 was not the one that relied most on wind in 2022.",
 "prompt": "Which choice best describes data from the table that support the student's claim?",
 "choices": [
 "Country Q had the highest share of electricity from wind in 2012, but country S had the highest share in 2022.",
-"Country R's share of electricity from wind increased more than country P's did.",
-"Country S's share of electricity from wind more than doubled between 2012 and 2022.",
-"Every country's share of electricity from wind was higher in 2022 than in 2012."
+"Country R's share of electricity from wind rose by 13 percentage points, more than country P's share rose.",
+"Country S had the highest share of electricity from wind in 2012, but country Q had the highest share in 2022.",
+"Country Q had the highest share of electricity from wind in both 2012 and 2022, at 18% and 19%, respectively."
 ],
 "answer": 0,
 "expl": "Da'vo: 2012-yilda eng ko'p (Q, 18%) va 2022-yilda eng ko'p (S, 24%) har xil davlatlar. Faqat birinchi variant ikkala yilni solishtiradi."
@@ -1111,9 +1111,9 @@
 "prompt": "Which choice most effectively uses data from the table to complete the statement?",
 "choices": [
 "65% of nests on fenced beaches produced chicks, compared with 35% of nests on open beaches.",
-"more nests were observed on open beaches than on beaches with fencing.",
-"52 nests on fenced beaches produced chicks, compared with 33 nests in dune grass.",
-"42 nests on open beaches produced chicks."
+"more nests were observed on open beaches (120) than on beaches with fencing (80) or in dune grass.",
+"52 nests on fenced beaches produced chicks, compared with only 33 nests in areas of dune grass.",
+"35% of nests on fenced beaches produced chicks, compared with 65% of nests on open beaches."
 ],
 "answer": 0,
 "expl": "Samaradorlikni ulush bilan solishtirish kerak: 52/80 = 65%, 42/120 = 35%. Uchinchi variant son solishtiradi va dune grass qo'riqlash bilan bog'liq emas."
@@ -1123,9 +1123,9 @@
 "prompt": "Which choice best describes data from the table that support Brandt's conclusion?",
 "choices": [
 "At Site 2, survival rose from 69% for container-grown seedlings to 88% with mulch, while at Sites 1 and 3 mulch raised survival by only 2 percentage points.",
-"At every site, container-grown seedlings survived at a higher rate than bare-root seedlings did.",
-"At Site 3, bare-root seedlings had the lowest survival rate of any method at any site.",
-"Container-grown seedlings with mulch had a survival rate above 70% at all three sites."
+"At every site, container-grown seedlings survived at a higher rate than bare-root seedlings did, by at least 17 percentage points at each of the three sites.",
+"At Site 1, survival rose from 71% for container-grown seedlings to 88% with mulch, while at Sites 2 and 3 mulch raised survival by only 2 percentage points.",
+"Container-grown seedlings with mulch had survival rates of 73%, 88%, and 76% at the three sites, above 70% at every site in Brandt's study."
 ],
 "answer": 0,
 "expl": "Xulosa: mulch faqat bitta joyda katta farq qildi. Site 2 da +19, qolganlarida +2 — faqat birinchi variant mulch ta'sirini solishtiradi."
@@ -1135,9 +1135,9 @@
 "prompt": "Which choice most effectively uses data from the table to support the student's claim?",
 "choices": [
 "Social media was the most common source for respondents aged 18–29 (48%), websites for those aged 50–64 (38%), and print for those aged 65 and older (41%).",
-"The share of respondents who read print news daily increased with each older age group.",
-"Among respondents aged 30–49, 34% read news daily on websites.",
-"Fewer than 25% of respondents in every age group read news daily in print, except those aged 65 and older."
+"The share of respondents who read print news daily increased with each older age group, rising from 4% among those aged 18–29 to 41% among those 65 and older.",
+"Social media was the most common source for respondents aged 18–29 (48%) and for those aged 30–49 (37%), as well as for those aged 50–64 (24%).",
+"Websites were the most common source for respondents aged 30–49 (34%), social media for those aged 50–64 (24%), and print for those 65 and older (41%)."
 ],
 "answer": 0,
 "expl": "Da'vo: har xil yosh guruhida eng keng tarqalgan manba har xil. Birinchi variant uch guruhdagi uch xil 'eng ko'p' manbani ko'rsatadi."
@@ -1177,12 +1177,12 @@
 "prompt": "Which choice best describes data from the graph that weaken the researchers' hypothesis?",
 "choices": [
 "The numbers of municipalities that offered incentives were nearly the same whether the announcement was planned for before or after the election.",
-"Most municipalities in both conditions did not respond to the inquiry at all.",
+"Most municipalities in both conditions did not respond to the inquiry at all, with about 1,100 failing to reply in each of the two conditions of the study.",
 "More municipalities replied without an offer when the announcement was planned for before the election than when it was planned for after.",
-"Fewer than 100 municipalities offered incentives when the announcement was planned for after the election."
+"Far more municipalities offered incentives when the announcement was planned for before the election than when it was planned for after it."
 ],
 "answer": 0,
-"expl": "Gipotezaga ko'ra 'saylovdan oldin' shartida takliflar ancha ko'p bo'lishi kerak edi. Ikkala shartda deyarli bir xil (90 va 85) — bu gipotezani zaiflashtiradi. B variant to'g'ri ma'lumot, lekin gipotezaga aloqasi yo'q."
+"expl": "Gipotezaga ko'ra 'saylovdan oldin' shartida takliflar ancha ko'p bo'lishi kerak edi. Grafikda esa ikkala shartda deyarli bir xil (90 va 85) — bu gipotezani zaiflashtiradi. 'Ancha ko'p taklif' degan variant grafikka zid va baribir gipotezani qo'llaydi. Javob bermaganlar yoki taklifsiz javob berganlar soni takliflar haqida emas."
 },
 {
 "chart": {
@@ -1219,9 +1219,9 @@
 "prompt": "Which choice best describes data from the graph that support Ahmadi's conclusion?",
 "choices": [
 "Even though pollinators could not reach any of the flowers, nectar volume in sun-exposed plants fell from 2.3 to 0.9 microliters over the day, while it stayed near 2.5 microliters in shaded plants.",
-"In the morning, shaded plants and sun-exposed plants had similar nectar volumes.",
-"Shaded plants had slightly more nectar at midday than they did in the morning.",
-"Sun-exposed plants had less nectar in the evening than shaded plants did in the morning."
+"In the morning, before the heat of the day, shaded plants and sun-exposed plants had similar nectar volumes, averaging 2.4 and 2.3 microliters per flower, respectively, in Ahmadi's study.",
+"Shaded plants had slightly more nectar per flower at midday (2.6 microliters) than they did in the morning (2.4 microliters), and they still had 2.5 microliters per flower in the evening.",
+"Even though pollinators could not reach any of the flowers, nectar volume fell over the course of the day in both groups, from about 2.4 to 0.9 microliters in shaded and sun-exposed plants alike by evening."
 ],
 "answer": 0,
 "expl": "Changlatuvchilar hech bir gulga yeta olmagan, demak kamayish issiqlikdan. Faqat quyoshdagi o'simliklarda kamayish va soyadagilarda barqarorlik — xulosani to'liq qo'llab-quvvatlaydi."
@@ -1269,12 +1269,12 @@
 "prompt": "Which choice best describes data from the graph that support Marchetti's suggestion?",
 "choices": [
 "In 2020, trips per day fell from 14,000 to 9,000 in City A but rose from 9,000 to 11,000 in City B.",
-"City A had more trips per day than City B in every year except 2020.",
-"Trips per day in City A were higher in 2022 than in any other year shown.",
-"Both cities had more trips per day in 2022 than in 2018."
+"City A had more trips per day than City B in every year shown, including 2020, when it had 9,000.",
+"Trips per day in City A reached 18,000 in 2022, higher than in any other year shown in the graph.",
+"In 2020, trips per day rose from 9,000 to 11,000 in City A but fell from 14,000 to 9,000 in City B."
 ],
 "answer": 0,
-"expl": "Taklif: himoyalangan yo'laklar tashqi sharoit o'zgarganda ham chavandozlarni saqlaydi. 2020 yilda A shahrida keskin tushish, B da o'sish — aynan shuni ko'rsatadi. Boshqa variantlar to'g'ri ma'lumot, lekin taklifga aloqasi yo'q."
+"expl": "Taklif: himoyalangan yo'laklar sharoit o'zgarganda ham chavandozlarni saqlaydi. 2020-yilda yo'laklarni kech qurgan shaharda qatnovlar 14 000 dan 9 000 ga tushgan, yo'laklari oldindan bor shaharda esa 9 000 dan 11 000 ga oshgan. Raqamlarni shaharlar o'rtasida almashtirgan variant grafikka zid; 'har yili ko'proq qatnov' degan variant 2020-yilda noto'g'ri, 2022-yil rekordi esa barqarorlik haqida emas."
 },
 {
 "chart": {
@@ -1319,24 +1319,24 @@
 "prompt": "Which choice most effectively uses data from the graph to complete the statement?",
 "choices": [
 "by August, soil moisture had fallen to 23% in plots with cover crops but to 15% in plots without them.",
-"in April, soil moisture was 31% in plots with cover crops and 32% in plots without them.",
-"soil moisture in plots with cover crops decreased each month from April to August.",
-"plots without cover crops had lower soil moisture in June than in May."
+"in April, soil moisture was 31% in plots with cover crops and 32% in plots that had no cover crops.",
+"by August, soil moisture had fallen to 15% in plots with cover crops but only to 23% in plots without them.",
+"soil moisture in plots with cover crops decreased every month from April to August, falling from 31% to 23%."
 ],
 "answer": 0,
-"expl": "Xulosa: issiq va quruq davrda qoplama ekinlar namlikni saqlaydi. Avgustdagi farq (23% va 15%) buni ko'rsatadi. B variant boshlang'ich holat — xulosani qo'llab-quvvatlamaydi."
+"expl": "Xulosa: issiq va quruq davrda qoplama ekinlar namlikni saqlaydi. Aprelda namlik deyarli teng edi, avgustga kelib esa qoplamali uchastkalarda 23%, qoplamasizlarda 15% — farq aynan shuni ko'rsatadi. Raqamlarni almashtirgan variant grafikka zid; aprel holati haqidagi variant faqat boshlang'ich tenglikni, faqat qoplamali uchastkalar haqidagi variant esa taqqoslashsiz pasayishni ko'rsatadi."
 },
 {
 "passage": "Researchers tested whether planting strips of wildflowers next to crop fields increases the number of native bees visiting the crops. They counted bee visits to blueberry flowers in fields with and without wildflower strips over three years. They concluded that the benefit of the strips grew over time as bee populations became established.",
 "prompt": "Which choice best describes data from the table that support the researchers' conclusion?",
 "choices": [
 "The difference in bee visits between fields with strips and fields without strips increased from Year 1 to Year 3.",
-"Fields without wildflower strips received some bee visits in every year of the study.",
-"In Year 1, fields with strips received more bee visits than fields without strips.",
-"The number of bee visits to fields without strips was about the same in Year 1 and Year 3."
+"Fields without wildflower strips received between 18 and 19 bee visits per 100 flowers in every year of the study.",
+"In Year 1, fields with strips received more bee visits than fields without strips, 22 visits compared with 18 visits.",
+"The difference in bee visits between fields with strips and fields without strips decreased from Year 1 to Year 3."
 ],
 "answer": 0,
-"expl": "Xulosa: foyda vaqt o'tib ortgan. Farq: 1-yil 4, 2-yil 13, 3-yil 25 — farqning o'sishi aynan shuni ko'rsatadi. C faqat 1-yilni aytadi.",
+"expl": "Xulosa: foyda vaqt o'tgani sari ortgan. Farq 1-yilda 4 (22 va 18), 2-yilda 13, 3-yilda 25 — farqning o'sishi aynan shuni ko'rsatadi. 'Farq kamaygan' degan variant jadvalga zid; faqat 1-yilni yoki faqat gul yo'laklari yo'q dalalarni aytgan variantlar vaqt bo'yicha o'zgarishni ko'rsatmaydi.",
 "chart": {
 "type": "table",
 "title": "Average Bee Visits per 100 Blueberry Flowers",
@@ -1369,12 +1369,12 @@
 "prompt": "Which choice best describes data from the table that support the team's claim?",
 "choices": [
 "Adults aged 65 to 69 made many more transit trips per week than adults aged 60 to 64, but only slightly fewer car trips.",
-"Adults aged 60 to 64 made more car trips per week than transit trips.",
-"Adults in both age groups made a similar number of walking trips per week.",
-"Adults aged 65 to 69 made fewer car trips per week than adults aged 60 to 64."
+"Adults aged 60 to 64 made more car trips per week than transit trips, averaging 8.2 car trips and just 1.1 transit trips.",
+"Adults aged 65 to 69 made many more car trips per week than adults aged 60 to 64, but only slightly more transit trips.",
+"Adults in both age groups made a similar number of walking trips per week, about 4, and roughly 8 car trips per week each."
 ],
 "answer": 0,
-"expl": "Da'vo: yangi sayohatlar qo'shildi, mashina o'rnini bosmadi. Transport 1.1 → 3.4 (+2.3), mashina esa 8.2 → 7.9 (−0.3). Demak ko'p qismi yangi sayohat. D faqat kamayishni aytadi — da'voni qo'llamaydi.",
+"expl": "Da'vo: bepul chiptalar yangi sayohatlar qo'shgan, mashina sayohatlarini almashtirmagan. 65–69 yoshlilarda transport 1.1 dan 3.4 ga (+2.3) oshgan, mashina esa atigi 8.2 dan 7.9 ga kamaygan. 'Mashina sayohatlari ancha ko'p' degan variant jadvalga zid; piyoda yurish yoki faqat 60–64 yoshlilar haqidagi variantlar ikki guruh farqini ko'rsatmaydi.",
 "chart": {
 "type": "table",
 "title": "Average Trips per Week by Age Group",
@@ -1407,9 +1407,9 @@
 "prompt": "Which choice best describes data from the graph that support the student's claim?",
 "choices": [
 "Survival after three years was far higher for fenced seedlings than for seedlings under shrubs, which survived only slightly better than seedlings in open areas.",
-"Survival declined each year for seedlings in all three conditions.",
-"Seedlings in open areas had the lowest survival rate after one year.",
-"More than half of the seedlings under shrubs survived the first year."
+"Survival after three years was far higher for seedlings under shrubs than for fenced seedlings, which survived only slightly better than seedlings in open areas.",
+"Survival declined each year for seedlings in all three conditions, although seedlings in open areas had the lowest survival rate in every year of the study.",
+"More than half of the seedlings under shrubs and in open areas survived the first year, but fewer than a quarter of each group survived through the third year."
 ],
 "answer": 0,
 "expl": "Da'vo: bug'udan himoya soyadan muhimroq. 3-yilda: to'siqli 71%, buta ostida 24%, ochiq 18% — to'siq katta farq beradi, soya esa kichik.",
@@ -1457,9 +1457,9 @@
 "prompt": "Which choice best describes data from the graph that support the report's claim?",
 "choices": [
 "Daytime visits stayed about the same after 2021, while total visits rose because of the added evening visits.",
-"Evening visits were lower in 2021 than in 2023.",
-"Daytime visits were higher than evening visits in every year shown.",
-"Total visits in 2020 were lower than total visits in 2019."
+"Evening visits rose each year after they were introduced, from about 6,000 in 2021 to about 13,000 in 2023.",
+"Daytime visits fell sharply after 2021, while total visits stayed about the same despite the added evening visits.",
+"Total visits in 2020 were slightly lower than total visits in 2019, before evening hours were introduced."
 ],
 "answer": 0,
 "expl": "Agar tashrif buyuruvchilar shunchaki kechga ko'chganda edi, kunduzgi tashriflar kamayardi. Kunduzgi ~ 40 da qolgan, jami esa oshgan — yangi tashrif buyuruvchilar.",
@@ -1506,9 +1506,9 @@
 "prompt": "Which choice best describes data from the table that support the scientists' hypothesis?",
 "choices": [
 "Relative leg length increased as the number of predator species increased, while body length stayed about the same.",
-"Lizards on Island D had the greatest average body length.",
-"Island A had the fewest predator species of the four islands.",
-"Body length varied by less than 2 millimeters across the islands."
+"Body length increased as the number of predator species increased, while relative leg length stayed about the same.",
+"Lizards on Island D, which had six predator species, had the greatest average body length, 55.8 millimeters.",
+"Average body length varied by less than 2 millimeters across the four islands, from 54.2 to 55.8 millimeters."
 ],
 "answer": 0,
 "expl": "Gipoteza oyoq nisbiy uzunligi yirtqichlar soni bilan ortadi. Jadvalda 0.41 → 0.47 → 0.52 → 0.58, tana uzunligi deyarli bir xil.",
@@ -1644,11 +1644,11 @@
 "choices": [
 "From 2018 to 2020, daily car trips downtown fell from about 60,000 to about 40,000, while daily bus trips rose from about 30,000 to about 50,000.",
 "Daily bus trips downtown reached about 50,000 in 2020, more than in any other year shown, and remained near that level in 2021.",
-"Daily car trips downtown declined in every year shown, falling from about 60,000 in 2017 to about 41,000 in 2021.",
-"In 2018, before the charge was introduced, there were about twice as many daily car trips downtown as daily bus trips."
+"Daily car trips downtown held steady at about 60,000 in 2017 and 2018 and then fell to about 40,000 in 2020, where they remained in 2021.",
+"From 2018 to 2020, daily car trips downtown fell from about 60,000 to about 40,000, while daily bus trips also fell, from about 50,000 to about 30,000."
 ],
 "answer": 0,
-"expl": "Da'vo: mashina kamaygan, lekin umumiy sayohat kamaymagan (avtobusga o'tgan). A: mashina −20 000, avtobus +20 000 — jami 90 000 saqlangan. B: faqat avtobus. C: grafikka zid — 2017–2018 da o'zgarmagan (60 000). D: 2018 holati — o'zgarishni ko'rsatmaydi.",
+"expl": "Da'vo: mashina kamaygan, lekin umumiy sayohat kamaymagan (odamlar avtobusga o'tgan). 2018–2020: mashina 60 000 dan 40 000 ga tushgan, avtobus 30 000 dan 50 000 ga oshgan — jami taxminan 90 000 saqlangan. 'Avtobus ham kamaygan' degan variant grafikka zid. Faqat avtobus yoki faqat mashina haqidagi variantlar da'voning bir qismini ko'rsatadi, xolos.",
 "difficulty": "Hard",
 "chart": {
 "type": "lineCat",
@@ -1774,12 +1774,12 @@
 "prompt": "Which choice most effectively uses data from the table to support the researcher's conclusion?",
 "choices": [
 "Intercropped fields produced 4.1 tons of maize and 1.6 tons of beans per hectare, a total of 5.7 tons, compared with 5.0 tons for maize alone and 2.2 tons for beans alone.",
-"Maize grown alone produced 5.0 tons per hectare, more than twice the 2.2 tons per hectare produced by beans grown alone.",
-"Intercropped fields produced 4.1 tons of maize per hectare, 0.9 tons less than the 5.0 tons produced by fields of maize grown alone.",
-"Beans grown alone produced 2.2 tons per hectare, more than the 1.6 tons per hectare produced by beans grown together with maize."
+"Intercropped fields produced 4.1 tons of maize per hectare, 0.9 tons less than the 5.0 tons per hectare produced by fields in which maize was grown alone.",
+"Intercropped fields produced 4.1 tons of maize and 1.6 tons of beans per hectare, a total of 5.7 tons, compared with 6.0 tons for maize alone and 2.2 tons for beans alone.",
+"Beans grown alone produced 2.2 tons per hectare, more than the 1.6 tons per hectare produced by beans grown with maize, and maize alone produced 5.0 tons per hectare."
 ],
 "answer": 0,
-"expl": "Xulosa: jami hosil (5.7) har biridan alohida ko'p (5.0 va 2.2), lekin har bir ekin alohida kamroq. A buni to'liq ko'rsatadi. C va D: faqat 'har biri kamroq' qismini ko'rsatadi. B: taqqoslash xulosaga aloqasiz.",
+"expl": "Xulosa: jami hosil (4.1 + 1.6 = 5.7 tonna) har bir ekinning alohida hosilidan (5.0 va 2.2) ko'p. To'g'ri javob buni to'liq ko'rsatadi. 'Makka alohida 6.0 tonna' degan variant jadvalga zid (aslida 5.0) va unda 5.7 kamroq bo'lib chiqadi. Faqat makka yoki faqat loviya kamaygani haqidagi variantlar 'jami ko'proq' qismini ko'rsatmaydi.",
 "difficulty": "Hard",
 "chart": {
 "type": "table",
@@ -1815,9 +1815,9 @@
 "prompt": "Which choice most logically completes the text?",
 "choices": [
 "the settlement's weavers likely obtained their fibers from somewhere other than the settlement itself.",
-"the loom weights were probably used for a purpose other than weaving.",
-"the settlement's residents probably did not wear woven clothing.",
-"sheep must have been raised at the settlement but their bones were not preserved."
+"the loom weights found at the settlement were probably used for some purpose other than weaving.",
+"the settlement's residents probably did not wear any woven clothing, despite owning many looms.",
+"sheep must have been raised at the settlement even though no traces of their bones have been preserved there."
 ],
 "answer": 0,
 "expl": "To'quvchilik joyida bo'lgan (og'ir toshlar uzoqqa tashilmagan), lekin tola va qo'y yo'q — demak tolani boshqa joydan olishgan. 'Bones not preserved' matn dalillariga zid taxmin."
@@ -1829,7 +1829,7 @@
 "urban males may be at a disadvantage in attracting mates compared with rural males.",
 "urban females will likely begin to prefer simpler songs within a few generations.",
 "rural males will likely begin singing simpler songs to compete with urban males.",
-"noise has no effect on which males are chosen as mates."
+"noise in cities has no effect at all on which males are chosen as mates by females."
 ],
 "answer": 0,
 "expl": "Shahar erkaklari soddaroq kuylaydi, urg'ochilar esa baribir murakkab kuyni afzal ko'radi — demak shahar erkaklari juft topishda noqulay holatda bo'lishi mumkin."
@@ -1839,12 +1839,12 @@
 "prompt": "Which choice most logically completes the text?",
 "choices": [
 "the additional items placed in carts on version B were largely offset by the higher rate at which those carts were abandoned.",
-"visitors to version A added more items to their carts than visitors to version B did.",
-"displaying prices before tax has no effect on how shoppers behave.",
-"most shoppers do not notice whether displayed prices include tax."
+"visitors to version A placed more items in their carts than visitors to version B did, even before any of the carts were abandoned.",
+"displaying prices before tax has no effect whatsoever on how shoppers behave at any stage of the online purchasing process.",
+"most shoppers do not notice whether the prices displayed on a website include tax, even when they reach the checkout page."
 ],
 "answer": 0,
-"expl": "B da savat ko'proq to'ldi, lekin ko'proq tashlab ketildi, umumiy savdo esa bir xil — demak biri ikkinchisini qoplagan. 'No effect' xato, chunki xatti-harakat o'zgargan."
+"expl": "Soliqsiz narx ko'rsatilgan versiyada savatga ko'proq narsa qo'shildi, lekin ko'proq savat tashlab ketildi, umumiy savdo esa deyarli bir xil — demak biri ikkinchisini qoplagan. 'Umuman ta'sir qilmaydi' degan variant xato, chunki xaridorlar xatti-harakati o'zgargan. Soliqli versiyada savatga ko'proq qo'shilgan degan variant matnga zid; xaridorlar soliqni sezmaydi degan variant esa tashlab ketish oshganiga to'g'ri kelmaydi."
 },
 {
 "passage": "Glaciologists drilling into an Antarctic ice sheet found a layer of volcanic ash about 1,000 meters below the surface. The ash's chemistry matches that of a known eruption in New Zealand, which other evidence dates to roughly 25,000 years ago. Because ice layers accumulate from the surface downward over time, the ice directly above the ash layer ______",
@@ -1863,9 +1863,9 @@
 "prompt": "Which choice most logically completes the text?",
 "choices": [
 "trades rapid growth for water conservation only when conditions make conservation necessary.",
-"grows more quickly during droughts than when water is plentiful.",
-"is unable to survive in regions where droughts are common.",
-"loses less water during wet periods than other desert plants do."
+"grows more quickly during droughts than it does in periods when water is readily available.",
+"is unable to survive in regions where droughts are common, since it cannot conserve water.",
+"uses CAM at all times, conserving water even when doing so is not necessary for its survival."
 ],
 "answer": 0,
 "expl": "Suv ko'p bo'lsa tez o'sish (oddiy fotosintez), qurg'oqchilikda suvni tejash (CAM) — ya'ni o'simlik faqat zarur bo'lganda tezlikni tejashga almashtiradi."
@@ -1875,7 +1875,7 @@
 "prompt": "Which choice most logically completes the text?",
 "choices": [
 "may overrepresent the activity of large coastal merchants relative to that of small inland traders.",
-"are likely to underestimate the importance of port cities such as Genoa and Venice.",
+"are likely to underestimate the importance of large port cities such as Genoa and Venice to medieval trade.",
 "should be replaced by studies of inland traders' oral agreements, which were carefully preserved.",
 "demonstrate that small inland traders were more numerous than coastal merchants."
 ],
@@ -1887,9 +1887,9 @@
 "prompt": "Which choice most logically completes the text?",
 "choices": [
 "features once regarded as flaws in Roman concrete may have contributed to its durability.",
-"Roman builders deliberately added water to their concrete to make it stronger.",
-"modern concrete contains more lime than Roman concrete did.",
-"most Roman concrete structures were built without any lime."
+"Roman builders deliberately added water to their concrete in order to make it stronger.",
+"modern concrete contains considerably more lime than Roman concrete did in antiquity.",
+"the lime lumps in Roman concrete are signs of careless mixing that weakened the material."
 ],
 "answer": 0,
 "expl": "Nuqson deb hisoblangan ohak bo'laklari yoriqlarni to'ldiradi — demak ular mustahkamlikka hissa qo'shgan bo'lishi mumkin."
@@ -1963,11 +1963,11 @@
 "choices": [
 "probably represent only a small fraction of the planets orbiting the stars that astronomers have observed.",
 "are likely to be larger, on average, than the planets that astronomers have detected using other methods.",
-"must orbit their stars at smaller distances than the planets in our own solar system orbit the Sun.",
+"must orbit their stars at much smaller distances, on average, than the planets in our own solar system orbit the Sun.",
 "are the only planets whose orbits astronomers have been able to measure with any degree of accuracy."
 ],
 "answer": 0,
-"expl": "Faqat orbitasi mos kelgan sayyoralar ko'rinadi, ko'pchilik orbitalar esa mos emas — demak topilganlar haqiqiy sayyoralarning kichik qismi. B va C: hajm yoki masofa haqida matnda asos yo'q. D: 'yagona' — haddan tashqari da'vo.",
+"expl": "Faqat orbitasi mos kelgan sayyoralar ko'rinadi, ko'pchilik orbitalar esa mos emas — demak topilganlar mavjud sayyoralarning kichik qismi. Kattaroq yoki yulduziga yaqinroq degan variantlarga matnda asos yo'q. 'Orbitasi aniq o'lchangan yagona sayyoralar' degan variant haddan tashqari kuchli da'vo.",
 "difficulty": "Hard"
 },
 {
@@ -1988,12 +1988,12 @@
 "prompt": "Which choice most logically completes the text?",
 "choices": [
 "the presence of some criticism can make a set of reviews seem more believable, offsetting the drawback of a lower average score.",
-"consumers generally prefer products with somewhat lower average ratings to products whose average ratings are higher.",
+"consumers generally prefer products with somewhat lower average ratings to products whose average ratings are perfect or very nearly so.",
 "many participants did not read the negative review carefully enough to notice its criticism before rating the products.",
 "five-star reviews have relatively little influence on whether consumers ultimately decide to purchase a product online."
 ],
 "answer": 0,
-"expl": "O'rtacha baho pasaygan bo'lsa ham, ishonchlilik va xarid niyati oshgan — demak tanqid sharhlarni ishonchliroq qiladi. B: umumlashtirish haddan tashqari. C: o'qimaganlik — asossiz taxmin. D: besh yulduzli sharhlar ta'siri o'lchanmagan.",
+"expl": "O'rtacha baho pasaygan bo'lsa ham ishonch va xarid niyati oshgan — demak ozgina tanqid sharhlarni ishonchliroq qiladi va past bahoning zararini qoplaydi. 'Odamlar umuman pastroq bahoni afzal ko'radi' degan variant haddan tashqari umumlashtirish. Salbiy sharhni o'qimagan degan variant asossiz; besh yulduzli sharhlar ta'siri esa o'lchanmagan.",
 "difficulty": "Hard"
 },
 {
@@ -2001,12 +2001,12 @@
 "prompt": "Which choice most logically completes the text?",
 "choices": [
 "the eruption may have influenced people's decisions even though they did not understand its role in their circumstances.",
-"the emigration from New England was probably unrelated to the effects of the eruption.",
-"the settlers who moved to the Midwest must have expected the cold weather to continue for many years.",
-"news of distant natural disasters traveled more quickly in the nineteenth century than historians have assumed."
+"the emigration from New England was probably unrelated to the eruption or to any of its effects on the region's climate.",
+"the settlers who moved west must have expected the cold weather to continue for many years after the summer of 1816.",
+"news of distant volcanic eruptions traveled far more quickly in the nineteenth century than historians have assumed."
 ],
 "answer": 0,
-"expl": "Ko'chuvchilar otilishdan bexabar bo'lgan, lekin hosil yetishmovchiligi (otilish natijasi) ularni ko'chishga undagan — sababni bilmasalar ham ta'sir qilgan. B: aksincha — bog'liqlik matnda. C: kutishlari haqida asos yo'q. D: yangiliklar tez tarqalgani — 'few could have known' ga zid.",
+"expl": "Ko'chuvchilar otilishdan bexabar edi, lekin hosil nobud bo'lishi (otilish oqibati) ularni ko'chishga undagan — sababni bilmasalar ham otilish ta'sir qilgan. 'Ko'chish otilishga aloqasiz' degan variant matndagi bog'liqlikka zid. Sovuq yillab davom etishini kutgan degan variantga asos yo'q; yangiliklar tez tarqalgan degan variant esa 'few settlers... could have known' ga zid.",
 "difficulty": "Hard"
 },
 {
@@ -2014,12 +2014,12 @@
 "prompt": "Which choice most logically completes the text?",
 "choices": [
 "dogs' ability to follow human pointing depends less on individual experience with people than on traits that emerged during domestication.",
-"wolves cannot learn to follow human pointing under any circumstances, even when they have been raised by humans from birth.",
+"wolves cannot learn to follow human pointing under any circumstances, even after being raised by humans from birth and given extensive training.",
 "adult pet dogs follow human pointing more accurately than young puppies do because adults have had more contact with people.",
 "dogs follow human pointing mainly because their owners have trained them to respond to such gestures from an early age."
 ],
 "answer": 0,
-"expl": "Odamlar bilan katta bo'lgan bo'rilar ham (tajriba bor) muvaffaqiyatsiz, kam aloqali kuchukchalar esa (tajriba kam) muvaffaqiyatli — demak qobiliyat tajribadan emas, xonakilashtirish bilan kelgan xususiyatlardan. B: 'extensive training' bilan bo'rilar o'rganadi. C: matn 'about as well' deydi. D: kuchukchalar o'rgatilmagan.",
+"expl": "Odamlar qo'lida katta bo'lgan bo'rilar (tajriba bor) muvaffaqiyatsiz, odam bilan kam aloqada bo'lgan kuchukchalar esa (tajriba kam) muvaffaqiyatli — demak qobiliyat tajribadan emas, xonakilashtirish bilan kelgan xususiyatlardan. 'Bo'rilar hech qachon o'rgana olmaydi' degan variant xato — ko'p mashqdan keyin o'rganadi. Kattalar kuchukchalardan yaxshiroq degan variant 'about as well' ga zid; egalari o'rgatgan degan variant ham kuchukchalar natijasiga to'g'ri kelmaydi.",
 "difficulty": "Hard"
 }
 ],
@@ -2492,7 +2492,7 @@
 "prompt": "Which choice completes the text with the most logical transition?",
 "choices": [
 "In other words,",
-"Nonetheless,",
+"In spite of this,",
 "Additionally,",
 "By contrast,"
 ],
@@ -2504,7 +2504,7 @@
 "prompt": "Which choice completes the text with the most logical transition?",
 "choices": [
 "In other words,",
-"Nevertheless,",
+"In spite of this,",
 "By contrast,",
 "Similarly,"
 ],
@@ -2518,7 +2518,7 @@
 "For this reason,",
 "Moreover,",
 "Instead,",
-"Still,"
+"In spite of this,"
 ],
 "answer": 0,
 "expl": "Plastik suv ostidagi mayda bo'laklar bo'lgani uchun sun'iy yo'ldosh suratlari foydasi kam — sabab-natija: 'For this reason'."
@@ -2553,7 +2553,7 @@
 "choices": [
 "Additionally,",
 "Instead,",
-"As a result,",
+"Because of this,",
 "Nonetheless,"
 ],
 "answer": 0,
@@ -2565,7 +2565,7 @@
 "prompt": "Which choice completes the text with the most logical transition?",
 "choices": [
 "After that, though,",
-"For instance,",
+"As one would expect,",
 "Therefore,",
 "In fact,"
 ],
@@ -2578,7 +2578,7 @@
 "prompt": "Which choice completes the text with the most logical transition?",
 "choices": [
 "Over the same period,",
-"In contrast,",
+"Despite this decrease,",
 "Even so,",
 "Previously,"
 ],
@@ -2670,9 +2670,9 @@
 "prompt": "The student wants to explain why the initiative's approach changed. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "Because many seedlings planted for the Great Green Wall died in dry conditions, planners moved away from a continuous belt of trees toward a mosaic of land-restoration projects.",
-"The Great Green Wall, launched by the African Union in 2007, originally aimed to plant a belt of trees 8,000 kilometers long across the Sahel.",
-"The Great Green Wall now includes projects such as water-harvesting and farmer-managed tree regrowth.",
-"Launched in 2007, the Great Green Wall is an African Union initiative to restore land across the Sahel region."
+"The Great Green Wall, launched by the African Union in 2007, originally aimed to plant a continuous belt of trees 8,000 kilometers long across Africa's Sahel region.",
+"Planners of the Great Green Wall shifted from a continuous belt of trees 8,000 kilometers long to a mosaic of projects such as water-harvesting and farmer-managed tree regrowth.",
+"Launched in 2007 by the African Union, the Great Green Wall is an initiative to restore land across Africa's Sahel region through a mosaic of projects."
 ],
 "answer": 0,
 "expl": "Maqsad — nima uchun yondashuv o'zgarganini tushuntirish: sabab (ko'chatlar nobud bo'ldi) va o'zgarish (belbog'dan mozaikaga) birga bo'lishi kerak."
@@ -2682,9 +2682,9 @@
 "prompt": "The student wants to emphasize a similarity between the two novels. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "Though one is set in the past and the other in the future, Octavia Butler's Kindred and Parable of the Sower both explore how people survive under oppressive conditions.",
-"Octavia Butler's Kindred (1979) is set partly on a plantation in pre-Civil War Maryland, while her Parable of the Sower (1993) is set in a near-future United States.",
-"Octavia Butler, an American science fiction writer, published Kindred in 1979 and Parable of the Sower in 1993.",
-"Parable of the Sower (1993) by Octavia Butler is set in a United States damaged by climate change."
+"Octavia Butler's Kindred (1979) follows a woman traveling to pre-Civil War Maryland, while her Parable of the Sower (1993) is set in a near-future United States.",
+"Octavia Butler (1947-2006), an American science fiction writer, published Kindred in 1979 and then Parable of the Sower fourteen years later, in 1993.",
+"Set in a near-future United States that has been damaged by climate change, Octavia Butler's Parable of the Sower (1993) explores how people survive under oppressive conditions."
 ],
 "answer": 0,
 "expl": "Vazifa — o'xshashlikni ta'kidlash. Birinchi variant ikkala romanning umumiy mavzusini aytadi. Ikkinchi variant farqni ta'kidlaydi."
@@ -2694,9 +2694,9 @@
 "prompt": "The student wants to explain to an audience unfamiliar with the Event Horizon Telescope how it was able to capture the image. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "By linking radio observatories on several continents, the Event Horizon Telescope combined their data into a virtual telescope about the size of Earth—large enough to resolve a black hole's shadow.",
-"In 2019, astronomers used the Event Horizon Telescope to capture the first image of a black hole.",
-"The Event Horizon Telescope is not a single instrument but rather a network of observatories.",
-"Astronomers needed a telescope the size of Earth to resolve the shadow of a black hole, which they imaged in 2019."
+"In 2019, a team of astronomers used the Event Horizon Telescope, which is not a single instrument, to capture an image of a black hole, a feat that required resolving its shadow.",
+"In order to resolve a black hole's shadow, astronomers needed a virtual telescope about the size of Earth, so in 2019 a team used the Event Horizon Telescope, which is not a single instrument, to image one.",
+"The Event Horizon Telescope is not a single instrument, and in 2019 a team of astronomers used it to produce an image of a black hole, resolving the black hole's shadow in the process."
 ],
 "answer": 0,
 "expl": "Tanish bo'lmagan auditoriyaga 'qanday' ni tushuntirish kerak: observatoriyalarni bog'lash → Yer kattaligidagi virtual teleskop → soyani ajrata olish. Faqat birinchi variantda mexanizm to'liq."
@@ -2706,9 +2706,9 @@
 "prompt": "The student wants to emphasize the lasting significance of Ulugh Beg's star catalogue. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "More precise than any earlier catalogue, Ulugh Beg's listing of 994 stars remained a standard reference for about two centuries.",
-"Ulugh Beg, who ruled Samarkand, built an observatory in the 1420s with a meridian arc about 40 meters in radius.",
-"Ulugh Beg's star catalogue listed the positions of 994 stars.",
-"Ulugh Beg (1394-1449) was both a ruler of Samarkand and an astronomer."
+"Ulugh Beg, who ruled Samarkand, built an observatory in the 1420s with a huge meridian arc about 40 meters in radius.",
+"Ulugh Beg's star catalogue listed the positions of 994 stars, with measurements that were more precise than those of any earlier catalogue.",
+"Ulugh Beg (1394-1449), who ruled Samarkand and was an astronomer, compiled a catalogue listing the positions of 994 stars."
 ],
 "answer": 0,
 "expl": "'Lasting significance' — uzoq muddatli ahamiyat: ikki asr davomida standart manba bo'lib qolgani. Faqat birinchi variant buni aytadi."
@@ -2718,9 +2718,9 @@
 "prompt": "The student wants to present the study's most surprising finding. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "Researchers who analyzed 500 sourdough starters found that a starter's microbes were better predicted by household factors, such as the baker's habits, than by the country it came from.",
-"Sourdough bread is leavened by a starter that contains wild yeast and bacteria.",
-"Researchers analyzed 500 sourdough starters from 14 countries and found more than 70 species of yeast.",
-"Sourdough starters from 14 countries contain wild yeast and bacteria that leaven bread."
+"Researchers who analyzed 500 sourdough starters collected from 14 countries found more than 70 species of yeast across the starters, which contain the wild yeast and bacteria that leaven bread.",
+"Sourdough bread is leavened by a starter containing wild yeast and bacteria, and researchers have analyzed 500 such starters from 14 different countries around the world.",
+"Researchers analyzed 500 sourdough starters from 14 countries to learn more about the wild yeast and bacteria that such starters contain and use to leaven sourdough bread."
 ],
 "answer": 0,
 "expl": "'Eng kutilmagan topilma' — mikroblar davlatga emas, uy sharoitiga bog'liqligi. Faqat birinchi variant buni aytadi."
@@ -2730,9 +2730,9 @@
 "prompt": "The student wants to emphasize a drawback of the canal's design. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "Because most of the Karakum Canal is unlined, much of the water it carries from the Amu Darya is lost through seepage and evaporation.",
-"The Karakum Canal, begun in 1954, carries water from the Amu Darya river across Turkmenistan.",
-"One of the world's longest irrigation canals, the Karakum Canal allowed cotton farming to expand across the desert.",
-"Construction of the Karakum Canal, which carries water across Turkmenistan, began in 1954."
+"The Karakum Canal, whose construction began in 1954, carries water from the Amu Darya river across Turkmenistan and allowed cotton farming to expand.",
+"One of the longest irrigation canals in the world, the Karakum Canal allowed cotton farming to expand across the desert.",
+"Carrying water from the Amu Darya across Turkmenistan, the Karakum Canal is one of the world's longest irrigation canals."
 ],
 "answer": 0,
 "expl": "Vazifa — loyihaning kamchiligini ta'kidlash: qoplanmaganligi sababli suv yo'qolishi. Paxtachilikning kengayishi esa afzallik."
@@ -2742,9 +2742,9 @@
 "prompt": "The student wants to emphasize the practical value of the seed vault. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "The first withdrawal from the Svalbard Global Seed Vault came in 2015, when researchers in Syria used its duplicate seeds to rebuild a collection damaged by war.",
-"The Svalbard Global Seed Vault, which opened in 2008, is located on a Norwegian island in the Arctic.",
-"The Svalbard Global Seed Vault can hold up to 4.5 million seed varieties from gene banks around the world.",
-"Located in the Arctic, the Svalbard Global Seed Vault stores duplicate seed samples."
+"The Svalbard Global Seed Vault, which opened in 2008 on a Norwegian island in the Arctic, can hold up to 4.5 million varieties of seeds from gene banks around the world.",
+"Located on a Norwegian island in the Arctic, the Svalbard Global Seed Vault stores duplicate samples of seeds from gene banks around the world.",
+"Opened in 2008 on a Norwegian island in the Arctic, the Svalbard Global Seed Vault stores duplicate samples of seeds and can hold up to 4.5 million seed varieties."
 ],
 "answer": 0,
 "expl": "Amaliy foyda — ombor haqiqatan ishlatilgan holat: Suriya tadqiqotchilari urushda yo'qolgan kolleksiyani tiklagan."
@@ -2754,24 +2754,24 @@
 "prompt": "The student wants to explain how the Green Belt Movement addressed more than one problem at once. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "By paying rural women to plant trees, the Green Belt Movement aimed both to reduce soil erosion and to provide firewood and income.",
-"Wangari Maathai, a Kenyan environmental activist, founded the Green Belt Movement in 1977.",
-"Members of the Green Belt Movement have planted more than 51 million trees.",
-"Wangari Maathai, who founded the Green Belt Movement, received the Nobel Peace Prize in 2004."
+"Wangari Maathai, a Kenyan environmental activist, founded the Green Belt Movement in 1977 and received the Nobel Peace Prize in 2004.",
+"Founded by Wangari Maathai in 1977, the Green Belt Movement paid rural women to plant trees, and members have planted over 51 million.",
+"Members of the Green Belt Movement, which Kenyan activist Wangari Maathai founded in 1977, have planted more than 51 million trees."
 ],
 "answer": 0,
-"expl": "Maqsad — bir vaqtda bir nechta muammo: eroziya + o'tin + daromad. Faqat A shularni birga keltiradi."
+"expl": "Maqsad — bir vaqtning o'zida bir nechta muammoni hal qilish: tuproq eroziyasi + o'tin + daromad. Faqat to'g'ri javob shularni birga keltiradi. 51 million daraxt, 1977-yil yoki Nobel mukofoti haqidagi variantlar faktlar, lekin qaysi muammolar hal qilinganini aytmaydi."
 },
 {
 "passage": "While researching a topic, a student has taken the following notes:\n  • Octavia Butler was an American science fiction writer.\n  • Her 1979 novel Kindred follows a Black woman in 1976 who is repeatedly transported to a plantation in the early 1800s.\n  • Her 1993 novel Parable of the Sower is set in a future California devastated by climate change and inequality.\n  • Both novels examine how people survive under oppressive conditions.",
 "prompt": "The student wants to present a similarity between the two novels. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "Although Kindred looks to the past and Parable of the Sower imagines the future, both novels by Octavia Butler examine how people survive under oppressive conditions.",
-"Octavia Butler's Kindred, published in 1979, follows a woman transported from 1976 to the early 1800s.",
-"Parable of the Sower, published in 1993, is set in a future California devastated by climate change.",
-"Octavia Butler wrote Kindred in 1979 and Parable of the Sower in 1993."
+"Octavia Butler's 1979 novel Kindred follows a Black woman living in 1976 who is repeatedly transported back in time to a plantation in the early 1800s.",
+"Octavia Butler's 1979 novel Kindred looks to the past, while her 1993 novel Parable of the Sower is set in a future California devastated by climate change and inequality.",
+"Parable of the Sower, the 1993 novel by American science fiction writer Octavia Butler, is set in a future California devastated by climate change and inequality."
 ],
 "answer": 0,
-"expl": "O'xshashlik — ikkalasi ham zulm sharoitida omon qolishni tasvirlaydi. A buni aniq ko'rsatadi.",
+"expl": "O'xshashlik — ikkala roman ham zulm sharoitida omon qolishni tasvirlaydi; to'g'ri javob o'tmish va kelajak farqini tan olib, shu umumiy mavzuni aniq aytadi. 'Biri o'tmishga, biri kelajakka qaraydi' deb tugagan variant o'xshashlikni emas, farqni ko'rsatadi. Faqat Kindred yoki faqat Parable of the Sower haqidagi variantlarda taqqoslash yo'q.",
 "difficulty": "Medium"
 },
 {
@@ -2779,24 +2779,24 @@
 "prompt": "The student wants to make a quantitative argument for protecting mangroves, addressed to an audience concerned about economic costs. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "Mangroves prevent an estimated $65 billion in flood damage worldwide each year, so the continued loss of these forests could prove costly.",
-"Mangroves store up to four times more carbon per hectare than most tropical rainforests.",
-"Growing along tropical coastlines, mangroves have dense roots that slow waves.",
-"About 35% of the world's mangroves have been lost since 1980, a significant decline."
+"Mangroves store up to four times more carbon per hectare than most tropical rainforests, so the continued loss of these forests could prove harmful.",
+"About 35% of the world's mangroves have been lost since 1980, even though their dense roots slow waves and reduce coastal erosion.",
+"Growing along tropical coastlines, mangroves have dense roots that slow waves and reduce coastal erosion, protecting the shore."
 ],
 "answer": 0,
-"expl": "Auditoriya iqtisodiy xarajatlar haqida qayg'uradi va miqdoriy dalil kerak: $65 mlrd zarar oldini olish — A."
+"expl": "Auditoriya iqtisodiy xarajatlar haqida qayg'uradi va miqdoriy dalil kerak: har yili $65 mlrd suv toshqini zararining oldi olinishi — aynan pul bilan o'lchangan dalil. Uglerod haqidagi variant miqdoriy, lekin iqtisodiy emas. 35% yo'qotilgani yoki ildizlar eroziyani kamaytirishi haqidagi variantlar xarajat haqida gapirmaydi."
 },
 {
 "passage": "While researching a topic, a student has taken the following notes:\n  • The Rosetta Stone was discovered in Egypt in 1799.\n  • It contains the same decree written in three scripts: hieroglyphic, Demotic, and ancient Greek.\n  • Scholars could already read ancient Greek.\n  • In 1822, Jean-François Champollion used the stone to decipher hieroglyphs.",
 "prompt": "The student wants to explain why the Rosetta Stone made it possible to decipher hieroglyphs. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "Because the Rosetta Stone contains the same decree in hieroglyphic and in ancient Greek, a script scholars could already read, it provided a key for deciphering hieroglyphs.",
-"The Rosetta Stone, discovered in Egypt in 1799, contains writing in three scripts.",
-"In 1822, Jean-François Champollion deciphered hieroglyphs.",
-"The Rosetta Stone contains hieroglyphic, Demotic, and ancient Greek scripts."
+"The Rosetta Stone, which was discovered in Egypt in 1799, contains the same decree written in three different scripts: hieroglyphic, Demotic, and ancient Greek.",
+"In 1822, Jean-François Champollion used the Rosetta Stone, which had been discovered in Egypt in 1799 and contains three scripts, to decipher hieroglyphs.",
+"Scholars could already read ancient Greek when the Rosetta Stone was discovered in Egypt in 1799, and Jean-François Champollion used the stone to decipher hieroglyphs in 1822."
 ],
 "answer": 0,
-"expl": "Nima uchun — bir xil matn o'qilishi ma'lum bo'lgan yunon tilida ham bor. Faqat A sababni tushuntiradi.",
+"expl": "Savol 'nima uchun' deydi: bir xil farmon olimlar allaqachon o'qiy oladigan yunon tilida ham yozilgan — shu kalit bo'lgan. To'g'ri javob shu sababni aniq aytadi. Uch xil yozuvni sanab bergan yoki Champollion 1822-yilda toshdan foydalanganini aytgan variantlar nima bo'lganini aytadi, lekin nega mumkin bo'lganini tushuntirmaydi.",
 "difficulty": "Medium"
 },
 {
@@ -2804,12 +2804,12 @@
 "prompt": "The student wants to emphasize the vault's purpose as a safeguard. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "By storing backup copies of seeds from gene banks around the world, the Svalbard vault allowed researchers in Syria to replace collections lost during conflict in 2015.",
-"The Svalbard Global Seed Vault, located inside a mountain on an Arctic island in Norway, holds more than 1.2 million seed samples.",
-"Located inside a mountain on an Arctic island, the Svalbard Global Seed Vault keeps its seeds frozen even if electricity fails.",
-"The Svalbard Global Seed Vault stores more than 1.2 million seed samples that it has received from gene banks around the world."
+"The Svalbard Global Seed Vault, located inside a mountain on an Arctic island in Norway, holds a collection of more than 1.2 million seed samples today.",
+"In 2015, researchers in Syria withdrew seeds from the Svalbard Global Seed Vault, which is located in Norway and holds more than 1.2 million seed samples.",
+"Holding more than 1.2 million seed samples from gene banks around the world, the Svalbard Global Seed Vault is located in Norway, inside a mountain on an Arctic island."
 ],
 "answer": 0,
-"expl": "Maqsad — 'zaxira/himoya' vazifasini ta'kidlash. A: zaxira nusxa va uning haqiqiy ishlatilishi (Suriya) — himoya vazifasini aniq ko'rsatadi. B va D: joylashuv va miqdor. C: xavfsizlik xususiyati, lekin maqsad (boshqa bankdagi yo'qotishni tiklash) ko'rsatilmaydi.",
+"expl": "Maqsad — omborning zaxira/himoya vazifasini ta'kidlash. To'g'ri variant zaxira nusxalar va ularning haqiqiy ishlatilishini (Suriya olimlari urushda yo'qolgan kolleksiyani tiklagan) ko'rsatadi. Joylashuv va 1.2 million namuna haqidagi variantlar shunchaki faktlar; Suriya olimlari urug' olganini aytgan variant ham nega olganini — yo'qolganini tiklash uchun ekanini aytmaydi.",
 "difficulty": "Hard"
 },
 {
@@ -2817,12 +2817,12 @@
 "prompt": "The student wants to introduce Maria Tallchief to an audience unfamiliar with her. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "Maria Tallchief, a ballerina of Osage heritage, was the first Native American to hold the rank of prima ballerina.",
-"Maria Tallchief's 1949 performance in The Firebird with the New York City Ballet was widely praised by critics.",
+"Maria Tallchief's 1949 performance in The Firebird with the New York City Ballet was widely praised by dance critics at the time.",
 "Like her sister Marjorie, who was also a prominent dancer, Maria Tallchief became a celebrated ballerina.",
 "From 1947 to 1965, Maria Tallchief performed with the New York City Ballet, where she danced many roles."
 ],
 "answer": 0,
-"expl": "Tanishtirish uchun kim ekanligi va nega muhimligi kerak: A — kelib chiqishi, kasbi va asosiy yutug'i. B, D: tafsilotlar — tinglovchi uni tanimasa kontekst yetishmaydi. C: singlisiga e'tibor qaratadi.",
+"expl": "Tanishtirish uchun kim ekanligi va nega muhimligi kerak: to'g'ri javobda kelib chiqishi, kasbi va asosiy yutug'i (birinchi tub amerikalik prima-balerina) bor. The Firebird chiqishi yoki 1947–1965 yillar haqidagi variantlar tafsilot — uni tanimagan tinglovchiga kontekst yetishmaydi. Singlisi Marjorie bilan boshlangan variant e'tiborni boshqa odamga buradi.",
 "difficulty": "Hard"
 },
 {
@@ -2830,12 +2830,12 @@
 "prompt": "The student wants to contrast how honeybees and some stingless bees communicate the location of food. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "Whereas honeybees indicate the direction and distance of food through the angle and duration of a dance, some stingless bees leave scent marks along the route.",
-"Honeybees communicate through a waggle dance, while some stingless bees use sounds within the nest to signal the quality of food.",
-"In the honeybee's waggle dance, the angle indicates direction relative to the sun, while the duration of the waggle indicates distance.",
-"Both honeybees and some species of stingless bees have developed ways to communicate with nestmates about sources of food."
+"Honeybees communicate the location of food through the waggle dance, while some species of stingless bees use sounds within the nest to signal the quality of food.",
+"In the honeybee's waggle dance, the angle of the dance indicates direction relative to the sun, and the duration of the waggle indicates the distance.",
+"Some species of stingless bees leave scent marks along the route to food, and some use sounds within the nest to signal the quality of that food."
 ],
 "answer": 0,
-"expl": "Maqsad — joylashuvni bildirish usullarini QARAMA-QARSHI qo'yish. A: raqs vs hid izlari — ikkalasi ham joylashuv haqida. B: tovush — sifat haqida, joylashuv emas (nozik tuzoq). C: faqat asalarilar. D: o'xshashlik, qarama-qarshilik emas.",
+"expl": "Maqsad — oziq joylashuvini bildirish usullarini qarama-qarshi qo'yish. To'g'ri javob asalarilar raqsi (burchak va davomiylik) bilan ayrim nishsiz arilarning hid izlarini solishtiradi — ikkalasi ham joylashuv haqida. Uya ichidagi tovushlar haqidagi variant nozik tuzoq: tovush oziq sifatini bildiradi, joylashuvni emas. Faqat asalarilar yoki faqat nishsiz arilar haqidagi variantlarda taqqoslash yo'q.",
 "difficulty": "Hard"
 },
 {
@@ -2843,12 +2843,12 @@
 "prompt": "The student wants to explain how the Green Belt Movement linked environmental and economic goals. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "By paying rural women to plant and care for seedlings, the Green Belt Movement combined reforestation with a source of income.",
-"Founded by Wangari Maathai in 1977, the Green Belt Movement has planted more than 51 million trees across Kenya.",
-"Wangari Maathai, who founded the Green Belt Movement in 1977, won the Nobel Peace Prize in 2004.",
-"Maathai, the movement's founder, argued that environmental destruction contributed to both poverty and conflict."
+"Founded by Wangari Maathai in 1977, the Green Belt Movement has planted more than 51 million trees across Kenya in the decades since then.",
+"Wangari Maathai, the Kenyan environmentalist who founded the Green Belt Movement in 1977, won the 2004 Nobel Peace Prize.",
+"Wangari Maathai, founder of the Green Belt Movement, argued that environmental destruction contributed to conflict."
 ],
 "answer": 0,
-"expl": "Maqsad — harakat ekologik va iqtisodiy maqsadni QANDAY bog'laganini tushuntirish. A: ayollarga daraxt ekish uchun haq to'lash — daraxt + daromad. D: Maathai fikri, lekin harakatning amaliy usuli emas (eng yaqin tuzoq). B, C: faktlar, bog'lanish yo'q.",
+"expl": "Maqsad — harakat ekologik va iqtisodiy maqsadni qanday bog'laganini tushuntirish. To'g'ri javob: qishloq ayollariga ko'chat ekish va parvarishlash uchun haq to'langan — daraxt + daromad. Maathai 'environmental destruction contributed to conflict' degani haqidagi variant eng yaqin tuzoq, lekin iqtisodiy bog'lanish usulini ko'rsatmaydi. 51 million daraxt yoki Nobel mukofoti haqidagi variantlarda bog'lanish yo'q.",
 "difficulty": "Hard"
 },
 {
@@ -2856,12 +2856,12 @@
 "prompt": "The student wants to emphasize the significance of the 2018 survey's findings. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
 "choices": [
 "The 2018 lidar survey around Tikal revealed more than 60,000 previously unknown structures, suggesting the region's population was far larger than once thought.",
-"Lidar, a laser-based scanning technology used by researchers near Tikal in 2018, can detect structures hidden beneath dense vegetation.",
-"In 2018, researchers used lidar to survey the forest around Tikal, a Mayan city that was a major urban center from about 200 to 900 CE.",
-"Tikal was a major Mayan urban center from about 200 to 900 CE, and researchers surveyed the forest surrounding it using lidar in 2018."
+"In 2018, researchers used lidar, a laser-based scanning technology that can detect structures hidden beneath dense vegetation, to survey Tikal.",
+"The Mayan city of Tikal was a major urban center from about 200 to 900 CE, and in 2018 researchers surveyed the forest around it using lidar technology.",
+"Using lidar, which can detect structures hidden beneath dense vegetation, researchers found more than 60,000 previously unknown structures around Tikal in 2018."
 ],
 "answer": 0,
-"expl": "Maqsad — topilmalar AHAMIYATI. A: nima topilgani va u nimani anglatishi (aholi ko'proq bo'lgan). B: texnologiya haqida. C, D: tadqiqot o'tkazilgani, lekin natija va uning ahamiyati yo'q.",
+"expl": "Maqsad — topilmalar ahamiyati. To'g'ri javob nima topilganini (60 000 dan ortiq noma'lum inshoot) va u nimani anglatishini (aholi ancha ko'p bo'lgan) aytadi. Lidar texnologiyasini tushuntirgan yoki Tikal tarixini aytgan variantlar faqat tadqiqot o'tkazilganini aytadi; 60 000 inshootni aytib, aholi haqidagi xulosasiz qolgan variant ham ahamiyatni ochib bermaydi.",
 "difficulty": "Hard"
 },
 {
@@ -2870,11 +2870,11 @@
 "choices": [
 "Whereas Hadid's Vitra Fire Station is made of sharp, angular concrete planes, the exterior of her Heydar Aliyev Center flows in continuous curves.",
 "Zaha Hadid designed both the Vitra Fire Station, completed in Germany in 1993, and the Heydar Aliyev Center, which opened in Azerbaijan in 2012.",
-"The Heydar Aliyev Center in Baku, which opened in 2012, has an exterior with no straight lines, its surfaces flowing in continuous curves.",
+"The Heydar Aliyev Center in Baku, Azerbaijan, which opened in 2012, has an exterior with no straight lines at all, its surfaces flowing in smooth, continuous curves.",
 "Zaha Hadid, who designed the Heydar Aliyev Center in Baku, was the first woman to win the Pritzker Architecture Prize, in 2004."
 ],
 "answer": 0,
-"expl": "Maqsad — ikki bino o'rtasidagi FARQ. A: burchakli vs egri shakl. B: ikkalasini aytadi, lekin farqni emas. C: faqat bitta bino. D: mukofot — aloqasiz.",
+"expl": "Maqsad — ikki bino o'rtasidagi farq. To'g'ri javob Vitra o't o'chirish stansiyasining o'tkir, burchakli beton tekisliklarini Heydar Aliyev markazining uzluksiz egri chiziqlariga qarama-qarshi qo'yadi. Ikkala binoni yil va joy bilan sanagan variant farqni aytmaydi; faqat Boku binosi yoki Pritzker mukofoti haqidagi variantlarda taqqoslash yo'q.",
 "difficulty": "Hard"
 }
 ]
