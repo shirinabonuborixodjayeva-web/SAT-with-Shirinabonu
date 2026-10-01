@@ -351,17 +351,29 @@ const qid = (q) => (q.passage ? "r" : "m") + hashStr((q.passage || "").slice(0, 
 // R&W savollar: ichki to'plam + rwbank.json (qo'shimcha 670+ savol) + serverdagi umumiy bank (AI bilan o'sadi)
 const RW_EXTRA = {};
 let __rwBankPromise = null;
+let RW_BANK_OK = false; // asosiy bank (rwbank.json) to'liq yuklandimi
 function loadRwBank() {
+  if (RW_BANK_OK) return Promise.resolve();
   if (!__rwBankPromise) __rwBankPromise = Promise.all([
-    fetch("/rwbank.json").then((r) => r.json()).catch(() => ({})),
+    fetch("/rwbank.json").then((r) => { if (!r.ok) throw new Error("bank"); return r.json(); }),
     // rwhard.json: haqiqiy imtihon darajasidagi qiyin savollar (variantlar har safar aralashtiriladi)
     fetch("/rwhard.json").then((r) => r.json()).catch(() => ({})),
   ]).then(([d, h]) => {
     Object.entries(d || {}).forEach(([k, arr]) => { RW_EXTRA[k] = arr.map((q) => ({ ...q, fixed: true })); });
     Object.entries(h || {}).forEach(([k, arr]) => { RW_EXTRA[k] = [...(RW_EXTRA[k] || []), ...arr.map((q) => ({ ...q, difficulty: q.difficulty || "Hard", pro: !q.difficulty || q.difficulty === "Hard" }))]; });
-  }).catch(() => {});
+    RW_BANK_OK = Object.keys(d || {}).length > 0;
+  }).catch(() => {}).then(() => { if (!RW_BANK_OK) __rwBankPromise = null; }); // xato bo'lsa keyingi safar qayta urinadi
   return __rwBankPromise;
 }
+// Mock test uchun bank albatta yuklangan bo'lishi kerak (aks holda qisqa, oson zaxira savollar chiqib qoladi)
+async function ensureBankFull() {
+  for (let i = 0; i < 3 && !RW_BANK_OK; i++) { await loadRwBank(); if (!RW_BANK_OK) await new Promise((r) => setTimeout(r, 1000)); }
+  return RW_BANK_OK;
+}
+// Haqiqiy SAT'dagi matn uzunligiga mos minimal so'z soni (juda qisqa matnli savollar testga tushmaydi)
+const RW_MIN_WORDS = { "Words in Context": 30, "Text Structure and Purpose": 40, "Cross-Text Connections": 120, "Central Ideas and Details": 50, "Command of Evidence (Textual)": 30, "Command of Evidence (Quantitative)": 25, "Inferences": 50, "Boundaries": 25, "Form, Structure, and Sense": 18, "Transitions": 35, "Rhetorical Synthesis": 40 };
+const wordCount = (t) => String(t || "").trim().split(/\s+/).filter(Boolean).length;
+const longEnough = (q, skill) => !!q && wordCount(q.passage) >= (RW_MIN_WORDS[skill] || 0);
 // To'g'ri javob boshqa variantlardan sezilarli uzun bo'lsa (uzunligidan topib olinadigan) — bunday savollar ishlatilmaydi
 function lenBiased(q) {
   if (!q || !Array.isArray(q.choices) || q.choices.length !== 4 || typeof q.answer !== "number") return false;
@@ -370,13 +382,13 @@ function lenBiased(q) {
   return L[q.answer] > Math.max(...L.filter((_, i) => i !== q.answer)) * 1.1;
 }
 // Bank yuklangach eski qisqa ichki to'plam ishlatilmaydi (uzun matnli, muvozanatli savollar ustun)
-const rwAll = (skill) => { const ex = (RW_EXTRA[skill] || []).filter((q) => !lenBiased(q)); return ex.length >= 20 ? ex : [...(RW_POOL[skill] || []), ...(RW_EXTRA[skill] || [])]; };
+const rwAll = (skill) => { const ex = (RW_EXTRA[skill] || []).filter((q) => !lenBiased(q) && longEnough(q, skill)); return ex.length >= 20 || RW_BANK_OK ? ex : [...(RW_POOL[skill] || []), ...(RW_EXTRA[skill] || [])]; };
 function rwQueue() { return loadLocal("sws_rwq", {}); }
 function unseenCount(skill) { const st = seenSet(); return rwAll(skill).filter((q) => !st.has(qid(q))).length + ((rwQueue()[skill] || []).length); }
 // Testga kirishni kutdirmaslik: bank yuklanishini qisqa kutamiz, AI savollarni esa fonda olib kelamiz
 const waitMax = (p, ms) => Promise.race([p, new Promise((r) => setTimeout(r, ms))]);
 async function ensureRWQuick(needs, ms = 1500) {
-  await waitMax(loadRwBank(), 6000);
+  await ensureBankFull();
   await waitMax(ensureRW(needs).catch(() => {}), ms);
 }
 // Kerakli miqdorda yangi savol borligini ta'minlash (kerak bo'lsa serverdan olib keladi)
@@ -393,7 +405,7 @@ async function ensureRW(needs) {
         const cur = loadLocal("sws_qcur", {});
         const r = await fetch("/api/questions", { method: "POST", headers: { "Content-Type": "application/json", ...(SWS.session ? { Authorization: "Bearer " + SWS.session } : {}) }, body: JSON.stringify({ skill, from: cur[skill] || 0, n: Math.min(8, deficit + 1) }) });
         const d = await r.json();
-        const qs = (d.questions || []).filter((q) => !seenSet().has(qid(q)));
+        const qs = (d.questions || []).filter((q) => !seenSet().has(qid(q)) && longEnough(q, skill) && !lenBiased(q));
         const qq = rwQueue(); qq[skill] = [...(qq[skill] || []), ...qs]; saveLocal("sws_rwq", qq);
         if (d.next != null) { const c = loadLocal("sws_qcur", {}); c[skill] = d.next; saveLocal("sws_qcur", c); }
         if (!(d.questions || []).length) return;
@@ -440,7 +452,7 @@ function pickUnseenRW(skill, tier) {
   let fresh = rwAll(skill).filter((q) => !st.has(qid(q)));
   if (tier && fresh.length) {
     // Avval kerakli qiyinlikdagi savol, bo'lmasa eng yaqin darajadagisi
-    const order = { E: ["Easy", "Medium", "Hard"], M: ["Medium", "Hard", "Easy"], MH: ["Hard", "Medium", "Easy"], H: ["Hard", "Medium", "Easy"] }[tier];
+    const order = { E: ["Easy", "Medium", "Hard"], EM: ["Medium", "Easy", "Hard"], M: ["Medium", "Hard", "Easy"], MH: ["Hard", "Medium", "Easy"], H: ["Hard", "Medium", "Easy"] }[tier];
     let pro = tier === "H" ? fresh.filter((q) => q.pro) : [];
     // Qiyin darajadagi miqdoriy savollarda grafik/jadvalli savollar birinchi
     if (pro.length && skill === "Command of Evidence (Quantitative)") { const ch = pro.filter((q) => q.chart); if (ch.length) pro = ch; }
@@ -451,7 +463,7 @@ function pickUnseenRW(skill, tier) {
   if (fresh.length) src = fresh[Math.floor(Math.random() * fresh.length)];
   else {
     const qq = rwQueue(); const list = qq[skill] || [];
-    while (list.length && !src) { const c = list.shift(); if (!st.has(qid(c)) && !lenBiased(c)) src = c; }
+    while (list.length && !src) { const c = list.shift(); if (!st.has(qid(c)) && !lenBiased(c) && longEnough(c, skill)) src = c; }
     qq[skill] = list; saveLocal("sws_rwq", qq);
     if (!src) { const all = rwAll(skill); src = all[Math.floor(Math.random() * all.length)]; ensureRW({ [skill]: 6 }); }
   }
@@ -1015,7 +1027,8 @@ const MODULES = [
   { id: "m2", section: "Math", label: "Section 2, Module 2", minutes: 35, kind: "math", adaptive: true },
 ];
 // Modul qiyinligi: 1-modul aralash; 2-modul 1-modul natijasiga qarab qiyin yoki osonroq (adaptiv)
-const TIER_MIX = { standard: [0.25, 0.4, 0.35], hard: [0.04, 0.3, 0.66], easy: [0.45, 0.4, 0.15] };
+// 1-modul haqiqiy SAT'dagidek o'rta-qiyin; bankdagi "Easy" savollar SAT'dan osonroq bo'lgani uchun 1-modulda deyarli ishlatilmaydi
+const TIER_MIX = { standard: [0.15, 0.45, 0.4], hard: [0, 0.3, 0.7], easy: [0.35, 0.45, 0.2] };
 function tierList(n, basis) {
   const [e, m] = TIER_MIX[basis] || TIER_MIX.standard;
   const ne = Math.round(n * e), nm = Math.round(n * m);
@@ -1043,7 +1056,8 @@ function buildModule(mod, testId, diffPath) {
   }
   return balanceAnswers(RW_BLUEPRINT.map(([domain, skill], i) => {
     // Qiyin 2-modulda o'rta darajadagi o'rinlar ham qiyin savollardan olinadi (uzun matn, yaqin variantlar)
-    const v = pickUnseenRW(skill, basis === "hard" && tiers[i] === "M" ? "MH" : tiers[i]);
+    const t = tiers[i];
+    const v = pickUnseenRW(skill, basis === "hard" && t === "M" ? "MH" : basis === "standard" && t === "E" ? "EM" : t);
     return { n: i + 1, domain, skill, type: "mc", difficulty: v.difficulty || TIER_NAME[tiers[i]], passage: v.passage, prompt: v.prompt, choices: v.choices, answer: v.answer, expl: v.expl, ...(v.chart ? { chart: v.chart } : {}) };
   }));
 }
@@ -1062,14 +1076,17 @@ function balanceAnswers(qs) {
     return out;
   });
 }
-function buildModuleCached(mod, testId, diffPath) {
+// v6: yangi qoidalar (bank to'liq yuklangan, qisqa matnlar yo'q, 1-modul qiyinroq). Eski (v5) savollar faqat
+// davom ettirilayotgan test va o'tgan natijalarni ko'rish uchun ishlatiladi
+function buildModuleCached(mod, testId, diffPath, allowOld) {
   if (mod.kind === "break") return [];
   const basis = mod.adaptive ? (diffPath || "easy") : "standard";
-  const cacheKey = `sws_qcache_v5_${testId}_${mod.id}_${basis}`;
+  const cacheKey = `sws_qcache_v6_${testId}_${mod.id}_${basis}`;
   const cached = loadLocal(cacheKey, null);
   if (cached) return cached;
+  if (allowOld) { const old = loadLocal(`sws_qcache_v5_${testId}_${mod.id}_${basis}`, null); if (old) return old; }
   const fresh = buildModule(mod, testId, diffPath);
-  saveLocal(cacheKey, fresh);
+  if (mod.kind !== "rw" || RW_BANK_OK) saveLocal(cacheKey, fresh);
   return fresh;
 }
 // ---- Ball hisoblash (Bluebook'ga yaqin): savollar qiyinligiga qarab vaznli, 2-modul yo'nalishi hisobga olinadi ----
@@ -1101,7 +1118,7 @@ function gradeTest(testId, responses, diffPath, mode) {
   const perDomain = {}; const perSection = { rw: { c: 0, t: 0, wc: 0, w: 0 }, math: { c: 0, t: 0, wc: 0, w: 0 } }; const wrong = []; const items = [];
   MODULES.filter((m) => m.kind !== "break" && (!mode || mode === "full" || m.kind === mode || m.id === mode)).forEach((mod) => {
     const basis = mod.id === "rw2" ? diffPath.rw1 : mod.id === "m2" ? diffPath.m1 : null;
-    const qs = buildModuleCached(mod, testId, basis);
+    const qs = buildModuleCached(mod, testId, basis, true);
     qs.forEach((q, i) => {
       const r = responses[`${mod.id}-${i}`];
       const ok = q.type === "spr" ? sprOk(r, q.answer) : r === q.answer;
@@ -2032,7 +2049,7 @@ function TestRunner({ test, onExit, onFinish }) {
   const questions = useMemo(() => {
     if (!mod || mod.kind === "break") return [];
     const basis = mod.id === "rw2" ? diffPath.rw1 : mod.id === "m2" ? diffPath.m1 : null;
-    return buildModuleCached(mod, test.id, basis);
+    return buildModuleCached(mod, test.id, basis, !!S0);
   }, [stage.modIdx, test.id, diffPath.rw1, diffPath.m1, mode]);
 
   useEffect(() => {
@@ -4833,7 +4850,7 @@ const fromRecord = (r) => ({ at: r.at, testId: r.testId, testName: r.test, mode:
 function canReview(e) {
   if (!e || !e.responses || !e.diffPath || !e.testId) return false;
   const mods = MODULES.filter((m) => m.kind !== "break" && (!e.modeArg || e.modeArg === "full" || m.kind === e.modeArg || m.id === e.modeArg));
-  return mods.every((mod) => { const basis = mod.id === "rw2" ? e.diffPath.rw1 : mod.id === "m2" ? e.diffPath.m1 : null; const b2 = mod.adaptive ? (basis || "easy") : "standard"; return !!loadLocal(`sws_qcache_v5_${e.testId}_${mod.id}_${b2}`, null); });
+  return mods.every((mod) => { const basis = mod.id === "rw2" ? e.diffPath.rw1 : mod.id === "m2" ? e.diffPath.m1 : null; const b2 = mod.adaptive ? (basis || "easy") : "standard"; return !!(loadLocal(`sws_qcache_v6_${e.testId}_${mod.id}_${b2}`, null) || loadLocal(`sws_qcache_v5_${e.testId}_${mod.id}_${b2}`, null)); });
 }
 function MyResults({ history, onOpen, onDelete, onResume, limit = 6 }) {
   const [all, setAll] = useState(false);
@@ -4970,7 +4987,7 @@ function AppShell({ onHome }) {
   };
   const openPast = async (e) => {
     setPreparing(true);
-    try { await waitMax(loadRwBank(), 6000); } catch (err) {}
+    try { await ensureBankFull(); } catch (err) {}
     setPreparing(false);
     const g = gradeTest(e.testId, e.responses, e.diffPath, e.modeArg || undefined);
     setActiveTest({ id: e.testId, name: e.testName || "Practice Test " + e.testId, reviewOnly: true });
@@ -5051,7 +5068,9 @@ function AppShell({ onHome }) {
   const openTest = async (t) => {
     setPreparing(true);
     try { await ensureRWQuick(mockNeeds()); } catch (e) {}
-    setPreparing(false); setActiveTest(t);
+    setPreparing(false);
+    if (!RW_BANK_OK) { alert("Savollar bazasi yuklanmadi (internet sekin bo'lishi mumkin). Iltimos, birozdan so'ng qayta urinib ko'ring."); return; }
+    setActiveTest(t);
   };
   const nav = [
     { id: "home", label: "Bosh sahifa", icon: Home }, { id: "tests", label: "Mock testlar", icon: FileText }, { id: "courses", label: "Kurslar", icon: BookOpen },
