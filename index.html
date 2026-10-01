@@ -373,11 +373,20 @@ function lenBiased(q) {
 const rwAll = (skill) => { const ex = (RW_EXTRA[skill] || []).filter((q) => !lenBiased(q)); return ex.length >= 20 ? ex : [...(RW_POOL[skill] || []), ...(RW_EXTRA[skill] || [])]; };
 function rwQueue() { return loadLocal("sws_rwq", {}); }
 function unseenCount(skill) { const st = seenSet(); return rwAll(skill).filter((q) => !st.has(qid(q))).length + ((rwQueue()[skill] || []).length); }
+// Testga kirishni kutdirmaslik: bank yuklanishini qisqa kutamiz, AI savollarni esa fonda olib kelamiz
+const waitMax = (p, ms) => Promise.race([p, new Promise((r) => setTimeout(r, ms))]);
+async function ensureRWQuick(needs, ms = 1500) {
+  await waitMax(loadRwBank(), 6000);
+  await waitMax(ensureRW(needs).catch(() => {}), ms);
+}
 // Kerakli miqdorda yangi savol borligini ta'minlash (kerak bo'lsa serverdan olib keladi)
+let __ensureBusy = {};
 async function ensureRW(needs) {
   await loadRwBank();
   const tasks = Object.entries(needs).map(async ([skill, need]) => {
-    for (let round = 0; round < 3; round++) {
+    if (__ensureBusy[skill]) return __ensureBusy[skill];
+    if (need - unseenCount(skill) <= 0) return;
+    const job = (async () => { for (let round = 0; round < 2; round++) {
       const deficit = need - unseenCount(skill);
       if (deficit <= 0) return;
       try {
@@ -389,7 +398,9 @@ async function ensureRW(needs) {
         if (d.next != null) { const c = loadLocal("sws_qcur", {}); c[skill] = d.next; saveLocal("sws_qcur", c); }
         if (!(d.questions || []).length) return;
       } catch (e) { return; }
-    }
+    } })();
+    __ensureBusy[skill] = job;
+    try { await job; } finally { delete __ensureBusy[skill]; }
   });
   await Promise.all(tasks);
 }
@@ -3043,7 +3054,7 @@ function PracticeSetup({ selection, onStart, onCancel }) {
   const left = isPremium() ? Infinity : Math.max(0, freeDaily().bank - usageOf("bank"));
   const start = async () => {
     setLoading(true);
-    if (hasRW) { const needs = {}; const rwSk = selection.filter((x) => x.domain.kind === "rw").map((x) => x.skill); rwSk.forEach((sk) => { needs[sk] = Math.ceil(n / rwSk.length) + 1; }); await ensureRW(needs); }
+    if (hasRW) { const needs = {}; const rwSk = selection.filter((x) => x.domain.kind === "rw").map((x) => x.skill); rwSk.forEach((sk) => { needs[sk] = Math.ceil(n / rwSk.length) + 1; }); await ensureRWQuick(needs); }
     setLoading(false); onStart({ count: n, timed });
   };
   const chip = (active) => ({ padding: "11px 0", borderRadius: 14, border: `2px solid ${active ? B.plum : B.border}`, background: active ? "#F4EEFB" : "#fff", color: active ? B.plum : B.text, cursor: "pointer", fontFamily: FONT, fontSize: 16, fontWeight: 800 });
@@ -4161,7 +4172,7 @@ function DrillsHome() {
   const start = async (id) => {
     if (!(await swsConsume("drill"))) { swsOpenPaywall("drill"); return; }
     setLoading(id);
-    if (id !== "math") { const needs = {}; BANK_DOMAINS.filter((d) => d.kind === "rw").forEach((d) => d.skills.forEach((sk) => { needs[sk] = 2; })); await ensureRW(needs); }
+    if (id !== "math") { const needs = {}; BANK_DOMAINS.filter((d) => d.kind === "rw").forEach((d) => d.skills.forEach((sk) => { needs[sk] = 2; })); await ensureRWQuick(needs); }
     setLoading(null); setActive(id);
   };
   if (active) return <Drill mode={active} onExit={() => setActive(null)} />;
@@ -4877,7 +4888,7 @@ function AppShell({ onHome }) {
   const [payReason, setPayReason] = useState(null);
   const [preparing, setPreparing] = useState(false);
   swsOpenPaywall = (reason) => { setPayReason(reason || null); setPayOpen(true); };
-  useEffect(() => { if (SWS.meLoaded) swsRefreshMe(); loadRwBank(); const f = () => { if (document.visibilityState === "visible") swsRefreshMe(); }; document.addEventListener("visibilitychange", f); return () => document.removeEventListener("visibilitychange", f); }, []);
+  useEffect(() => { if (SWS.meLoaded) swsRefreshMe(); loadRwBank().then(() => setTimeout(() => ensureRW(mockNeeds()).catch(() => {}), 1500)); const f = () => { if (document.visibilityState === "visible") swsRefreshMe(); }; document.addEventListener("visibilitychange", f); return () => document.removeEventListener("visibilitychange", f); }, []);
   const [activeTest, setActiveTest] = useState(null);
   const [report, setReport] = useState(null);
   const [history, setHistory] = useState(() => {
@@ -4959,7 +4970,7 @@ function AppShell({ onHome }) {
   };
   const openPast = async (e) => {
     setPreparing(true);
-    try { await ensureRW(mockNeeds()); } catch (err) {}
+    try { await waitMax(loadRwBank(), 6000); } catch (err) {}
     setPreparing(false);
     const g = gradeTest(e.testId, e.responses, e.diffPath, e.modeArg || undefined);
     setActiveTest({ id: e.testId, name: e.testName || "Practice Test " + e.testId, reviewOnly: true });
@@ -5039,7 +5050,7 @@ function AppShell({ onHome }) {
   const needPay = (reason) => swsOpenPaywall(typeof reason === "string" && REASONS[reason] ? reason : null);
   const openTest = async (t) => {
     setPreparing(true);
-    try { await ensureRW(mockNeeds()); } catch (e) {}
+    try { await ensureRWQuick(mockNeeds()); } catch (e) {}
     setPreparing(false); setActiveTest(t);
   };
   const nav = [
