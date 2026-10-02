@@ -83,6 +83,7 @@ module.exports = async (req, res) => {
           firstSeen: first, lastSeen: last, online: !!last && now - last < 3 * 60000,
           premiumUntil: until || null, premium: until > now, paid: !!v[3], trial: until > now && !v[3],
           minutesToday: ros.day === today ? ros.minutesToday || 0 : 0, streak: ros.streak || 0, totalMinutes: ros.totalMinutes || 0, mocks: ros.mocks || 0,
+          official: Array.isArray(prof.official) ? prof.official.slice(0, 10) : null,
           questionsSeen: Number(v[6]) || 0, refBy: Number(v[7]) || null, usage, ...summarize(v[8 + kinds.length]), lbScore: Number(v[9 + kinds.length]) || null, lbRw: (parse(v[10 + kinds.length]) || {}).rw || null, lbMath: (parse(v[10 + kinds.length]) || {}).math || null,
         });
       });
@@ -98,8 +99,14 @@ module.exports = async (req, res) => {
       trial: users.filter((u) => u.trial).length,
       paid: users.filter((u) => u.premium && u.paid).length,
     };
+    // Ball aniqligi: o'quvchi kiritgan haqiqiy ball va o'sha paytdagi so'nggi mock ball farqi
+    const calib = [];
+    users.forEach((u) => (u.official || []).forEach((o) => { const m = o && o.mock && Number(o.mock.total); if (Number(o.total) && m) calib.push({ id: u.id, name: u.name || u.tgName || u.username || String(u.id), kind: o.kind, at: o.at, official: Number(o.total), mock: m, diff: m - Number(o.total), rw: o.rw, math: o.math, mockRw: o.mock.rw, mockMath: o.mock.math }); }));
+    calib.sort((x, y) => (y.at || 0) - (x.at || 0));
+    const avg = (arr) => (arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : null);
+    stats.calibN = calib.length; stats.calibAvgDiff = avg(calib.map((c) => c.diff)); stats.calibAvgAbs = avg(calib.map((c) => Math.abs(c.diff)));
     const payments = ((await K.kv("LRANGE", "paylog", "0", "49")) || []).map(parse).filter(Boolean);
-    res.status(200).json({ storage: true, stats, users, payments, plans: { price: K.PRICE_UZS, price3: K.PRICE3_UZS } });
+    res.status(200).json({ storage: true, stats, users, payments, calib: calib.slice(0, 100), plans: { price: K.PRICE_UZS, price3: K.PRICE3_UZS } });
   } catch (e) {
     res.status(200).json({ storage: false, error: String(e && e.message || e), users: [] });
   }
