@@ -352,13 +352,17 @@ const qid = (q) => (q.passage ? "r" : "m") + hashStr((q.passage || "").slice(0, 
 const RW_EXTRA = {};
 let __rwBankPromise = null;
 let RW_BANK_OK = false; // asosiy bank (rwbank.json) to'liq yuklandimi
+const MATH_BANK = {}; // SAT uslubidagi Math savollari (mathbank.json)
 function loadRwBank() {
   if (RW_BANK_OK) return Promise.resolve();
   if (!__rwBankPromise) __rwBankPromise = Promise.all([
     fetch("/rwbank.json").then((r) => { if (!r.ok) throw new Error("bank"); return r.json(); }),
     // rwhard.json: haqiqiy imtihon darajasidagi qiyin savollar (variantlar har safar aralashtiriladi)
     fetch("/rwhard.json").then((r) => r.json()).catch(() => ({})),
-  ]).then(([d, h]) => {
+    // mathbank.json: haqiqiy SAT uslubidagi matnli va "tuzoqli" Math savollari (javoblari tekshirilgan)
+    fetch("/mathbank.json").then((r) => r.json()).catch(() => ({})),
+  ]).then(([d, h, mb]) => {
+    Object.entries(mb || {}).forEach(([k, arr]) => { MATH_BANK[k] = arr; });
     Object.entries(d || {}).forEach(([k, arr]) => { RW_EXTRA[k] = arr.map((q) => ({ ...q, fixed: true })); });
     Object.entries(h || {}).forEach(([k, arr]) => { RW_EXTRA[k] = [...(RW_EXTRA[k] || []), ...arr.map((q) => ({ ...q, difficulty: q.difficulty || "Hard", pro: !q.difficulty || q.difficulty === "Hard" }))]; });
     RW_BANK_OK = Object.keys(d || {}).length > 0;
@@ -486,6 +490,18 @@ function pickUnseenRW(skill, tier) {
   const order = src.choices.map((_, k) => k);
   for (let k = order.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [order[k], order[j]] = [order[j], order[k]]; }
   return extractTextTable({ ...src, choices: order.map((k) => src.choices[k]), answer: order.indexOf(src.answer) });
+}
+// Math banki: o'rta/qiyin o'rinlarning bir qismi SAT uslubidagi tayyor savollardan olinadi (ko'rilmaganlari)
+function pickBankMath(skill, tier, isSPR) {
+  const want = tier === "H" ? "Hard" : "Medium";
+  const st = seenSet();
+  const pool = (MATH_BANK[skill] || []).filter((q) => q.difficulty === want && (q.type === "spr") === !!isSPR && !st.has(qid(q)));
+  if (!pool.length) return null;
+  const src = pool[Math.floor(Math.random() * pool.length)];
+  markSeen(qid(src));
+  if (src.type === "spr") return { type: "spr", prompt: src.prompt, answer: src.answer, expl: src.expl, difficulty: src.difficulty };
+  const order = shuffleArr(src.choices.map((_, k) => k));
+  return { type: "mc", prompt: src.prompt, choices: order.map((k) => src.choices[k]), answer: order.indexOf(src.answer), expl: src.expl, difficulty: src.difficulty };
 }
 // Math: har safar yangi raqamlar; ko'rilgan savol chiqsa qayta yaratamiz
 function genMathUnseen(skill, isSPR, forceT, tier) {
@@ -1041,7 +1057,7 @@ const MODULES = [
 ];
 // Modul qiyinligi: 1-modul aralash; 2-modul 1-modul natijasiga qarab qiyin yoki osonroq (adaptiv)
 // 1-modul haqiqiy SAT'dagidek o'rta-qiyin; bankdagi "Easy" savollar SAT'dan osonroq bo'lgani uchun 1-modulda deyarli ishlatilmaydi
-const TIER_MIX = { standard: [0.15, 0.45, 0.4], hard: [0, 0.3, 0.7], easy: [0.35, 0.45, 0.2] };
+const TIER_MIX = { standard: [0.15, 0.45, 0.4], hard: [0, 0.3, 0.7], easy: [0.25, 0.5, 0.25] };
 function tierList(n, basis) {
   const [e, m] = TIER_MIX[basis] || TIER_MIX.standard;
   const ne = Math.round(n * e), nm = Math.round(n * m);
@@ -1057,7 +1073,8 @@ function buildModule(mod, testId, diffPath) {
     const tiers = tierList(slots.length, basis);
     return balanceAnswers(slots.map(([domain, skill], i) => {
       const isSPR = i > 1 && (i % 4 === 3 || i === slots.length - 1);
-      return { n: i + 1, domain, skill, ...genMathUnseen(skill, isSPR, null, tiers[i]), passage: null };
+      const fromBank = tiers[i] !== "E" && Math.random() < 0.5 ? pickBankMath(skill, tiers[i], isSPR) : null;
+      return { n: i + 1, domain, skill, ...(fromBank || genMathUnseen(skill, isSPR, null, tiers[i])), passage: null };
     }));
   }
   // R&W: savol turlari tartibi haqiqiy SAT'dagidek, har bir tur ichida osondan qiyinga
@@ -3800,6 +3817,38 @@ function Profile({ name, setName, goalMinutes, setGoalMinutes, streak, todaySeco
    COMMUNITY — online presence (room) + shared study stats (db)
 ============================================================ */
 function timeAgo(ms) { const m = Math.round((Date.now() - ms) / 60000); if (m < 1) return "hozir"; if (m < 60) return m + " daq oldin"; const h = Math.round(m / 60); if (h < 24) return h + " soat oldin"; return Math.round(h / 24) + " kun oldin"; }
+// Haqiqiy ball: o'quvchi Bluebook practice test yoki haqiqiy SAT ballini kiritadi — admin mock ballar bilan solishtirib, ball jadvalini sozlaydi
+function OfficialScoreCard({ history }) {
+  const [list, setList] = useState(() => (SWS.me && SWS.me.profile && Array.isArray(SWS.me.profile.official) ? SWS.me.profile.official : loadLocal("sws_official", [])));
+  const [kind, setKind] = useState("bluebook"); const [total, setTotal] = useState(""); const [rw, setRw] = useState(""); const [math, setMath] = useState("");
+  const lastMock = [...(history || [])].reverse().find((h) => !h.mode && h.total) || null;
+  const ok = (v, lo, hi) => { const n = Number(v); return Number.isFinite(n) && n >= lo && n <= hi && n % 10 === 0; };
+  const save = () => {
+    if (!ok(total, 400, 1600) || (rw && !ok(rw, 200, 800)) || (math && !ok(math, 200, 800))) { swsToast("Ballarni to'g'ri kiriting (masalan 1250; bo'limlar 200–800, 10 ga karrali)"); return; }
+    const item = { at: Date.now(), kind, total: Number(total), rw: rw ? Number(rw) : null, math: math ? Number(math) : null, mock: lastMock ? { total: lastMock.total, rw: lastMock.rwScore || null, math: lastMock.mathScore || null, at: lastMock.at } : null };
+    const next = [item, ...list].slice(0, 10);
+    setList(next); saveLocal("sws_official", next); swsSaveProfile({ official: next });
+    if (SWS.me && SWS.me.profile) SWS.me.profile.official = next;
+    setTotal(""); setRw(""); setMath(""); swsToast("Rahmat! Ballingiz saqlandi ✓");
+  };
+  const inp = { width: "100%", boxSizing: "border-box", padding: "10px 12px", borderRadius: 10, border: `1px solid ${B.border}`, fontSize: 15, fontFamily: FONT, outline: "none" };
+  return (
+    <div style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 18, padding: 20, marginTop: 18 }}>
+      <div style={{ fontSize: 17, fontWeight: 800 }}>🎯 Haqiqiy ballingiz</div>
+      <div style={{ fontSize: 14, color: B.muted, margin: "4px 0 14px", lineHeight: 1.5 }}>Bluebook'dagi rasmiy practice test yoki haqiqiy SAT ballingizni kiriting. Bu mock testlardagi ballni haqiqiy imtihonga yanada yaqin qilishga yordam beradi.</div>
+      <div style={{ display: "flex", gap: 8, marginBottom: 10, flexWrap: "wrap" }}>
+        {[["bluebook", "Bluebook practice test"], ["sat", "Haqiqiy SAT"]].map(([id, l]) => <button key={id} onClick={() => setKind(id)} style={{ border: `1.5px solid ${kind === id ? B.plum : B.border}`, background: kind === id ? "#F4EEFB" : "#fff", color: kind === id ? B.plum : B.text, borderRadius: 10, padding: "8px 12px", fontFamily: FONT, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>{l}</button>)}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))", gap: 8 }}>
+        <input inputMode="numeric" value={total} onChange={(e) => setTotal(e.target.value.replace(/\D/g, "").slice(0, 4))} placeholder="Umumiy (1250)" style={inp} />
+        <input inputMode="numeric" value={rw} onChange={(e) => setRw(e.target.value.replace(/\D/g, "").slice(0, 3))} placeholder="R&W (ixtiyoriy)" style={inp} />
+        <input inputMode="numeric" value={math} onChange={(e) => setMath(e.target.value.replace(/\D/g, "").slice(0, 3))} placeholder="Math (ixtiyoriy)" style={inp} />
+      </div>
+      <button onClick={save} style={{ marginTop: 12, background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "10px 20px", fontSize: 15, fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>Saqlash</button>
+      {list.length > 0 && <div style={{ marginTop: 14, fontSize: 14, color: B.muted }}>{list.slice(0, 3).map((x) => <div key={x.at}>{new Date(x.at).toLocaleDateString("uz-UZ")} · {x.kind === "sat" ? "SAT" : "Bluebook"}: <b style={{ color: B.text }}>{x.total}</b>{x.mock ? ` (o'sha paytdagi mock: ${x.mock.total})` : ""}</div>)}</div>}
+    </div>
+  );
+}
 function AdminPanel() {
   const [data, setData] = useState(null);
   const [q, setQ] = useState("");
@@ -3859,6 +3908,15 @@ function AdminPanel() {
         <Card label="Sinovda" value={st.trial} color={B.plum} />
         <Card label="To'lagan (faol)" value={st.paid} color="#9A6200" />
       </div>
+      {(data.calib || []).length > 0 && (
+        <div style={{ background: "#fff", borderRadius: 16, padding: "14px 16px", marginBottom: 16 }}>
+          <div style={{ fontSize: 16, fontWeight: 800 }}>🎯 Ball aniqligi (mock ↔ haqiqiy)</div>
+          <div style={{ fontSize: 13.5, color: B.muted, margin: "4px 0 10px" }}>{st.calibN} ta solishtiruv · o'rtacha farq {st.calibAvgDiff > 0 ? "+" : ""}{st.calibAvgDiff} ball (mock {st.calibAvgDiff > 0 ? "yuqoriroq" : "pastroq"}) · o'rtacha xato ±{st.calibAvgAbs}</div>
+          <div style={{ maxHeight: 260, overflowY: "auto", fontSize: 13.5 }}>
+            {data.calib.map((c, i) => <div key={i} style={{ display: "flex", gap: 10, padding: "6px 0", borderTop: i ? `1px solid ${B.bg}` : "none" }}><span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.name}</span><span>{c.kind === "sat" ? "SAT" : "Bluebook"} {c.official}</span><span style={{ color: B.muted }}>mock {c.mock}</span><b style={{ color: Math.abs(c.diff) <= 40 ? B.green : "#B4213F", minWidth: 44, textAlign: "right" }}>{c.diff > 0 ? "+" : ""}{c.diff}</b></div>)}
+          </div>
+        </div>
+      )}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
         <div style={{ flex: "1 1 220px", display: "flex", alignItems: "center", gap: 8, background: "#fff", borderRadius: 12, padding: "9px 12px" }}>
           <Search size={15} color={B.muted} />
@@ -5285,7 +5343,7 @@ function AppShell({ onHome }) {
           {page === "plan" && !isPremium() && <PremiumLock reason="plan" title="Shaxsiy o'quv reja" note="Haftalik reja va maqsad ballgacha yo'l — Premium'da" height={520}><StudyPlan history={history} targetScore={targetScore} examDate={examDate} onGo={() => {}} /></PremiumLock>}
           {page === "plan" && isPremium() && <StudyPlan history={history} targetScore={targetScore} examDate={examDate} onGo={setPage} />}
           {page === "tutor" && <AITutor tier={tier} />}
-          {page === "analytics" && <><MyResults history={history} onOpen={openPast} onDelete={deleteResult} onResume={(t) => openTest({ ...t, resume: true })} limit={20} /><Analytics history={history} /></>}
+          {page === "analytics" && <><MyResults history={history} onOpen={openPast} onDelete={deleteResult} onResume={(t) => openTest({ ...t, resume: true })} limit={20} /><Analytics history={history} /><OfficialScoreCard history={history} /></>}
           {page === "community" && <Community name={name} />}
           {page === "top" && <Leaderboard name={name} history={history} />}
           {page === "admin" && sws.me && sws.me.isAdmin && <AdminPanel />}
