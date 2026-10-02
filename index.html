@@ -418,14 +418,27 @@ async function ensureRW(needs) {
 }
 // Matn ichidagi jadvallarni ("A — B — C" yoki bo'shliq bilan tekislangan qatorlar) haqiqiy jadvalga aylantirish
 // Matn: "Text 1"/"Text 2" sarlavhalari Bluebook'dagidek qalin va alohida ko'rsatiladi
+// "[underlined: ...]" belgisi — Bluebook'dagidek tagiga chizilgan gap sifatida ko'rsatiladi
+const UL_STYLE = { textDecoration: "underline", textDecorationThickness: "1.5px", textUnderlineOffset: "3px" };
+function stripUL(raw) {
+  const t = String(raw || ""); const re = /\[underlined:\s*([^\]]*)\]/g; const ul = []; let out = "", last = 0, m;
+  while ((m = re.exec(t))) { out += t.slice(last, m.index); ul.push([out.length, out.length + m[1].length]); out += m[1]; last = re.lastIndex; }
+  return { text: out + t.slice(last), ul };
+}
+function ulNodes(raw) {
+  const { text, ul } = stripUL(raw); if (!ul.length) return text;
+  const o = []; let p = 0;
+  ul.forEach(([a, b], i) => { if (a > p) o.push(text.slice(p, a)); o.push(<u key={"u" + i} style={UL_STYLE}>{text.slice(a, b)}</u>); p = b; });
+  if (p < text.length) o.push(text.slice(p)); return o;
+}
 function PassageText({ text }) {
   const t = String(text || "");
-  if (!/(^|\n)Text [12]\b/.test(t)) return t;
+  if (!/(^|\n)Text [12]\b/.test(t)) return ulNodes(t);
   const parts = t.split(/(?:^|\n+)(?=Text [12]\b)/).filter((p) => p.trim());
   return parts.map((p, i) => {
     const m = p.match(/^(Text [12])[:.]?\s*([\s\S]*)$/);
-    if (!m) return <div key={i} style={{ marginBottom: 12 }}>{p.trim()}</div>;
-    return <div key={i} style={{ marginBottom: i < parts.length - 1 ? 16 : 0 }}><div style={{ fontWeight: 700, fontFamily: "inherit", marginBottom: 4 }}>{m[1]}</div><div>{m[2].trim()}</div></div>;
+    if (!m) return <div key={i} style={{ marginBottom: 12 }}>{ulNodes(p.trim())}</div>;
+    return <div key={i} style={{ marginBottom: i < parts.length - 1 ? 16 : 0 }}><div style={{ fontWeight: 700, fontFamily: "inherit", marginBottom: 4 }}>{m[1]}</div><div>{ulNodes(m[2].trim())}</div></div>;
   });
 }
 function extractTextTable(q) {
@@ -1192,7 +1205,21 @@ const VOCAB_EXTRA = [
 ];
 
 function loadLocal(key, fallback) { try { const v = localStorage.getItem(nsKey(key)); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; } }
-function saveLocal(key, value) { try { localStorage.setItem(nsKey(key), JSON.stringify(value)); } catch (e) {} }
+// Xotira (localStorage) to'lsa, eski test keshlarini (avval v5, keyin eng eskilari) o'chirib qayta urinadi
+function freeLocalSpace() {
+  try {
+    const ks = []; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.indexOf("sws_qcache_") >= 0) ks.push(k); }
+    if (!ks.length) return false;
+    const old = ks.filter((k) => k.indexOf("_v5_") >= 0);
+    const drop = old.length ? old : ks.slice(0, Math.max(1, Math.ceil(ks.length / 3)));
+    drop.forEach((k) => localStorage.removeItem(k)); return true;
+  } catch (e) { return false; }
+}
+function saveLocal(key, value) {
+  const v = JSON.stringify(value);
+  for (let t = 0; t < 4; t++) { try { localStorage.setItem(nsKey(key), v); return true; } catch (e) { if (!freeLocalSpace()) return false; } }
+  return false;
+}
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth <= 680);
   useEffect(() => {
@@ -2293,15 +2320,20 @@ function TestRunner({ test, onExit, onFinish }) {
   const hlSelection = () => addHL(passRef.current, key) || (canHlPrompt && addHL(promptRef.current, pKey));
   const addHighlight = () => { if (annot) hlSelection(); };
   annotApplyRef.current = hlSelection;
-  const hlNodes = (t, rs, hkey) => {
-    if (!rs.length) return t;
-    const out = []; let pos = 0;
-    rs.forEach(([a, b], i) => {
-      if (a > pos) out.push(t.slice(pos, a));
-      out.push(<mark key={i} onClick={() => annot && setHl((h) => ({ ...h, [hkey]: rs.filter((_, k) => k !== i) }))} style={{ background: "#FFE58F", color: "inherit", borderRadius: 2, cursor: annot ? "pointer" : "text" }}>{t.slice(a, b)}</mark>);
-      pos = b;
-    });
-    if (pos < t.length) out.push(t.slice(pos));
+  // Matnni bo'laklarga ajratib, tagiga chizilgan gap va sariq belgilarni birga ko'rsatadi
+  const hlNodes = (raw, rs, hkey) => {
+    const { text: t, ul } = stripUL(raw);
+    if (!rs.length && !ul.length) return t;
+    const pts = [...new Set([0, t.length, ...rs.flat(), ...ul.flat()])].filter((x) => x >= 0 && x <= t.length).sort((a, b) => a - b);
+    const out = [];
+    for (let k = 0; k < pts.length - 1; k++) {
+      const a = pts[k], b = pts[k + 1]; if (b <= a) continue;
+      let node = t.slice(a, b);
+      if (ul.some(([x, y]) => a >= x && b <= y)) node = <u key={"u" + k} style={UL_STYLE}>{node}</u>;
+      const hi = rs.findIndex(([x, y]) => a >= x && b <= y);
+      if (hi >= 0) node = <mark key={"m" + k} onClick={() => annot && setHl((h) => ({ ...h, [hkey]: rs.filter((_, j) => j !== hi) }))} style={{ background: "#FFE58F", color: "inherit", borderRadius: 2, cursor: annot ? "pointer" : "text" }}>{node}</mark>;
+      out.push(node);
+    }
     return out;
   };
   const passageNodes = hlNodes(q.passage || "", ranges, key);
@@ -2539,7 +2571,7 @@ function TestReview({ items }) {
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: 14, gap: 10 }}>
             <button disabled={shown.indexOf(cur) <= 0} onClick={() => go(-1)} style={{ background: "#fff", border: `1px solid ${B.border}`, borderRadius: 10, padding: "9px 16px", fontFamily: FONT, fontSize: 14, fontWeight: 700, cursor: "pointer", opacity: shown.indexOf(cur) <= 0 ? 0.4 : 1 }}>← Oldingi</button>
-            <button onClick={() => addSaved({ domain: cur.q.domain, skill: cur.q.skill, prompt: cur.q.prompt, passage: cur.q.passage, choices: cur.q.choices, answer: cur.q.answer, expl: cur.q.expl, mistake: !cur.ok })} style={{ background: "transparent", border: `1px solid ${B.border}`, borderRadius: 10, padding: "9px 14px", fontFamily: FONT, fontSize: 13.5, fontWeight: 700, color: B.plum, cursor: "pointer" }}><Bookmark size={13} /> Saqlash</button>
+            <button onClick={() => addSaved({ domain: cur.q.domain, skill: cur.q.skill, prompt: cur.q.prompt, passage: cur.q.passage, choices: cur.q.choices, answer: cur.q.answer, expl: cur.q.expl, mistake: !cur.ok, ...(cur.q.chart ? { chart: cur.q.chart } : {}) }, true)} style={{ background: "transparent", border: `1px solid ${B.border}`, borderRadius: 10, padding: "9px 14px", fontFamily: FONT, fontSize: 13.5, fontWeight: 700, color: B.plum, cursor: "pointer" }}><Bookmark size={13} /> Saqlash</button>
             <button disabled={shown.indexOf(cur) >= shown.length - 1} onClick={() => go(1)} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 10, padding: "9px 16px", fontFamily: FONT, fontSize: 14, fontWeight: 800, cursor: "pointer", opacity: shown.indexOf(cur) >= shown.length - 1 ? 0.4 : 1 }}>Keyingi →</button>
           </div>
         </div>
@@ -3048,7 +3080,7 @@ function PracticeSession({ selection, count, timed, onExit, onRecord }) {
         {revealed && !blocked && (
           <div style={{ display: "flex", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
             <button onClick={next} style={{ background: B.plum, color: "#fff", border: "none", borderRadius: 12, padding: "12px 26px", fontSize: 15.5, fontWeight: 800, cursor: "pointer", fontFamily: FONT }}>{i >= count - 1 ? "Natijani ko'rish" : "Keyingi savol"}</button>
-            <button onClick={() => addSaved(q)} style={{ background: "#fff", color: B.plum, border: `1px solid ${B.plum}`, borderRadius: 12, padding: "11px 18px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6 }}><Bookmark size={14} /> Saqlash</button>
+            <button onClick={() => addSaved(q, true)} style={{ background: "#fff", color: B.plum, border: `1px solid ${B.plum}`, borderRadius: 12, padding: "11px 18px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6 }}><Bookmark size={14} /> Saqlash</button>
           </div>
         )}
       </div>
@@ -4023,18 +4055,24 @@ function Community({ name }) {
    SAVED / MISTAKES
 ============================================================ */
 function loadSaved() { return loadLocal("sws_saved", []); }
-function addSaved(item) {
-  const list = loadSaved();
-  if (list.some((x) => x.prompt === item.prompt)) return;
+// Savolni aniqlash: R&W savollarining "prompt"i ko'pincha bir xil, shuning uchun matn + variantlar ham hisobga olinadi
+const savedKey = (x) => (x && (String(x.passage || "").slice(0, 160) + "|" + x.prompt + "|" + (x.choices || []).join("|"))) || "";
+// manual=true: foydalanuvchi "Saqlash" tugmasini bosgan — natija haqida xabar ko'rsatiladi
+function addSaved(item, manual) {
+  const list = loadSaved(); const k = savedKey(item);
+  const i = list.findIndex((x) => savedKey(x) === k);
+  if (i >= 0) { if (manual) swsToast("Bu savol allaqachon saqlangan ✓"); return true; }
   list.unshift({ ...item, savedAt: Date.now() });
-  saveLocal("sws_saved", list.slice(0, 200));
+  const ok = saveLocal("sws_saved", list.slice(0, 200));
+  if (manual) swsToast(ok ? "Savol saqlandi ✓ (Saqlanganlar bo'limida)" : "Saqlab bo'lmadi — xotira to'lgan bo'lishi mumkin");
+  return ok;
 }
-function removeSaved(prompt) { saveLocal("sws_saved", loadSaved().filter((x) => x.prompt !== prompt)); }
+function removeSaved(key) { saveLocal("sws_saved", loadSaved().filter((x) => savedKey(x) !== key)); }
 
 function SavedPage() {
   const [list, setList] = useState(() => loadSaved());
   const [active, setActive] = useState(null);
-  const remove = (prompt) => { removeSaved(prompt); setList(loadSaved()); if (active?.prompt === prompt) setActive(null); };
+  const remove = (k) => { removeSaved(k); setList(loadSaved()); if (active && savedKey(active) === k) setActive(null); };
   if (active) {
     return (
       <div>
@@ -4051,7 +4089,7 @@ function SavedPage() {
             </div>
           )) : <div style={{ fontSize: 15.5, marginBottom: 12 }}>To'g'ri javob: <b>{active.answer}</b></div>}
           {active.expl && <div style={{ marginTop: 14, background: B.bg, borderRadius: 12, padding: "13px 16px", fontSize: 15, lineHeight: 1.6 }}>{mt(active.expl)}</div>}
-          <button onClick={() => remove(active.prompt)} style={{ marginTop: 16, background: "transparent", border: `1px solid ${B.rose}`, color: B.rose, borderRadius: 12, padding: "9px 20px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>O'chirish</button>
+          <button onClick={() => remove(savedKey(active))} style={{ marginTop: 16, background: "transparent", border: `1px solid ${B.rose}`, color: B.rose, borderRadius: 12, padding: "9px 20px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", fontFamily: FONT }}>O'chirish</button>
         </div>
       </div>
     );
@@ -4074,7 +4112,7 @@ function SavedPage() {
                 <div style={{ fontSize: 12, color: B.muted, marginBottom: 3 }}>{item.domain}</div>
                 <div style={{ fontSize: 15, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 420 }}>{mt(item.prompt)}</div>
               </div>
-              <button onClick={(e) => { e.stopPropagation(); remove(item.prompt); }} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", flexShrink: 0 }}><X size={15} /></button>
+              <button onClick={(e) => { e.stopPropagation(); remove(savedKey(item)); }} style={{ background: "transparent", border: "none", color: B.muted, cursor: "pointer", flexShrink: 0 }}><X size={15} /></button>
             </div>
           ))}
         </div>
